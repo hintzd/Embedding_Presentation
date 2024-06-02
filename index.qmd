@@ -1,0 +1,1309 @@
+---
+engine: knitr
+webr: 
+  show-startup-message: false  
+  packages: ['purrr']
+format:
+  revealjs:
+    include-in-header:
+      - file: MathJax.html
+    theme: [default, theme.scss]
+    scrollable: true
+    css: styles.css
+    transition: slide
+    highlight-style: github
+    slide-number: c/t
+    chalkboard: true
+filters: 
+ - webr
+---
+
+# [An Advanced Introduction to R]{
+  style="color:#FFFFFF; 
+         font-size: 110px; 
+         text-shadow: -0.5px -0.5px 0 #000, 
+                      0.5px -0.5px 0 #000, 
+                      -0.5px 0.5px 0 #000, 
+                      0.5px 0.5px 0 #000;"
+}{background-image="images/conny-schneider-xuTJZ7uD7PI-unsplash.jpg" background-size="cover" background-color="#4f6952"}
+
+
+<h2 style="color:#FFFFFF; 
+         font-size: 35px; 
+         text-shadow: -1px -1px 0 #000, 
+                      1px -1px 0 #000, 
+                      -1px 1px 0 #000, 
+                      1px 1px 0 #000;">Daniel Hintz | Seth Rankins | 2024-03-25</h2>
+
+<h3 style="color:#FFFFFF; 
+         font-size: 25px; 
+         text-shadow: -1px -1px 0 #000, 
+                      1px -1px 0 #000, 
+                      -1px 1px 0 #000, 
+                      1px 1px 0 #000;">A R Ladies Workshop</h3>
+
+
+# [Outline (1)]{style="font-size: 55px;"} 
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+-   Loops, Functionals (to replace loops), and Logicals
+-   R function Basics
+    -   Structure
+    -   Some practice to start
+-   R function's Extended
+    -   `formals()`, `body()`, and `environment()`
+    -   More on Environments
+    -   Default Argument Assignment
+    -   `NULL` Conditional Execution
+    -   `message()`, `warning()`, and `stop()`
+    -   Conditional Execution with `missing()`
+    -   Using the Three Dots Ellipsis, `...`
+    -   Anonymous Functions
+:::
+:::
+
+## [Outline (2)]{style="font-size: 55px;"} 
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+-   Functional Programming with `base` R
+    -   Function Look Table
+    -   Examples
+-   Functional programming with `purrr`
+    -   Function Look Table
+    -   Examples
+-   Parallel Computing
+    -   Parallel Computing with `furrr`
+    -   A Note on Parallel Computing
+-   Practice Questions
+:::
+:::
+
+## Webr Code Execution
+
+![](images/webr.gif){fig-align="center"}
+
+::: incremental
+- Use `cmd` `+` `enter` to execute a line  
+
+- As of `webR 0.2.3`, `webr` does not support smart execution, so for multiline code highlight the entire section before hitting `cmd` `+` `enter`
+:::
+
+# [Loops, Functions, and Logical Statements]{style="color:white;"} {background-color="#8FA9C2"}
+
+## What is the Difference Between Vectorization and Iteration?
+
+::: incremental
+-   If y = 4x + 3, what is y for x = 4?
+-   If $N_{(t + 1)} = N_{t}e^{r\left(1 ~-~ \frac{N_{t}}{K}\right)}$, what is $N$ for $t = 4$ $~~$($N_{1} = 2$, $r = 0.5$, and $K = 30$)?
+:::
+
+## Now for the Math in R
+
+```{webr-r}
+# First let's make some data to play with.
+vec_dat <- data.frame(x = 1:5, y = NA_real_)
+vec_dat
+loop_dat <- data.frame(t = 1:5, N = NA_real_)
+loop_dat
+
+# What is the difference between vectorization and iteration?
+vec_dat$y <- 4*vec_dat$x + 3
+vec_dat
+
+loop_dat$N[1] <- 2
+for(i in 1:4) {
+  loop_dat$N[i + 1] <- loop_dat$N[i]*exp(0.5*(1 - loop_dat$N[i]/30))
+}
+loop_dat
+```
+
+## Now Onto a More Complex `for` Loop 
+
+```{webr-r}
+# This is a stupid example, but it creates some data for us.
+for(i in 1:20) {
+  write.csv(data.frame(ID = paste0("DataLogger-", i),
+                    Temperature = runif(30, 10, 20),
+                    Wind = runif(30, 0, 15),
+                    Battery = "Normal"),
+            paste0(getwd(), "/WeatherStation_", i, ".csv"))
+}
+
+# Now lets check our work.
+list.files(getwd(), pattern = "WeatherStation_")
+```
+
+<!--
+-   There are also while and repeat loops, but you shouldn't be writing code in R if you are using them.
+-->
+
+
+
+- For people that write their own algorithms, `while` loops are a good skill to know^[Their usage, however, can be more niche as they are used when the number of iterations is not known a priori and reach completion via convergence criterion such as the max number of iterations or some metric like Euclidean Distance] 
+
+
+## Now for `apply` Functions
+
+```{webr-r}
+# This is the code we just wrote.
+for(i in 1:20) {write.csv(data.frame(ID = paste0("DataLogger-", i),
+                Temperature = runif(30, 10, 20), Wind = runif(30, 0, 15),
+                Battery = "Normal"),paste0(getwd(), "/WeatherStation_", i, ".csv"))}
+
+# What if we want to read in a bunch of data files?
+df <- lapply(paste0(getwd(), "/", list.files(getwd(), pattern = ".csv")), read.csv)
+
+lapply(df, function(x) head(x,3))[1:2]
+
+df2 <- do.call(rbind, lapply(paste0(getwd(), "/",
+                             list.files(getwd(), pattern = ".csv")), read.csv))
+head(df2)
+```
+
+## `apply` Functions (cont'd)
+
+```{webr-r}
+# Create some genetic data.
+genetic_data <- data.frame(matrix(data = sample(c("A", "T", "G", "C"), 3000, replace = TRUE),
+                                  nrow = 300, ncol = 10))
+head(genetic_data)
+
+# I want to know how many A's there are in each column.
+apply(genetic_data, 2, table)[1,]
+```
+
+. . .
+
+-   You might want to look at the `pbapply` package if you regularly parallelize your code.
+
+## Logical Statements (1)
+
+```{webr-r}
+if(TRUE) {print("I have to work today.")}
+
+if(FALSE) {print("I have to work today.")
+} else {print("It is the weekend!")}
+
+if(FALSE) {print("I have to work today.")
+} else if(TRUE) {print("It is the weekend!")}
+
+x <- 10
+x == 10
+x != 10
+```
+
+## Logical Statements (2)
+
+```{webr-r}
+column1 <- c(1:10, NA)
+column1
+any(is.na(column1))
+is.numeric(column1)
+!is.numeric(column1)
+
+ifelse(TRUE, "cold", "hot")
+
+# Make some data.
+df2 <- data.frame(ID = "DataLogger-20", Temperature = runif(30, 10, 20),
+                  Wind = runif(30, 0, 15), Battery = "Normal")
+                    
+head(df2)
+df2$WindClass <- ifelse(df2$Wind >= 10, "Windy", "Still")
+```
+
+# `r fontawesome::fa("laptop-code", "white")` [Lets Try Some Exercises]{style="color:white;"} {background-color="#8FA9C2"}
+
+## Q1
+
+::: panel-tabset
+### Question
+
+Read in the 20 "Weather Station" data files with a `for` loop and combine into one dataframe.
+
+```{webr-r}
+# This is the code from before to make the data.
+for(i in 1:20) {
+write.csv(data.frame(ID = paste0("DataLogger-", i), Temperature = runif(30, 10, 20),
+Wind = runif(30, 0, 15), Battery = "Normal"), paste0(getwd(), "/WeatherStation_", i, ".csv"))}
+```
+
+### Answer
+
+```{webr-r}
+# This is the code from before to make the data.
+for(i in 1:20) {
+write.csv(data.frame(ID = paste0("DataLogger-", i), Temperature = runif(30, 10, 20),
+Wind = runif(30, 0, 15), Battery = "Normal"), paste0(getwd(), "/WeatherStation_", i, ".csv"))}
+
+for(i in seq_along(list.files(getwd(), pattern = "WeatherStation_"))) {
+  tmp <- read.csv(paste0(getwd(), "/", list.files(getwd(), pattern = ".csv"))[i])
+  if(i == 1) {weather_dat <- tmp
+  } else {weather_dat <- rbind(weather_dat, tmp)}}
+```
+:::
+
+## Q2
+::: panel-tabset
+### Question
+
+Now modify your `for` loop to omit any files that contain an `NA`.
+
+```{webr-r}
+# This is the code from before to make the data.
+for(i in 1:20) {
+write.csv(data.frame(ID = paste0("DataLogger-", i), Temperature = runif(30, 10, 20),
+Wind = runif(30, 0, 15), Battery = "Normal"), paste0(getwd(), "/WeatherStation_", i, ".csv"))}
+
+# Use this code to put some NA's into the "Weather Station" files.
+write.csv(data.frame(ID = "DataLogger-7", Temperature = c(runif(28, 10, 20), NA, NA),
+          Wind = c(runif(28, 0, 15), NA, NA), Battery = c(rep("Normal", 28), "Low", "Low")),
+          paste0(getwd(), "/WeatherStation_7.csv"))
+
+
+
+```
+
+### Answer
+
+```{webr-r}
+# This is the code from before to make the data.
+for(i in 1:20) {
+write.csv(data.frame(ID = paste0("DataLogger-", i), Temperature = runif(30, 10, 20),
+Wind = runif(30, 0, 15), Battery = "Normal"), paste0(getwd(), "/WeatherStation_", i, ".csv"))}
+
+# Use this code to put some NA's into the "Weather Station" files.
+write.csv(data.frame(ID = "DataLogger-7", Temperature = c(runif(28, 10, 20), NA, NA),
+          Wind = c(runif(28, 0, 15), NA, NA), Battery = c(rep("Normal", 28), "Low", "Low")),
+          paste0(getwd(), "/WeatherStation_7.csv"))
+
+for(i in seq_along(list.files(getwd(), pattern = "WeatherStation_"))) {
+  tmp <- read.csv(paste0(getwd(), "/", list.files(getwd(), pattern = ".csv"))[i])
+  if(!any(is.na(tmp))) {
+  if(i == 1) {weather_dat <- tmp
+  } else {weather_dat <- rbind(weather_dat, tmp)}}}
+```
+:::
+
+## Q3
+::: panel-tabset
+### Question
+
+Use an `apply` function to perform a Shapiro-Wilk test on each column of the data set created below (dat) to determine if the data in each column is normally distributed.
+
+```{webr-r}
+dat <- data.frame(A = rnorm(100, 10, 5), B = rpois(100, 10), C = rnorm(100, 50, 10),
+                  X = runif(100, 0, 100), Y = rbeta(100, 1, 2), Z = rnorm(100, 0, 1))
+
+
+```
+
+### Answer
+
+```{webr-r}
+dat <- data.frame(A = rnorm(100, 10, 5), B = rpois(100, 10), C = rnorm(100, 50, 10),
+                  X = runif(100, 0, 100), Y = rbeta(100, 1, 2), Z = rnorm(100, 0, 1))
+
+apply(dat, 2, shapiro.test)
+```
+:::
+
+## Q4
+::: panel-tabset
+### Question
+
+Make a column in the data created below (a subset of the weather station data) for week. When `X` (this is the row ID or day of the month) is 1-7, `Week` should be 1; when `X` (day) is 8-14, `Week` should be 2; when `X` (day) is 15-21, `Week` should be 3; when `X` (day) is 22-28, `Week` should be 4; and for `X` (day) from 28-30, `Week` should be assigned a value of `NA`.
+
+```{webr-r}
+# Make some data.
+df2 <- data.frame(X = 1:30, ID = "DataLogger-20", Temperature = runif(30, 10, 20),
+                  Wind = runif(30, 0, 15), Battery = "Normal")
+
+
+```
+
+### Answer
+
+```{webr-r}
+# Make some data.
+df2 <- data.frame(X = 1:30, ID = "DataLogger-20", Temperature = runif(30, 10, 20),
+                  Wind = runif(30, 0, 15), Battery = "Normal")
+
+df2$Week <- ifelse(df2$X <= 7, 1,
+              ifelse(df2$X >= 8 & df2$X <= 14, 2,
+                ifelse(df2$X >= 15 & df2$X <= 21, 3,
+                  ifelse(df2$X >= 22 & df2$X <= 28, 4, NA))))
+```
+:::
+
+```{r}
+#| echo: false
+#| eval: true
+#| results: 'hide'
+
+file.remove(list.files(getwd(), pattern = "WeatherStation_"))
+```
+
+# [R Function Basics]{style="color:white;"} {background-color="#8FA9C2"}
+
+## Function Structure
+
+> Functions are like a grammatically correct sentences; they require arguments, a body, and an environment^[See Hadley's section on [function-fundamentals](https://adv-r.hadley.nz/functions.html#function-fundamentals) for more details].
+
+. . .
+
+![](images/function-structure.png){height="300px"}
+
+## Lets Write Some Functions
+
+```{webr-r}
+i <- function(x) x^2 # same as `i <- function(x) print(x^2)`
+i(3)
+j <- function(x) return(x^2)
+j(3)
+```
+
+. . .
+
+::: {style="margin-top: 10px;"}
+:::
+
+```{webr-r}
+k <- function(x) {X = x^2; Y = x^3}
+k(3) # nothing is printed to the screen, last assignment is returned as an invisible()
+paste("k(3):", k(3))
+k_val = k(3); k_val
+```
+
+. . .
+
+::: {style="margin-top: 10px;"}
+:::
+
+```{webr-r}
+l <- function(x) {X = x^2; Y = x^3; Z = x^4; invisible(x+1)}
+l(3)
+paste("l(3):", l(3))
+```
+
+. . .
+
+::: {style="margin-top: 10px;"}
+:::
+
+```{webr-r}
+m <- function(x){X = x^2; invisible(x+1); Y = x^3}
+paste(m(3))
+```
+
+## `r fontawesome::fa("triangle-exclamation", "white")` [Functions need an object call (i.e. `x` or a `return(x)`) in order to return output from `x` to the global environment]{style="color:white;"} {background-color="#447099"}
+
+# [R Function's Extended]{style="color:white;"} {background-color="#8FA9C2"}
+
+## Function `formals()`, `body()` and `environment()`
+
+```{webr-r}
+f <- function(x) x^2
+f
+formals(f) #> $x
+body(f) #> x^2
+environment(f) # <environment: R_GlobalEnv>
+```
+
+::: aside
+See [Function-Components](https://adv-r.hadley.nz/functions.html#fun-components)
+:::
+## More on Environments 
+
+```{webr-r}
+k <- function() list(ls(),environment())
+k() # k() has its own environment
+list(ls()[1:5],environment()) 
+# all other environments sit on top of the global environments 
+```
+
+. . . 
+
+- Environments are important to understand as they relate to **Lexical scoping**
+
+## Lexical Scoping 
+
+::: columns
+::: {.column width="30%" style="padding-right: 0px;"}
+![](images/castle.jpeg){height="425px"}
+:::
+::: {.column width="70%" style="padding-right: 0px;"}
+```{webr-r}
+f1 <- function(){L = 1; L}
+f1()
+L # Error: object 'L' not found
+
+K = 3
+f2 <- function() {K} 
+f2() # Functions can access the global environment
+
+f3 <- function() {L <<- 10} 
+f3() # returns L to the parent environment
+L    # now we also prints L from global environment
+
+remove(L)
+f4 <- function(){L = 100; f3(); L}
+f4()
+L
+# Avoid using `<<-` when possible!!
+```
+:::
+:::
+
+
+::: {.notes}
+- Imagine a castle where of the three levels (Keep, Main, Lower), some levels can see more levels than others. For example from the Keep, you can see inside the keep, into the Main level as well as the lower level. In `R`, their are also varying degrees of *"sight"*. For example, inside a function, objects that were defined inside the function are visible as well as objects that were defined outside the function, say like the global environment.    
+
+- If you were in the castle and you wanted to search for an object, one possible procedure is to first search the lower level (say a f3), then if you still haven't found it, proceed to search the main level (f4) and finally, if still haven't found it, you would search the keep and if were still not found you would declare the object is not in the castle. This is analogous to how lexical scoping works in R.
+
+- In R, the `<<-` operator does not simply assign a value to a variable in the parent environment; it assigns a value to a variable in the parent environment if the variable already exists there. If the variable does not exist in the parent environment, R searches up through the chain of environments until it finds an environment where the variable exists and assigns the value there. If it does not find the variable in any parent environments, it will assign the value in the global environment.
+:::
+
+::: aside
+For more information see [here](https://adv-r.hadley.nz/functions.html#lexical-scoping).
+:::
+
+
+## Default Argument Assignment
+
+```{webr-r}
+#| echo: true
+f <- function(a = 1) a
+f()
+```
+
+## `NULL` Conditional Execution (1)
+
+```{webr-r}
+f <- function(a, b = NULL) c(a,b)
+f(1)
+f(1,2)
+```
+
+## `message()`, `warning()`, and `stop()`
+
+```{webr-r}
+message("notify the user, although we are not indicating any problems")
+
+warning("notify the user of something potentially problematic")
+
+stop("A condition has been met that is problematic enough to warrant forcing an error.")
+
+
+```
+
+## `NULL` Conditional Execution (2)
+
+```{webr-r}
+k <- function(a,b) a^(b)
+f <- function(a, b = NULL) {
+  if(is.null(b)){
+    warning("{warning()} b is missing, just returning `a`")
+    return(a)
+  } 
+  if(a < 0 && b == 1/2){
+    stop("{stop()} can't take the sqrt of a negative number")
+  } else {
+    message("{message()} function completion without conditional execution")
+    a^(b)
+  }
+}
+k(1) # error without user defined error handling 
+f(1) # here we see the `NULL` Conditional Execution
+f(-2,1/2)
+f(3,2)
+```
+
+## Conditional Execution with `missing()`
+
+```{webr-r}
+f <- function(a, b, c) {
+  if(missing(c)) {
+  return(sum(a,b))
+    }
+  if(!missing(c)) {
+  return(sum(a,b,c))
+    }
+}
+f(1,2)
+f(1,2,3)
+```
+
+## `...` dot-dot-dot (1)
+
+```{webr-r}
+f1 <- function(x, ...){...length()}
+f1(1)      # 0 argument passed to `...`
+f1(1,2)    # 1 arguments passed to `...`
+f1(1,2,3)  # 2 arguments passed to `...`
+
+f2 <- function(x, ...){list(...)}
+f2(1,2,3) # `1` passed to `x`, `2` and `3` passed to `...`
+```
+. . . 
+
+::: {style="margin-top: 10px;"}
+:::
+
+```{webr-r}
+rnorm
+random_num_gen <- function(x, ...) {
+  rnorm(x, ...)
+}
+
+set.seed(1); random_num_gen(5)
+set.seed(1); random_num_gen(5, mean = 3, sd = 1.5)
+```
+
+. . .
+
+- The \``...`\` argument is also known as an Ellipsis or simply dot-dot-dot.
+
+## `...` dot-dot-dot (2)
+
+```{webr-r}
+# mean and median defined with `...`
+f3 <- function(x, ...){
+  out <- list(mean(x, ...), median(x, ...))
+  out
+}
+
+(k = c(1:8,NA))
+f3(x=k, na.rm = TRUE)                                        # Works 
+f3(x=k, na.rm = TRUE, random_message = "Save the bees")      # Works 
+
+# matrix not defined with "..."
+f4 <- function(x, ...){
+  out <- list(mean(x, ...), median(x, ...), matrix(x,...))
+  return(out)
+}
+
+f4(x=k, na.rm = TRUE)                                        # Fails
+list(mean(k,na.rm = TRUE),median(k,na.rm = TRUE),matrix(k))
+```
+
+\``...`\` has pros and cons, for more info see [here](https://adv-r.hadley.nz/functions.html#fun-dot-dot-dot)
+
+
+::: {.notes}
+- Functions that were defined without `...`, will fail to execute when arguments are given to the Ellipsis, and restricts future users
+of having full access to arguments nested function arguments with the larger function 
+
+- Because of this, some package developers in R, are advocates for **all** functions being defined with `...`! 
+:::
+
+## `...` dot-dot-dot (3)
+
+So why does `f5` work?
+
+```{webr-r}
+#| context: setup
+defined_arguments <- function(...){
+  f <- list(...);out = lapply(f,function(x) names(formals(x)))
+  names(out) = as.character(substitute(list(...)))[-1];out
+}
+```
+
+```{webr-r}
+defined_arguments(matrix, data.frame, as.data.frame) # which are defined with `...` ?
+(k = c(1:3,NA))
+
+matrix(k, na.rm = TRUE)
+data.frame(k, na.rm = TRUE)
+as.data.frame(k,na.rm = TRUE)
+
+f5 <- function(x, ...){
+  out <- list(mean(x, ...), median(x, ...), as.data.frame(x,...))
+  return(out)
+}
+f5(x=k, na.rm = TRUE)
+```
+
+
+## Anonymous Functions
+
+::: {style="font-size: 0.7em;"}
+> "An Anonymous Function (also known as a lambda expression) is a function definition that is not bound to an identifier. That is, it is a function that is created and used, but never assigned to a variable" (see [link](https://coolbutuseless.github.io/2019/03/13/anonymous-functions-in-r-part-1/))
+:::
+
+. . .
+
+::: {style="margin-top: 40px;"}
+:::
+
+::: {style="font-size: 0.65em;"}
+`base` R anonymous function syntax:
+:::
+
+```{webr-r}
+function(x) x * 2
+sapply(1:5,function(x) x * 2)
+```
+
+. . .
+
+::: {style="margin-top: 40px;"}
+:::
+
+::: {style="font-size: 0.65em;"}
+`purrr`’s anonymous function syntax:
+:::
+
+```{webr-r}
+library(purrr)
+# ~ .x * 2  or \(x) x*2
+map_dbl(1:5,~ .x * 2)
+map_dbl(1:5,\(x) x*2)
+```
+
+# [Functional Programming with `base` R]{style="color:white;"} {background-color="#8FA9C2"}
+
+## Functional Programming with `base` R
+
+::: {style="font-size: 0.45em;"}
+| Function                       | Description                                                                                                                                       |
+|------------------------------------|------------------------------------|
+| `apply(X, MARGIN, FUN, ...)`   | Applies a function over the margins (rows or columns) of an array or matrix.                                                                      |
+| `sapply(X, FUN, ...)`          | Simplifies the result of `lapply()` by attempting to reduce the result to a vector, matrix, or higher-dimensional array.                          |
+| `vapply(X, FUN, FUN.VALUE)`    | Similar to `sapply()`, but with a specified type of return value, making it safer and faster by avoiding unexpected type coercion.                |
+| `lapply(X, FUN, ...)`          | Applies a function to each element of a list or vector and returns a list.                                                                        |
+| `tapply(X, INDEX, FUN = NULL)` | Applies a function over subsets of a vector, array, or data frame, split by the levels of a factor or list of factors                             |
+| `do.call(what, args, ...)`     | constructs and executes a function call from a name or a function and a list of arguments to be passed to it                                      |
+| `mapply(FUN, ...)`             | A multivariate version of `sapply()`, applies a function to the 1st elements of each argument, then the 2nd elements of each argument, and so on. |
+| `Map(f, ...)`                  | Similar to `mapply()` but always returns a list, regardless of the output type.                                                                   |
+| `Reduce(f, x, init, ...)`      | Applies a function successively to elements of a vector from left to right so as to reduce the vector to a single value.                          |
+:::
+
+## `base` R Examples (1)
+
+::: panel-tabset
+### `apply`
+
+```{webr-r}
+(X <- cbind(x1 = 3, x2 = c(4:1, 2:5)))
+
+apply(X, 1, mean) # row-wise 
+apply(X, 2, mean) # col-wise
+```
+
+::: {style="margin-top: 10px;"}
+:::
+
+```{webr-r}
+(J = array(rep(1,12), c(2, 2, 3)))
+apply(J, c(1), sum)
+apply(J, c(2), sum)
+apply(J, c(3), sum)
+apply(J, c(1,2), sum)
+apply(J, c(1,3), sum)
+```
+
+### `sapply`
+
+```{webr-r}
+(Y <- list(a = 1:10, beta = exp(-3:3)))
+
+sapply(Y, quantile)
+```
+
+### `lapply`
+
+```{webr-r}
+(Y <- list(a = 1:10, beta = exp(-3:3)))
+
+lapply(Y, quantile)
+```
+
+### `vapply`
+
+```{webr-r}
+try2 <- function(x,m){tryCatch({x}, error =function(e) {finally = print(m)})}
+(Y <- list(a = 1:10, beta = exp(-3:3)))
+
+try2(vapply(Y,quantile),"Error:`FUN.VALUE` is missing")
+vapply(Y,quantile,seq(0, 1, 0.25))
+```
+
+### `tapply`
+
+```{webr-r}
+W <- warpbreaks; head(W,3) 
+
+# contingency table 
+tapply(W$breaks, subset(W, select = -breaks), sum) 
+```
+:::
+
+## `base` R Examples (2)
+
+::: panel-tabset
+### `do.call`
+
+```{webr-r}
+(Z <- lapply(rep(2,2), function(x) data.frame(x=rnorm(x))))
+
+do.call(cbind, Z)
+```
+
+### `mapply`
+
+```{webr-r}
+abs_dif <- function(x,y) abs(x-y)
+mapply(abs_dif, c(2,10), c(2,30))
+
+mapply(sum, c(1,2,3,5), c(1,2,3,10),c(1,2,3,15))
+```
+
+### `Map`
+
+```{webr-r}
+abs_dif <- function(x,y) abs(x-y)
+Map(abs_dif, c(2,10), c(2,30))
+
+Map(sum, c(1,2,3,5), c(1,2,3,10),c(1,2,3,15))
+```
+
+### `Reduce`
+
+```{webr-r}
+set.seed(1)
+(L <- purrr::map(1:3, ~ sample(1:3, 5, replace = T)))
+
+intersect(c(1,2,3), c(1,2,4)) # demo of intersect()
+Reduce(intersect,L)
+```
+
+::: {style="font-size: 0.65em;"}
+-   "\[1\] 3 2" indicates that among the three random samples generated, the numbers 3 and 2 are the only ones that appear at least once in all three vectors.
+:::
+:::
+
+# [Functional Programming with `purrr`]{style="color:white;"} {background-color="#8FA9C2"}
+
+## Functional Programming with `purrr`
+
+::: {style="font-size: 0.65em;"}
+| Function                                 | Description                                                                                                                         |
+|--------------------------------|----------------------------------------|
+| `map(.x, .f, ...)`                       | Applies a function to each element of a list or vector and returns a list. Useful for operations on list elements.                  |
+| `map2(.x, .y, .f, ...)`                  | Applies a function to the corresponding elements of two vectors/lists, useful for element-wise operations on two inputs.            |
+| `pmap(.l, .f, ...)`                      | Applies a function to each element of a list or vector in parallel, taking multiple arguments from parallel lists or vectors.       |
+| `reduce(.x, .f, ..., .init, .)`          | Reduces a list or vector to a single value by iteratively applying a function that takes two arguments.                             |
+| `_dbl,` `_int` `_chr`, `_lgl and` `_vec` | `map, map2` and `pmap` variants to change output type, e.g., `map_dbl`, `map_int`, `map_chr`, `map_lgl`, `map_vec`, `map2_dbl ...`  |
+:::
+
+## `purrr` Examples
+
+::: panel-tabset
+### `map`
+
+```{webr-r}
+set.seed(0); 1:5 |> map(rnorm, n = 4)
+
+# You can also use an anonymous function
+set.seed(0); 1:5 |> map(\(x) rnorm(n=4, mean = x, sd = 1))
+set.seed(0); 1:5 |> map(~ rnorm(n=4, mean = .x, sd = 1))
+```
+
+### `map2`
+
+```{webr-r}
+x <- list(1, 1, 1)
+y <- list(10, 20, 30)
+
+map2(x, y, \(x, y) x + y)
+```
+
+### `pmap`
+
+```{webr-r}
+x <- list(1, 1, 1)
+y <- list(10, 20, 30)
+z <- list(100, 200, 300)
+
+pmap(list(x, y, z), sum)
+
+set.seed(0); list(1:2,1:2,1:2) |> pmap(\(x,y,z) rhyper(3, m = x, n = y, k = z))
+# These numbers represent the number of white balls drawn in each of the 3 draws from the urn
+```
+
+::: {.notes}
+- For the first combination `(x = 1, y = 1, z = 1)`, three numbers are generated based on the hypergeometric distribution parameters, resulting in [1] 0 1 1.
+
+- For the second combination `(x = 2, y = 2, z = 2)`, it generates another set of three numbers, resulting in [1] 1 0 1.
+:::
+### `reduce`
+
+```{webr-r}
+set.seed(1)
+(L <- purrr::map(1:3, ~ sample(1:3, 5, replace = T)))
+
+purrr::reduce(L,intersect)
+```
+:::
+
+# [Parallel Computing]{style="color:white;"} {background-color="#8FA9C2"}
+
+## Parallel Computing with `furrr`
+
+```{r}
+#| echo: true
+#| eval: false
+fib_n <- function(n) {
+    if ((n == 0) | (n == 1)) 
+        return(1)
+    else
+        return(fib_n(n-1) + fib_n(n-2))
+}
+```
+
+. . .
+
+::: {style="margin-top: 20px;"}
+:::
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-2|4|5-7|1-7"
+library(furrr) # library(furrr) loads future by default
+library(tictoc)
+
+future::plan(multisession, workers = 1) # setting num of cores/workers
+tic()
+num <- 1:30 |> future_map(fib_n)
+toc() # 4.151 sec elapsed
+```
+
+. . .
+
+::: {style="margin-top: 20px;"}
+:::
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1|2-4|1-4"
+future::plan(multisession, workers = 2) # Using 1 additional core
+tic()
+num <- 1:30 |> future_map(fib_n)
+toc() # 2.174 sec elapsed
+```
+
+## A Note on Parallel Computing
+
+> Parallel Computing is not a magic bullet. Performance depends on Overhead of Parallelization, Task Granularity, and whether or not the task is sequential
+
+. . .
+
+::: incremental
+- Sequential Tasks, generally speaking, are not capable of being parallized, though they can be *"functionally parallized"*; meaning given a function, `seq_func`, the internals of 
+`seq_func` **cannot** not be parallized, but the call to `seq_func` **can** be parallized. 
+- We will illustrate this concept with Random Walks
+:::
+
+## Random Walks 
+
+```{r}
+#| eval: false
+#| echo: true
+#| code-fold: true
+#| code-summary: "expand for `random_walk()` source code"
+#| code-line-numbers: "4|5-16|6|7|8-14|8|9-10|11-13|5-16"
+library(furrr)
+library(tictoc)
+
+nworkers = parallel::detectCores() - 1 # select nworkers to amount of cores - 1 
+random_walk <- function(steps) {
+  position <- numeric(steps) # Initialize the position vector
+  position[1] <- 0 # Start at the origin
+  for (i in 2:steps) {                   # Simulate each step of the walk
+    if (runif(1) < 0.5) {
+      position[i] <- position[i - 1] + 1 # Move forward
+    } else {
+      position[i] <- position[i - 1] - 1 # Move backward
+    }
+  }
+  return(position)
+}
+```
+
+
+```{r}
+#| eval: false
+#| echo: true
+#| code-line-numbers: "1|3-6|7-11|13-18"
+steps = 10000; n_random_walks = 300 # Define the number of steps and walks
+
+future::plan(multisession, workers = 1) # setting num of cores/workers
+tic() # Measure time taken to execute the random walk
+set.seed(1); walks = future_map(1:n_random_walks , ~random_walk(steps),.options = furrr_options(seed = TRUE)) 
+toc() # 3.088 sec elapsed
+
+tic()
+future::plan(multisession, workers = nworkers) # setting num of cores/workers
+set.seed(1);walks = future_map(1:n_random_walks , ~random_walk(steps),.options = furrr_options(seed = TRUE)) 
+toc() # 1.713 sec elapsed
+
+pdf("random_walks.pdf")
+invisible(
+  lapply(1:10, function(i) 
+    plot(walks[[i]],type = "l", ylab = "Position", xlab = "Step",
+         main = paste("Random Walk",i)))
+  );dev.off()
+```
+
+## Our First 10 Random Walks Plots
+
+{{< pdf random_walks.pdf width=1000 height=650 >}}
+
+
+## Bootstraps in Parallel
+
+```{r}
+#| eval: false
+#| echo: true
+#| code-fold: true
+#| code-summary: "expand for source code for `boot()` and `samp.o()`"
+
+boot <- function(x, B = 5000, m, theta.f, w = 1, rdist, ...) {
+  plan(multisession, workers = w) # Set up for parallel execution
+  b_indices <- 1:B # vector of indices for bootstrapping iterations
+  iterate_func <- function(b) { # apply for each bootstrap iteration
+    if (m == "p") {
+      d.b <- rdist(...) # parametric bootstrap
+    } else if (m == "np") {
+      d.b <- x[sample(1:length(x), replace = TRUE)] # nonparametric bootstrap
+    } else {
+      stop("possible arguments for m is 'p' (parametric) or 'np' (nonparametric)")
+    }
+    theta.f(d.b)
+  }
+  # future_map_dbl to apply iterate_func over each index in parallel with proper seeding
+  t.s <- future_map_dbl(b_indices, iterate_func, .options = furrr_options(seed = TRUE))
+  samp.o(t.s) # Summarize the bootstrap results
+}
+samp.o = function(t.s) {
+  round(c(mean=mean(t.s),sd=sd(t.s),lower=quantile(t.s, 0.025, names = F),
+  upper= quantile(t.s, 0.975, names = F)),digits=6)}
+```
+
+. . .
+
+```{r}
+#| eval: false
+#| echo: true
+library(purrr)
+library(future)
+library(tictoc)
+
+# boot <- function(x, B = 5000, m, theta.f, w = 1, rdist, ...) {} # see above
+# samp.o = function(t.s) {} # see above
+theta.f = function(d.b) {p = sum(d.b)/n; p/(1-p)} 
+
+set.seed(1); n = 800000; y = 480; B = 5000
+data <- c(rep(1, y), rep(0, n-y)); phat <- sum(data)/n
+```
+
+. . .
+
+::: {style="margin-top: 20px;"}
+:::
+
+```{r}
+#| eval: false
+#| echo: true
+
+tic()
+(b_p_future <- boot(data, B = B, m = "p", theta.f = theta.f, w = 1,
+                    rdist = rbinom, n = n, size = 1, prob = phat))
+toc() # 49.859 sec elapsed
+```
+
+. . .
+
+::: {style="margin-top: 20px;"}
+:::
+
+```{r}
+#| eval: false
+#| echo: true
+
+tic()
+(b_p_future = boot(data, B = B, m = "p", theta.f = theta.f, w = 9,
+                    rdist = rbinom, n = n, size = 1, prob = phat))
+toc() # 8.014 sec elapsed
+```
+
+
+# `r fontawesome::fa("laptop-code", "white")` [Its Time for Some More Exercises]{style="color:white;"} {background-color="#8FA9C2"}
+
+## Q5
+
+::: panel-tabset
+### Question
+
+<!--Basic If-Else-->
+
+Write an R function named `is_positive` that takes a single numeric input and returns `TRUE` if the number is positive, and `FALSE` otherwise.
+
+```{webr-r}
+is_positive <- function(x) {
+
+}
+```
+
+### Answer
+
+```{webr-r}
+is_positive <- function(x) {
+  if (x > 0) {
+    TRUE
+  } else {
+    FALSE
+  }
+}
+
+is_positive(5)
+```
+:::
+
+## Q6
+
+<!--Error Handling with Stop-->
+
+::: panel-tabset
+### Question
+
+Create a function named `sqrt_safe` that computes the square root of a number. If the input is negative, the function should stop execution and return an error message `"Cannot take square root of a negative number."`
+
+```{webr-r}
+sqrt_safe <- function(x) {
+
+}
+```
+
+### Answer
+
+```{webr-r}
+sqrt_safe <- function(x) {
+  if (x < 0) {
+    stop("Cannot take square root of a negative number.")
+  }
+  sqrt(x)
+}
+sqrt_safe(-2)
+sqrt_safe(5)
+```
+:::
+
+## Q7
+
+<!--Loop with Break-->
+
+::: panel-tabset
+### Question
+
+Write a function named `find_first_negative` that takes a numeric vector and returns the position of the first negative number. If there are no negative numbers, return `NA`.
+
+```{webr-r}
+find_first_negative <- function(vec) {
+
+}
+```
+
+### Answer
+
+```{webr-r}
+find_first_negative <- function(vec) {
+  for (i in 1:length(vec)) {
+    if (vec[i] < 0) {
+      return(i)
+    }
+  }
+  NA
+}
+
+find_first_negative(c(5, 2, -4, 6, -1))
+```
+:::
+
+## Q8
+
+<!--While Loop-->
+
+::: panel-tabset
+### Question
+
+Create a function named `halve_until_less_than_one` that takes a single numeric argument and keeps halving it until it is less than 1, then returns the result. Keep track of the number of times the input is halved; print the function output as `list(result = x, nsteps = count)`
+
+```{webr-r}
+halve_until_less_than_one <- function(x) {
+
+}
+```
+
+### Answer
+
+```{webr-r}
+halve_until_less_than_one <- function(x) {
+  count = 0
+  while (x >= 1) {
+    x <- x / 2
+    count <- count+1
+  }
+  list(result = x, nsteps = count)
+}
+halve_until_less_than_one(14)
+```
+:::
+
+## Q9
+
+<!--Apply Function-->
+
+::: panel-tabset
+### Question
+
+Write a function named `scale_columns` that takes a matrix and scales (normalizes) each column to have a mean of 0 and a standard deviation of 1. Use the given dataframe `M`
+
+```{webr-r}
+set.seed(1)
+M <- as.data.frame(
+  lapply(c(400,400), function(x) data.frame(x=rgamma(x, shape =2, scale = 2)))
+  )
+
+scale_columns <- function(mat) {
+  
+}
+```
+
+### Answer
+
+```{webr-r}
+set.seed(1)
+M <- as.data.frame(
+  lapply(c(400,400), function(x) data.frame(x=rgamma(x, shape =2, scale = 2)))
+  )
+
+scale_columns <- function(mat) {
+  apply(mat, 2, function(x) (x - mean(x)) / sd(x))
+}
+
+M_new <- scale_columns(M)
+par(mfrow = c(1,2))
+hist(M$x);hist(M_new)
+```
+:::
+
+## Q10
+
+<!--`map` with purr-->
+
+::: panel-tabset
+### Question
+
+Using the `purrr` package, write a function that takes a list of numeric vectors and returns a list of their means. Use `purrr::map`.
+
+```{webr-r}
+set.seed(1)
+(K <- lapply(rep(4,3), rnorm))
+
+library(purrr)
+calc_means <- function(list_of_vectors) {
+  
+}
+```
+
+### Answer
+
+```{webr-r}
+set.seed(1)
+(K <- lapply(rep(4,3), rnorm))
+
+library(purrr)
+calc_means <- function(list_of_vectors) {
+  map_dbl(list_of_vectors, mean)
+}
+
+calc_means(K)
+```
+:::
+
+## Q11
+
+<!--Using the Ellipsis (...)-->
+
+::: panel-tabset
+### Question
+
+Create a function named `multiply_and_add` that takes an arbitrary number of numeric vectors. It should multiply each vector by its index in the argument list and then sum all the results into a single number.
+
+```{webr-r}
+multiply_and_add <- function(...) {
+  
+}
+```
+
+### Answer
+
+```{webr-r}
+multiply_and_add <- function(...) {
+  vectors <- list(...)
+  result <- 0
+  for (i in seq_along(vectors)) {
+    result <- result + sum(vectors[[i]] * i)
+  }
+  result
+}
+multiply_and_add(c(1,2),c(3,4))
+# ie 
+sum(c(1, 2) * 1) + sum(c(3, 4) * 2)  
+```
+:::
+
+# `r fontawesome::fa("hand-holding-heart", "white")` [Acknowledgements]{style="color:white; font-size: 70px;"} {background-color="#8FA9C2"}
+
+::: incremental
+- Thank you Molly Caldwell your efforts organizing! 
+- A big thanks to the R-Ladies Community!
+- Thank you Seth for your patience in my experiment using quarto revealjs and `webr`!!
+- Photo Credit: [Conny Schneider](https://unsplash.com/photos/a-blue-background-with-lines-and-dots-xuTJZ7uD7PI) `r fontawesome::fa("camera-retro", "white")`
+:::
+
+# [Wanna Hear From Us?]{style="color:white; font-size: 70px;"} {background-color="#8FA9C2"}
+
+::: columns
+::: {.column width="50%"}
+<p align="center">
+  <img src="images/Dan.png" alt="Cover Image" height="250px">
+</p>
+
+`r fontawesome::fa("linkedin", "black")` <a href="https://www.linkedin.com/in/daniel-hintz-rstat/" class="custom-link">daniel-hintz</a>
+
+`r fontawesome::fa("github", "black")` <a href="https://github.com/DHintz137" class="custom-link">DHintz137</a>
+
+`r fontawesome::fa("globe", "black")` <a href="https://dhintz137.github.io/quartz/" class="custom-link">dhintz137.github.io</a>
+
+`r fontawesome::fa("envelope", "black")` <a href="dhintz1@uwyo.edu" class="custom-link">dhintz1@uwyo.edu</a>
+:::
+::: {.column width="50%"}
+<p align="center">
+  <img src="images/Seth.png" alt="Cover Image" height="250px">
+</p>
+
+`r fontawesome::fa("github", "black")` <a href="https://github.com/STRankins" class="custom-link">STRankins</a>
+
+`r fontawesome::fa("globe", "black")` <a href="https://wyocoopunit.org/people/seth-rankins/" class="custom-link">wyocoopunit.org</a>
+
+`r fontawesome::fa("envelope", "black")` <a href="srankins@uwyo.edu" class="custom-link">srankins@uwyo.edu</a>
+:::
+:::
+
+# Thank you!! {.center background-color="#447099"}
