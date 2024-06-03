@@ -93,7 +93,26 @@
     code span.va { color: #e36209; } /* Variable */
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto.css">
   <link rel="stylesheet" href="styles.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -535,7 +554,7 @@
   // Document level settings ----
 
   // Determine if we need to install R packages
-  globalThis.qwebrInstallRPackagesList = ['purrr'];
+  globalThis.qwebrInstallRPackagesList = ['word2vec'];
 
   // Specify possible locations to search for the repository
   globalThis.qwebrPackageRepoURLS = ['https://repo.r-wasm.org/'];
@@ -557,7 +576,7 @@
   };
 
   // Store cell data
-  globalThis.qwebrCellDetails = [{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-1","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"# First let's make some data to play with.\nvec_dat <- data.frame(x = 1:5, y = NA_real_)\nvec_dat\nloop_dat <- data.frame(t = 1:5, N = NA_real_)\nloop_dat\n\n# What is the difference between vectorization and iteration?\nvec_dat$y <- 4*vec_dat$x + 3\nvec_dat\n\nloop_dat$N[1] <- 2\nfor(i in 1:4) {\n  loop_dat$N[i + 1] <- loop_dat$N[i]*exp(0.5*(1 - loop_dat$N[i]/30))\n}\nloop_dat","id":1},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-2","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"# This is a stupid example, but it creates some data for us.\nfor(i in 1:20) {\n  write.csv(data.frame(ID = paste0(\"DataLogger-\", i),\n                    Temperature = runif(30, 10, 20),\n                    Wind = runif(30, 0, 15),\n                    Battery = \"Normal\"),\n            paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))\n}\n\n# Now lets check our work.\nlist.files(getwd(), pattern = \"WeatherStation_\")","id":2},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-3","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"# This is the code we just wrote.\nfor(i in 1:20) {write.csv(data.frame(ID = paste0(\"DataLogger-\", i),\n                Temperature = runif(30, 10, 20), Wind = runif(30, 0, 15),\n                Battery = \"Normal\"),paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}\n\n# What if we want to read in a bunch of data files?\ndf <- lapply(paste0(getwd(), \"/\", list.files(getwd(), pattern = \".csv\")), read.csv)\n\nlapply(df, function(x) head(x,3))[1:2]\n\ndf2 <- do.call(rbind, lapply(paste0(getwd(), \"/\",\n                             list.files(getwd(), pattern = \".csv\")), read.csv))\nhead(df2)","id":3},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-4","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"# Create some genetic data.\ngenetic_data <- data.frame(matrix(data = sample(c(\"A\", \"T\", \"G\", \"C\"), 3000, replace = TRUE),\n                                  nrow = 300, ncol = 10))\nhead(genetic_data)\n\n# I want to know how many A's there are in each column.\napply(genetic_data, 2, table)[1,]","id":4},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-5","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"if(TRUE) {print(\"I have to work today.\")}\n\nif(FALSE) {print(\"I have to work today.\")\n} else {print(\"It is the weekend!\")}\n\nif(FALSE) {print(\"I have to work today.\")\n} else if(TRUE) {print(\"It is the weekend!\")}\n\nx <- 10\nx == 10\nx != 10","id":5},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-6","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"column1 <- c(1:10, NA)\ncolumn1\nany(is.na(column1))\nis.numeric(column1)\n!is.numeric(column1)\n\nifelse(TRUE, \"cold\", \"hot\")\n\n# Make some data.\ndf2 <- data.frame(ID = \"DataLogger-20\", Temperature = runif(30, 10, 20),\n                  Wind = runif(30, 0, 15), Battery = \"Normal\")\n                    \nhead(df2)\ndf2$WindClass <- ifelse(df2$Wind >= 10, \"Windy\", \"Still\")","id":6},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-7","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"# This is the code from before to make the data.\nfor(i in 1:20) {\nwrite.csv(data.frame(ID = paste0(\"DataLogger-\", i), Temperature = runif(30, 10, 20),\nWind = runif(30, 0, 15), Battery = \"Normal\"), paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}","id":7},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-8","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"# This is the code from before to make the data.\nfor(i in 1:20) {\nwrite.csv(data.frame(ID = paste0(\"DataLogger-\", i), Temperature = runif(30, 10, 20),\nWind = runif(30, 0, 15), Battery = \"Normal\"), paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}\n\nfor(i in seq_along(list.files(getwd(), pattern = \"WeatherStation_\"))) {\n  tmp <- read.csv(paste0(getwd(), \"/\", list.files(getwd(), pattern = \".csv\"))[i])\n  if(i == 1) {weather_dat <- tmp\n  } else {weather_dat <- rbind(weather_dat, tmp)}}","id":8},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-9","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"# This is the code from before to make the data.\nfor(i in 1:20) {\nwrite.csv(data.frame(ID = paste0(\"DataLogger-\", i), Temperature = runif(30, 10, 20),\nWind = runif(30, 0, 15), Battery = \"Normal\"), paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}\n\n# Use this code to put some NA's into the \"Weather Station\" files.\nwrite.csv(data.frame(ID = \"DataLogger-7\", Temperature = c(runif(28, 10, 20), NA, NA),\n          Wind = c(runif(28, 0, 15), NA, NA), Battery = c(rep(\"Normal\", 28), \"Low\", \"Low\")),\n          paste0(getwd(), \"/WeatherStation_7.csv\"))\n\n","id":9},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-10","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"# This is the code from before to make the data.\nfor(i in 1:20) {\nwrite.csv(data.frame(ID = paste0(\"DataLogger-\", i), Temperature = runif(30, 10, 20),\nWind = runif(30, 0, 15), Battery = \"Normal\"), paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}\n\n# Use this code to put some NA's into the \"Weather Station\" files.\nwrite.csv(data.frame(ID = \"DataLogger-7\", Temperature = c(runif(28, 10, 20), NA, NA),\n          Wind = c(runif(28, 0, 15), NA, NA), Battery = c(rep(\"Normal\", 28), \"Low\", \"Low\")),\n          paste0(getwd(), \"/WeatherStation_7.csv\"))\n\nfor(i in seq_along(list.files(getwd(), pattern = \"WeatherStation_\"))) {\n  tmp <- read.csv(paste0(getwd(), \"/\", list.files(getwd(), pattern = \".csv\"))[i])\n  if(!any(is.na(tmp))) {\n  if(i == 1) {weather_dat <- tmp\n  } else {weather_dat <- rbind(weather_dat, tmp)}}}","id":10},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-11","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"dat <- data.frame(A = rnorm(100, 10, 5), B = rpois(100, 10), C = rnorm(100, 50, 10),\n                  X = runif(100, 0, 100), Y = rbeta(100, 1, 2), Z = rnorm(100, 0, 1))\n","id":11},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-12","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"dat <- data.frame(A = rnorm(100, 10, 5), B = rpois(100, 10), C = rnorm(100, 50, 10),\n                  X = runif(100, 0, 100), Y = rbeta(100, 1, 2), Z = rnorm(100, 0, 1))\n\napply(dat, 2, shapiro.test)","id":12},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-13","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"# Make some data.\ndf2 <- data.frame(X = 1:30, ID = \"DataLogger-20\", Temperature = runif(30, 10, 20),\n                  Wind = runif(30, 0, 15), Battery = \"Normal\")\n","id":13},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-14","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"# Make some data.\ndf2 <- data.frame(X = 1:30, ID = \"DataLogger-20\", Temperature = runif(30, 10, 20),\n                  Wind = runif(30, 0, 15), Battery = \"Normal\")\n\ndf2$Week <- ifelse(df2$X <= 7, 1,\n              ifelse(df2$X >= 8 & df2$X <= 14, 2,\n                ifelse(df2$X >= 15 & df2$X <= 21, 3,\n                  ifelse(df2$X >= 22 & df2$X <= 28, 4, NA))))","id":14},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-15","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"i <- function(x) x^2 # same as `i <- function(x) print(x^2)`\ni(3)\nj <- function(x) return(x^2)\nj(3)","id":15},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-16","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"k <- function(x) {X = x^2; Y = x^3}\nk(3) # nothing is printed to the screen, last assignment is returned as an invisible()\npaste(\"k(3):\", k(3))\nk_val = k(3); k_val","id":16},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-17","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"l <- function(x) {X = x^2; Y = x^3; Z = x^4; invisible(x+1)}\nl(3)\npaste(\"l(3):\", l(3))","id":17},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-18","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"m <- function(x){X = x^2; invisible(x+1); Y = x^3}\npaste(m(3))","id":18},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-19","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"f <- function(x) x^2\nf\nformals(f) #> $x\nbody(f) #> x^2\nenvironment(f) # <environment: R_GlobalEnv>","id":19},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-20","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"k <- function() list(ls(),environment())\nk() # k() has its own environment\nlist(ls()[1:5],environment()) \n# all other environments sit on top of the global environments ","id":20},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-21","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"f1 <- function(){L = 1; L}\nf1()\nL # Error: object 'L' not found\n\nK = 3\nf2 <- function() {K} \nf2() # Functions can access the global environment\n\nf3 <- function() {L <<- 10} \nf3() # returns L to the parent environment\nL    # now we also prints L from global environment\n\nremove(L)\nf4 <- function(){L = 100; f3(); L}\nf4()\nL\n# Avoid using `<<-` when possible!!","id":21},{"options":{"read-only":"false","fig-cap":"","fig-height":5,"dpi":72,"classes":"","comment":"","label":"unnamed-chunk-22","output":"true","fig-width":7,"autorun":"false","message":"true","results":"markup","out-height":"","echo":"true","out-width":"700px","context":"interactive","warning":"true"},"code":"f <- function(a = 1) a\nf()","id":22},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-23","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"f <- function(a, b = NULL) c(a,b)\nf(1)\nf(1,2)","id":23},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-24","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"message(\"notify the user, although we are not indicating any problems\")\n\nwarning(\"notify the user of something potentially problematic\")\n\nstop(\"A condition has been met that is problematic enough to warrant forcing an error.\")\n","id":24},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-25","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"k <- function(a,b) a^(b)\nf <- function(a, b = NULL) {\n  if(is.null(b)){\n    warning(\"{warning()} b is missing, just returning `a`\")\n    return(a)\n  } \n  if(a < 0 && b == 1/2){\n    stop(\"{stop()} can't take the sqrt of a negative number\")\n  } else {\n    message(\"{message()} function completion without conditional execution\")\n    a^(b)\n  }\n}\nk(1) # error without user defined error handling \nf(1) # here we see the `NULL` Conditional Execution\nf(-2,1/2)\nf(3,2)","id":25},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-26","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"f <- function(a, b, c) {\n  if(missing(c)) {\n  return(sum(a,b))\n    }\n  if(!missing(c)) {\n  return(sum(a,b,c))\n    }\n}\nf(1,2)\nf(1,2,3)","id":26},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-27","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"f1 <- function(x, ...){...length()}\nf1(1)      # 0 argument passed to `...`\nf1(1,2)    # 1 arguments passed to `...`\nf1(1,2,3)  # 2 arguments passed to `...`\n\nf2 <- function(x, ...){list(...)}\nf2(1,2,3) # `1` passed to `x`, `2` and `3` passed to `...`","id":27},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-28","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"rnorm\nrandom_num_gen <- function(x, ...) {\n  rnorm(x, ...)\n}\n\nset.seed(1); random_num_gen(5)\nset.seed(1); random_num_gen(5, mean = 3, sd = 1.5)","id":28},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-29","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"# mean and median defined with `...`\nf3 <- function(x, ...){\n  out <- list(mean(x, ...), median(x, ...))\n  out\n}\n\n(k = c(1:8,NA))\nf3(x=k, na.rm = TRUE)                                        # Works \nf3(x=k, na.rm = TRUE, random_message = \"Save the bees\")      # Works \n\n# matrix not defined with \"...\"\nf4 <- function(x, ...){\n  out <- list(mean(x, ...), median(x, ...), matrix(x,...))\n  return(out)\n}\n\nf4(x=k, na.rm = TRUE)                                        # Fails\nlist(mean(k,na.rm = TRUE),median(k,na.rm = TRUE),matrix(k))","id":29},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"true","label":"unnamed-chunk-30","warning":"true","classes":"","results":"markup","out-height":"","context":"setup","out-width":"700px","message":"true","dpi":72},"code":"defined_arguments <- function(...){\n  f <- list(...);out = lapply(f,function(x) names(formals(x)))\n  names(out) = as.character(substitute(list(...)))[-1];out\n}","id":30},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-31","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"defined_arguments(matrix, data.frame, as.data.frame) # which are defined with `...` ?\n(k = c(1:3,NA))\n\nmatrix(k, na.rm = TRUE)\ndata.frame(k, na.rm = TRUE)\nas.data.frame(k,na.rm = TRUE)\n\nf5 <- function(x, ...){\n  out <- list(mean(x, ...), median(x, ...), as.data.frame(x,...))\n  return(out)\n}\nf5(x=k, na.rm = TRUE)","id":31},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-32","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"function(x) x * 2\nsapply(1:5,function(x) x * 2)","id":32},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-33","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"library(purrr)\n# ~ .x * 2  or \\(x) x*2\nmap_dbl(1:5,~ .x * 2)\nmap_dbl(1:5,\\(x) x*2)","id":33},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-34","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"(X <- cbind(x1 = 3, x2 = c(4:1, 2:5)))\n\napply(X, 1, mean) # row-wise \napply(X, 2, mean) # col-wise","id":34},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-35","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"(J = array(rep(1,12), c(2, 2, 3)))\napply(J, c(1), sum)\napply(J, c(2), sum)\napply(J, c(3), sum)\napply(J, c(1,2), sum)\napply(J, c(1,3), sum)","id":35},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-36","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"(Y <- list(a = 1:10, beta = exp(-3:3)))\n\nsapply(Y, quantile)","id":36},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-37","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"(Y <- list(a = 1:10, beta = exp(-3:3)))\n\nlapply(Y, quantile)","id":37},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-38","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"try2 <- function(x,m){tryCatch({x}, error =function(e) {finally = print(m)})}\n(Y <- list(a = 1:10, beta = exp(-3:3)))\n\ntry2(vapply(Y,quantile),\"Error:`FUN.VALUE` is missing\")\nvapply(Y,quantile,seq(0, 1, 0.25))","id":38},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-39","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"W <- warpbreaks; head(W,3) \n\n# contingency table \ntapply(W$breaks, subset(W, select = -breaks), sum) ","id":39},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-40","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"(Z <- lapply(rep(2,2), function(x) data.frame(x=rnorm(x))))\n\ndo.call(cbind, Z)","id":40},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-41","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"abs_dif <- function(x,y) abs(x-y)\nmapply(abs_dif, c(2,10), c(2,30))\n\nmapply(sum, c(1,2,3,5), c(1,2,3,10),c(1,2,3,15))","id":41},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-42","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"abs_dif <- function(x,y) abs(x-y)\nMap(abs_dif, c(2,10), c(2,30))\n\nMap(sum, c(1,2,3,5), c(1,2,3,10),c(1,2,3,15))","id":42},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-43","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"set.seed(1)\n(L <- purrr::map(1:3, ~ sample(1:3, 5, replace = T)))\n\nintersect(c(1,2,3), c(1,2,4)) # demo of intersect()\nReduce(intersect,L)","id":43},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-44","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"set.seed(0); 1:5 |> map(rnorm, n = 4)\n\n# You can also use an anonymous function\nset.seed(0); 1:5 |> map(\\(x) rnorm(n=4, mean = x, sd = 1))\nset.seed(0); 1:5 |> map(~ rnorm(n=4, mean = .x, sd = 1))","id":44},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-45","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"x <- list(1, 1, 1)\ny <- list(10, 20, 30)\n\nmap2(x, y, \\(x, y) x + y)","id":45},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-46","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"x <- list(1, 1, 1)\ny <- list(10, 20, 30)\nz <- list(100, 200, 300)\n\npmap(list(x, y, z), sum)\n\nset.seed(0); list(1:2,1:2,1:2) |> pmap(\\(x,y,z) rhyper(3, m = x, n = y, k = z))\n# These numbers represent the number of white balls drawn in each of the 3 draws from the urn","id":46},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-47","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"set.seed(1)\n(L <- purrr::map(1:3, ~ sample(1:3, 5, replace = T)))\n\npurrr::reduce(L,intersect)","id":47},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-48","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"is_positive <- function(x) {\n\n}","id":48},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-49","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"is_positive <- function(x) {\n  if (x > 0) {\n    TRUE\n  } else {\n    FALSE\n  }\n}\n\nis_positive(5)","id":49},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-50","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"sqrt_safe <- function(x) {\n\n}","id":50},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-51","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"sqrt_safe <- function(x) {\n  if (x < 0) {\n    stop(\"Cannot take square root of a negative number.\")\n  }\n  sqrt(x)\n}\nsqrt_safe(-2)\nsqrt_safe(5)","id":51},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-52","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"find_first_negative <- function(vec) {\n\n}","id":52},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-53","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"find_first_negative <- function(vec) {\n  for (i in 1:length(vec)) {\n    if (vec[i] < 0) {\n      return(i)\n    }\n  }\n  NA\n}\n\nfind_first_negative(c(5, 2, -4, 6, -1))","id":53},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-54","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"halve_until_less_than_one <- function(x) {\n\n}","id":54},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-55","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"halve_until_less_than_one <- function(x) {\n  count = 0\n  while (x >= 1) {\n    x <- x / 2\n    count <- count+1\n  }\n  list(result = x, nsteps = count)\n}\nhalve_until_less_than_one(14)","id":55},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-56","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"set.seed(1)\nM <- as.data.frame(\n  lapply(c(400,400), function(x) data.frame(x=rgamma(x, shape =2, scale = 2)))\n  )\n\nscale_columns <- function(mat) {\n  \n}","id":56},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-57","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"set.seed(1)\nM <- as.data.frame(\n  lapply(c(400,400), function(x) data.frame(x=rgamma(x, shape =2, scale = 2)))\n  )\n\nscale_columns <- function(mat) {\n  apply(mat, 2, function(x) (x - mean(x)) / sd(x))\n}\n\nM_new <- scale_columns(M)\npar(mfrow = c(1,2))\nhist(M$x);hist(M_new)","id":57},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-58","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"set.seed(1)\n(K <- lapply(rep(4,3), rnorm))\n\nlibrary(purrr)\ncalc_means <- function(list_of_vectors) {\n  \n}","id":58},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-59","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"set.seed(1)\n(K <- lapply(rep(4,3), rnorm))\n\nlibrary(purrr)\ncalc_means <- function(list_of_vectors) {\n  map_dbl(list_of_vectors, mean)\n}\n\ncalc_means(K)","id":59},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-60","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"multiply_and_add <- function(...) {\n  \n}","id":60},{"options":{"read-only":"false","output":"true","fig-width":7,"fig-cap":"","comment":"","fig-height":5,"autorun":"false","label":"unnamed-chunk-61","warning":"true","classes":"","results":"markup","out-height":"","context":"interactive","out-width":"700px","message":"true","dpi":72},"code":"multiply_and_add <- function(...) {\n  vectors <- list(...)\n  result <- 0\n  for (i in seq_along(vectors)) {\n    result <- result + sum(vectors[[i]] * i)\n  }\n  result\n}\nmultiply_and_add(c(1,2),c(3,4))\n# ie \nsum(c(1, 2) * 1) + sum(c(3, 4) * 2)  ","id":61}];
+  globalThis.qwebrCellDetails = [{"code":"url <- \"https://dhintz137.github.io/Embedding_Presentation/raw-data/King_Man_Woman_Queen_pred.csv\"\ndownload.file(url, \"King_Man_Woman_Queen_pred.csv\")\nKing_Man_Woman_Queen_pred <- read.csv(\"King_Man_Woman_Queen_pred\")\nhead(King_Man_Woman_Queen_pred)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-1","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":1},{"code":"url <- \"https://dhintz137.github.io/Embedding_Presentation/raw-data/King_Man_Woman_Queen_pred.csv\"\ndownload.file(url, \"King_Man_Woman_Queen_pred.csv\")\nlist.files()\npred_from_csv <- read.csv(\"King_Man_Woman_Queen_pred.csv\")","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-2","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":2},{"code":"# First let's make some data to play with.\nvec_dat <- data.frame(x = 1:5, y = NA_real_)\nvec_dat\nloop_dat <- data.frame(t = 1:5, N = NA_real_)\nloop_dat\n\n# What is the difference between vectorization and iteration?\nvec_dat$y <- 4*vec_dat$x + 3\nvec_dat\n\nloop_dat$N[1] <- 2\nfor(i in 1:4) {\n  loop_dat$N[i + 1] <- loop_dat$N[i]*exp(0.5*(1 - loop_dat$N[i]/30))\n}\nloop_dat","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-3","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":3},{"code":"# This is a stupid example, but it creates some data for us.\nfor(i in 1:20) {\n  write.csv(data.frame(ID = paste0(\"DataLogger-\", i),\n                    Temperature = runif(30, 10, 20),\n                    Wind = runif(30, 0, 15),\n                    Battery = \"Normal\"),\n            paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))\n}\n\n# Now lets check our work.\nlist.files(getwd(), pattern = \"WeatherStation_\")","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-4","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":4},{"code":"# This is the code we just wrote.\nfor(i in 1:20) {write.csv(data.frame(ID = paste0(\"DataLogger-\", i),\n                Temperature = runif(30, 10, 20), Wind = runif(30, 0, 15),\n                Battery = \"Normal\"),paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}\n\n# What if we want to read in a bunch of data files?\ndf <- lapply(paste0(getwd(), \"/\", list.files(getwd(), pattern = \".csv\")), read.csv)\n\nlapply(df, function(x) head(x,3))[1:2]\n\ndf2 <- do.call(rbind, lapply(paste0(getwd(), \"/\",\n                             list.files(getwd(), pattern = \".csv\")), read.csv))\nhead(df2)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-5","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":5},{"code":"# Create some genetic data.\ngenetic_data <- data.frame(matrix(data = sample(c(\"A\", \"T\", \"G\", \"C\"), 3000, replace = TRUE),\n                                  nrow = 300, ncol = 10))\nhead(genetic_data)\n\n# I want to know how many A's there are in each column.\napply(genetic_data, 2, table)[1,]","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-6","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":6},{"code":"if(TRUE) {print(\"I have to work today.\")}\n\nif(FALSE) {print(\"I have to work today.\")\n} else {print(\"It is the weekend!\")}\n\nif(FALSE) {print(\"I have to work today.\")\n} else if(TRUE) {print(\"It is the weekend!\")}\n\nx <- 10\nx == 10\nx != 10","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-7","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":7},{"code":"column1 <- c(1:10, NA)\ncolumn1\nany(is.na(column1))\nis.numeric(column1)\n!is.numeric(column1)\n\nifelse(TRUE, \"cold\", \"hot\")\n\n# Make some data.\ndf2 <- data.frame(ID = \"DataLogger-20\", Temperature = runif(30, 10, 20),\n                  Wind = runif(30, 0, 15), Battery = \"Normal\")\n                    \nhead(df2)\ndf2$WindClass <- ifelse(df2$Wind >= 10, \"Windy\", \"Still\")","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-8","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":8},{"code":"# This is the code from before to make the data.\nfor(i in 1:20) {\nwrite.csv(data.frame(ID = paste0(\"DataLogger-\", i), Temperature = runif(30, 10, 20),\nWind = runif(30, 0, 15), Battery = \"Normal\"), paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-9","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":9},{"code":"# This is the code from before to make the data.\nfor(i in 1:20) {\nwrite.csv(data.frame(ID = paste0(\"DataLogger-\", i), Temperature = runif(30, 10, 20),\nWind = runif(30, 0, 15), Battery = \"Normal\"), paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}\n\nfor(i in seq_along(list.files(getwd(), pattern = \"WeatherStation_\"))) {\n  tmp <- read.csv(paste0(getwd(), \"/\", list.files(getwd(), pattern = \".csv\"))[i])\n  if(i == 1) {weather_dat <- tmp\n  } else {weather_dat <- rbind(weather_dat, tmp)}}","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-10","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":10},{"code":"# This is the code from before to make the data.\nfor(i in 1:20) {\nwrite.csv(data.frame(ID = paste0(\"DataLogger-\", i), Temperature = runif(30, 10, 20),\nWind = runif(30, 0, 15), Battery = \"Normal\"), paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}\n\n# Use this code to put some NA's into the \"Weather Station\" files.\nwrite.csv(data.frame(ID = \"DataLogger-7\", Temperature = c(runif(28, 10, 20), NA, NA),\n          Wind = c(runif(28, 0, 15), NA, NA), Battery = c(rep(\"Normal\", 28), \"Low\", \"Low\")),\n          paste0(getwd(), \"/WeatherStation_7.csv\"))\n\n","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-11","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":11},{"code":"# This is the code from before to make the data.\nfor(i in 1:20) {\nwrite.csv(data.frame(ID = paste0(\"DataLogger-\", i), Temperature = runif(30, 10, 20),\nWind = runif(30, 0, 15), Battery = \"Normal\"), paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}\n\n# Use this code to put some NA's into the \"Weather Station\" files.\nwrite.csv(data.frame(ID = \"DataLogger-7\", Temperature = c(runif(28, 10, 20), NA, NA),\n          Wind = c(runif(28, 0, 15), NA, NA), Battery = c(rep(\"Normal\", 28), \"Low\", \"Low\")),\n          paste0(getwd(), \"/WeatherStation_7.csv\"))\n\nfor(i in seq_along(list.files(getwd(), pattern = \"WeatherStation_\"))) {\n  tmp <- read.csv(paste0(getwd(), \"/\", list.files(getwd(), pattern = \".csv\"))[i])\n  if(!any(is.na(tmp))) {\n  if(i == 1) {weather_dat <- tmp\n  } else {weather_dat <- rbind(weather_dat, tmp)}}}","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-12","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":12},{"code":"dat <- data.frame(A = rnorm(100, 10, 5), B = rpois(100, 10), C = rnorm(100, 50, 10),\n                  X = runif(100, 0, 100), Y = rbeta(100, 1, 2), Z = rnorm(100, 0, 1))\n","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-13","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":13},{"code":"dat <- data.frame(A = rnorm(100, 10, 5), B = rpois(100, 10), C = rnorm(100, 50, 10),\n                  X = runif(100, 0, 100), Y = rbeta(100, 1, 2), Z = rnorm(100, 0, 1))\n\napply(dat, 2, shapiro.test)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-14","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":14},{"code":"# Make some data.\ndf2 <- data.frame(X = 1:30, ID = \"DataLogger-20\", Temperature = runif(30, 10, 20),\n                  Wind = runif(30, 0, 15), Battery = \"Normal\")\n","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-15","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":15},{"code":"# Make some data.\ndf2 <- data.frame(X = 1:30, ID = \"DataLogger-20\", Temperature = runif(30, 10, 20),\n                  Wind = runif(30, 0, 15), Battery = \"Normal\")\n\ndf2$Week <- ifelse(df2$X <= 7, 1,\n              ifelse(df2$X >= 8 & df2$X <= 14, 2,\n                ifelse(df2$X >= 15 & df2$X <= 21, 3,\n                  ifelse(df2$X >= 22 & df2$X <= 28, 4, NA))))","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-16","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":16},{"code":"i <- function(x) x^2 # same as `i <- function(x) print(x^2)`\ni(3)\nj <- function(x) return(x^2)\nj(3)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-17","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":17},{"code":"k <- function(x) {X = x^2; Y = x^3}\nk(3) # nothing is printed to the screen, last assignment is returned as an invisible()\npaste(\"k(3):\", k(3))\nk_val = k(3); k_val","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-18","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":18},{"code":"l <- function(x) {X = x^2; Y = x^3; Z = x^4; invisible(x+1)}\nl(3)\npaste(\"l(3):\", l(3))","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-19","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":19},{"code":"m <- function(x){X = x^2; invisible(x+1); Y = x^3}\npaste(m(3))","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-20","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":20},{"code":"f <- function(x) x^2\nf\nformals(f) #> $x\nbody(f) #> x^2\nenvironment(f) # <environment: R_GlobalEnv>","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-21","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":21},{"code":"k <- function() list(ls(),environment())\nk() # k() has its own environment\nlist(ls()[1:5],environment()) \n# all other environments sit on top of the global environments ","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-22","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":22},{"code":"f1 <- function(){L = 1; L}\nf1()\nL # Error: object 'L' not found\n\nK = 3\nf2 <- function() {K} \nf2() # Functions can access the global environment\n\nf3 <- function() {L <<- 10} \nf3() # returns L to the parent environment\nL    # now we also prints L from global environment\n\nremove(L)\nf4 <- function(){L = 100; f3(); L}\nf4()\nL\n# Avoid using `<<-` when possible!!","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-23","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":23},{"code":"f <- function(a = 1) a\nf()","options":{"context":"interactive","message":"true","label":"unnamed-chunk-24","fig-width":7,"read-only":"false","results":"markup","echo":"true","fig-height":5,"comment":"","fig-cap":"","classes":"","autorun":"false","out-width":"700px","out-height":"","output":"true","warning":"true","dpi":72},"id":24},{"code":"f <- function(a, b = NULL) c(a,b)\nf(1)\nf(1,2)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-25","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":25},{"code":"message(\"notify the user, although we are not indicating any problems\")\n\nwarning(\"notify the user of something potentially problematic\")\n\nstop(\"A condition has been met that is problematic enough to warrant forcing an error.\")\n","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-26","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":26},{"code":"k <- function(a,b) a^(b)\nf <- function(a, b = NULL) {\n  if(is.null(b)){\n    warning(\"{warning()} b is missing, just returning `a`\")\n    return(a)\n  } \n  if(a < 0 && b == 1/2){\n    stop(\"{stop()} can't take the sqrt of a negative number\")\n  } else {\n    message(\"{message()} function completion without conditional execution\")\n    a^(b)\n  }\n}\nk(1) # error without user defined error handling \nf(1) # here we see the `NULL` Conditional Execution\nf(-2,1/2)\nf(3,2)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-27","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":27},{"code":"f <- function(a, b, c) {\n  if(missing(c)) {\n  return(sum(a,b))\n    }\n  if(!missing(c)) {\n  return(sum(a,b,c))\n    }\n}\nf(1,2)\nf(1,2,3)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-28","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":28},{"code":"f1 <- function(x, ...){...length()}\nf1(1)      # 0 argument passed to `...`\nf1(1,2)    # 1 arguments passed to `...`\nf1(1,2,3)  # 2 arguments passed to `...`\n\nf2 <- function(x, ...){list(...)}\nf2(1,2,3) # `1` passed to `x`, `2` and `3` passed to `...`","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-29","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":29},{"code":"rnorm\nrandom_num_gen <- function(x, ...) {\n  rnorm(x, ...)\n}\n\nset.seed(1); random_num_gen(5)\nset.seed(1); random_num_gen(5, mean = 3, sd = 1.5)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-30","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":30},{"code":"# mean and median defined with `...`\nf3 <- function(x, ...){\n  out <- list(mean(x, ...), median(x, ...))\n  out\n}\n\n(k = c(1:8,NA))\nf3(x=k, na.rm = TRUE)                                        # Works \nf3(x=k, na.rm = TRUE, random_message = \"Save the bees\")      # Works \n\n# matrix not defined with \"...\"\nf4 <- function(x, ...){\n  out <- list(mean(x, ...), median(x, ...), matrix(x,...))\n  return(out)\n}\n\nf4(x=k, na.rm = TRUE)                                        # Fails\nlist(mean(k,na.rm = TRUE),median(k,na.rm = TRUE),matrix(k))","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-31","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":31},{"code":"defined_arguments <- function(...){\n  f <- list(...);out = lapply(f,function(x) names(formals(x)))\n  names(out) = as.character(substitute(list(...)))[-1];out\n}","options":{"context":"setup","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-32","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"true","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":32},{"code":"defined_arguments(matrix, data.frame, as.data.frame) # which are defined with `...` ?\n(k = c(1:3,NA))\n\nmatrix(k, na.rm = TRUE)\ndata.frame(k, na.rm = TRUE)\nas.data.frame(k,na.rm = TRUE)\n\nf5 <- function(x, ...){\n  out <- list(mean(x, ...), median(x, ...), as.data.frame(x,...))\n  return(out)\n}\nf5(x=k, na.rm = TRUE)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-33","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":33},{"code":"function(x) x * 2\nsapply(1:5,function(x) x * 2)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-34","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":34},{"code":"library(purrr)\n# ~ .x * 2  or \\(x) x*2\nmap_dbl(1:5,~ .x * 2)\nmap_dbl(1:5,\\(x) x*2)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-35","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":35},{"code":"(X <- cbind(x1 = 3, x2 = c(4:1, 2:5)))\n\napply(X, 1, mean) # row-wise \napply(X, 2, mean) # col-wise","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-36","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":36},{"code":"(J = array(rep(1,12), c(2, 2, 3)))\napply(J, c(1), sum)\napply(J, c(2), sum)\napply(J, c(3), sum)\napply(J, c(1,2), sum)\napply(J, c(1,3), sum)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-37","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":37},{"code":"(Y <- list(a = 1:10, beta = exp(-3:3)))\n\nsapply(Y, quantile)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-38","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":38},{"code":"(Y <- list(a = 1:10, beta = exp(-3:3)))\n\nlapply(Y, quantile)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-39","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":39},{"code":"try2 <- function(x,m){tryCatch({x}, error =function(e) {finally = print(m)})}\n(Y <- list(a = 1:10, beta = exp(-3:3)))\n\ntry2(vapply(Y,quantile),\"Error:`FUN.VALUE` is missing\")\nvapply(Y,quantile,seq(0, 1, 0.25))","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-40","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":40},{"code":"W <- warpbreaks; head(W,3) \n\n# contingency table \ntapply(W$breaks, subset(W, select = -breaks), sum) ","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-41","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":41},{"code":"(Z <- lapply(rep(2,2), function(x) data.frame(x=rnorm(x))))\n\ndo.call(cbind, Z)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-42","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":42},{"code":"abs_dif <- function(x,y) abs(x-y)\nmapply(abs_dif, c(2,10), c(2,30))\n\nmapply(sum, c(1,2,3,5), c(1,2,3,10),c(1,2,3,15))","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-43","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":43},{"code":"abs_dif <- function(x,y) abs(x-y)\nMap(abs_dif, c(2,10), c(2,30))\n\nMap(sum, c(1,2,3,5), c(1,2,3,10),c(1,2,3,15))","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-44","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":44},{"code":"set.seed(1)\n(L <- purrr::map(1:3, ~ sample(1:3, 5, replace = T)))\n\nintersect(c(1,2,3), c(1,2,4)) # demo of intersect()\nReduce(intersect,L)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-45","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":45},{"code":"set.seed(0); 1:5 |> map(rnorm, n = 4)\n\n# You can also use an anonymous function\nset.seed(0); 1:5 |> map(\\(x) rnorm(n=4, mean = x, sd = 1))\nset.seed(0); 1:5 |> map(~ rnorm(n=4, mean = .x, sd = 1))","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-46","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":46},{"code":"x <- list(1, 1, 1)\ny <- list(10, 20, 30)\n\nmap2(x, y, \\(x, y) x + y)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-47","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":47},{"code":"x <- list(1, 1, 1)\ny <- list(10, 20, 30)\nz <- list(100, 200, 300)\n\npmap(list(x, y, z), sum)\n\nset.seed(0); list(1:2,1:2,1:2) |> pmap(\\(x,y,z) rhyper(3, m = x, n = y, k = z))\n# These numbers represent the number of white balls drawn in each of the 3 draws from the urn","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-48","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":48},{"code":"set.seed(1)\n(L <- purrr::map(1:3, ~ sample(1:3, 5, replace = T)))\n\npurrr::reduce(L,intersect)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-49","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":49},{"code":"is_positive <- function(x) {\n\n}","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-50","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":50},{"code":"is_positive <- function(x) {\n  if (x > 0) {\n    TRUE\n  } else {\n    FALSE\n  }\n}\n\nis_positive(5)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-51","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":51},{"code":"sqrt_safe <- function(x) {\n\n}","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-52","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":52},{"code":"sqrt_safe <- function(x) {\n  if (x < 0) {\n    stop(\"Cannot take square root of a negative number.\")\n  }\n  sqrt(x)\n}\nsqrt_safe(-2)\nsqrt_safe(5)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-53","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":53},{"code":"find_first_negative <- function(vec) {\n\n}","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-54","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":54},{"code":"find_first_negative <- function(vec) {\n  for (i in 1:length(vec)) {\n    if (vec[i] < 0) {\n      return(i)\n    }\n  }\n  NA\n}\n\nfind_first_negative(c(5, 2, -4, 6, -1))","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-55","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":55},{"code":"halve_until_less_than_one <- function(x) {\n\n}","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-56","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":56},{"code":"halve_until_less_than_one <- function(x) {\n  count = 0\n  while (x >= 1) {\n    x <- x / 2\n    count <- count+1\n  }\n  list(result = x, nsteps = count)\n}\nhalve_until_less_than_one(14)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-57","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":57},{"code":"set.seed(1)\nM <- as.data.frame(\n  lapply(c(400,400), function(x) data.frame(x=rgamma(x, shape =2, scale = 2)))\n  )\n\nscale_columns <- function(mat) {\n  \n}","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-58","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":58},{"code":"set.seed(1)\nM <- as.data.frame(\n  lapply(c(400,400), function(x) data.frame(x=rgamma(x, shape =2, scale = 2)))\n  )\n\nscale_columns <- function(mat) {\n  apply(mat, 2, function(x) (x - mean(x)) / sd(x))\n}\n\nM_new <- scale_columns(M)\npar(mfrow = c(1,2))\nhist(M$x);hist(M_new)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-59","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":59},{"code":"set.seed(1)\n(K <- lapply(rep(4,3), rnorm))\n\nlibrary(purrr)\ncalc_means <- function(list_of_vectors) {\n  \n}","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-60","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":60},{"code":"set.seed(1)\n(K <- lapply(rep(4,3), rnorm))\n\nlibrary(purrr)\ncalc_means <- function(list_of_vectors) {\n  map_dbl(list_of_vectors, mean)\n}\n\ncalc_means(K)","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-61","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":61},{"code":"multiply_and_add <- function(...) {\n  \n}","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-62","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":62},{"code":"multiply_and_add <- function(...) {\n  vectors <- list(...)\n  result <- 0\n  for (i in seq_along(vectors)) {\n    result <- result + sum(vectors[[i]] * i)\n  }\n  result\n}\nmultiply_and_add(c(1,2),c(3,4))\n# ie \nsum(c(1, 2) * 1) + sum(c(3, 4) * 2)  ","options":{"context":"interactive","message":"true","out-width":"700px","comment":"","label":"unnamed-chunk-63","fig-height":5,"warning":"true","fig-cap":"","read-only":"false","classes":"","autorun":"false","output":"true","fig-width":7,"results":"markup","out-height":"","dpi":72},"id":63}];
 
   </script>
   <script type="module">
@@ -1453,91 +1472,247 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
     <div class="slides">
 
 
-<section id="an-advanced-introduction-to-r" class="title-slide slide level1 center" data-background-image="images/conny-schneider-xuTJZ7uD7PI-unsplash.jpg" data-background-size="cover" data-background-color="#4f6952">
-<h1><span style="color:#FFFFFF;           font-size: 110px;           text-shadow: -0.5px -0.5px 0 #000,                        0.5px -0.5px 0 #000,                        -0.5px 0.5px 0 #000,                        0.5px 0.5px 0 #000;">An Advanced Introduction to R</span></h1>
+<section id="an-exploration-of-information-loss-in-transformer-embedding-spaces-for-enhancing-predictive-ai-in-genomics" class="title-slide slide level1 center" data-background-image="images/DALL_E_DNA_Image_edited.png" data-background-size="cover" data-background-color="#4f6952">
+<h1><span style="color:#FFFFFF;           font-size: 55px;           position: relative;          bottom: 60px;           text-shadow: -1px -1px 0 #000,                        1px -1px 0 #000,                        -1px 1px 0 #000,                        1px 1px 0 #000;">An Exploration of Information Loss in Transformer Embedding Spaces for Enhancing Predictive AI in Genomics</span></h1>
 <h2 style="color:#FFFFFF; 
-         font-size: 35px; 
-         text-shadow: -1px -1px 0 #000, 
-                      1px -1px 0 #000, 
-                      -1px 1px 0 #000, 
-                      1px 1px 0 #000;">
-Daniel Hintz | Seth Rankins | 2024-03-25
+         font-size: 28px; 
+         text-align: center;
+         position: absolute; 
+         top: 325px; 
+         width: 100%; 
+         text-shadow: -0.5px -0.5px 0 #000, 
+                      0.5px -0.5px 0 #000, 
+                      -0.5px 0.5px 0 #000, 
+                      0.5px 0.5px 0 #000;">
+Daniel Hintz <br> 2024-06-06
 </h2>
-<h3 style="color:#FFFFFF; 
-         font-size: 25px; 
-         text-shadow: -1px -1px 0 #000, 
-                      1px -1px 0 #000, 
-                      -1px 1px 0 #000, 
-                      1px 1px 0 #000;">
-A R Ladies Workshop
-</h3>
 </section>
 
-<section>
 <section id="outline-1" class="title-slide slide level1 center">
 <h1><span style="font-size: 55px;">Outline (1)</span></h1>
 <div>
 <div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">Loops, Functionals (to replace loops), and Logicals</li>
-<li class="fragment">R function Basics
+<li class="fragment">Background
 <ul>
-<li class="fragment">Structure</li>
-<li class="fragment">Some practice to start</li>
+<li class="fragment">SARS-COV-2</li>
+<li class="fragment">DNA</li>
+<li class="fragment">Coding regions and Proteins</li>
+<li class="fragment">Sequence Representations</li>
+<li class="fragment">GenSLM</li>
 </ul></li>
-<li class="fragment">R function’s Extended
+<li class="fragment">Data and Processing
 <ul>
-<li class="fragment"><code>formals()</code>, <code>body()</code>, and <code>environment()</code></li>
-<li class="fragment">More on Environments</li>
-<li class="fragment">Default Argument Assignment</li>
-<li class="fragment"><code>NULL</code> Conditional Execution</li>
-<li class="fragment"><code>message()</code>, <code>warning()</code>, and <code>stop()</code></li>
-<li class="fragment">Conditional Execution with <code>missing()</code></li>
-<li class="fragment">Using the Three Dots Ellipsis, <code>...</code></li>
-<li class="fragment">Anonymous Functions</li>
+<li class="fragment">Data Description</li>
+<li class="fragment">Data Cleaning &amp; Pre-Processing</li>
+<li class="fragment">Exploratory Data Analysis</li>
+<li class="fragment">Generating Embeddings</li>
 </ul></li>
+<li class="fragment">Methodology</li>
 </ul>
 </div>
 </div>
 </section>
-<section id="outline-2" class="slide level2">
-<h2><span style="font-size: 55px;">Outline (2)</span></h2>
+
+<section>
+<section id="background" class="title-slide slide level1 center" data-background-color="#8FA9C2">
+<h1><span style="color:white;">Background</span></h1>
+
+</section>
+<section id="sars-cov-2" class="slide level2">
+<h2>SARS-COV-2</h2>
+<div id="qwebr-insertion-location-1"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</section>
+<section id="dna" class="slide level2">
+<h2>DNA</h2>
+<div class="columns">
+<div class="column" style="width:80%;">
 <div>
 <div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">Functional Programming with <code>base</code> R
+<li class="fragment">Deoxyribonucleic acid (DNA) is a molecule that contains the genetic code that provides the instructions for building and maintaining life.</li>
+<li class="fragment">The structure of DNA can be thought of as rungs on a ladder (known as base pairs) involving the pairing of four nucleotides - Adenine (A), Cytosine (C),Guanine (G) and Thymine (T).</li>
+<li class="fragment">Genomic sequencing is a process used to decipher the genetic material found in an organism</li>
+<li class="fragment">For reference, the SARS-CoV2 virus is approximately 30,0000 base pairs (bp’s), whereas the human genome is approximately 3 billion bp.</li>
+</ul>
+</div>
+</div>
+</div><div class="column" style="width:20%;">
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/DNA_diagram.png"></p>
+<figcaption>Figure 1: DNA Base Pairs; <span class="citation" data-cites="NHGRI2024">[<a href="#/references" role="doc-biblioref" onclick="">1</a>]</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="dna-sequencing-technology" class="slide level2">
+<h2>DNA Sequencing Technology</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div>
+<div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">Function Look Table</li>
-<li class="fragment">Examples</li>
-</ul></li>
-<li class="fragment">Functional programming with <code>purrr</code>
+<li class="fragment">The two main technologies for DNA Sequencing is Ilumina and Nanopore</li>
+<li class="fragment">Big Picture, the workflow for sequencing is the same for each technology:
 <ul>
-<li class="fragment">Function Look Table</li>
-<li class="fragment">Examples</li>
+<li class="fragment">Someone gets tested for Covid, PCA is ran to detect if the assay is indeed positive</li>
+<li class="fragment">Positive tests are ran though Library prep workflow before going onto a sequencing protocol within a lab</li>
+<li class="fragment">This takes in the Covid Assay and arrives at a digital copy of DNA sequences</li>
 </ul></li>
-<li class="fragment">Parallel Computing
+</ul>
+</div>
+</div>
+</div><div class="column" style="width:40%;">
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/sequencing_technology_edit.png"></p>
+<figcaption>Figure 2: Overview of Lab processing for SARS-CoV-2; Adapted from <span class="citation" data-cites="carbo2023comparison">[<a href="#/references" role="doc-biblioref" onclick="">2</a>]</span>, pg. 702</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="dna-library-prep-workflow" class="slide level2">
+<h2>DNA Library Prep Workflow</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div>
+<div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">Parallel Computing with <code>furrr</code></li>
-<li class="fragment">A Note on Parallel Computing</li>
-</ul></li>
-<li class="fragment">Practice Questions</li>
+<li class="fragment">Library prep contains many steps, with lab technicians performing tasks to prepare the assay</li>
+<li class="fragment">Library prep comes with the possibility of human error, in addition to the natural machine error in sequencing.</li>
+<li class="fragment">Often between steps in the Library prep, the assay can diminish in quality without there being a clear reason as to why this happened.</li>
+<li class="fragment">Post-sequencing, median genome coverage rates for SARS-CoV-2 can range from 81.6 to 99.8% <span class="citation" data-cites="carbo2023comparison">[<a href="#/references" role="doc-biblioref" onclick="">2</a>]</span>.</li>
+<li class="fragment">A genome coverage of 99.8% means that the sequencing process has successfully captured and sequenced 99.8% of the entire genome of the virus.</li>
+</ul>
+</div>
+</div>
+</div><div class="column" style="width:40%;">
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/library-prep.png"></p>
+<figcaption>Figure 3: Nextera DNA Library Prep Workflow; <span class="citation" data-cites="Illumina2016Nextera">[<a href="#/references" role="doc-biblioref" onclick="">3</a>]</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="coding-regions-and-proteins" class="slide level2">
+<h2>Coding regions and Proteins</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">The coding region specifically encodes proteins that are essential for all the functions necessary for life.</li>
+<li class="fragment">the whole SARS-CoV2 genome, marking structural and nonstructural proteins within the coding region along with the first 43 nucleotides for the nsp1 protein</li>
+</ul>
+</div>
+</div>
+</div><div class="column" style="width:60%;">
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/nsp1_str_non_str.png"></p>
+<figcaption>Figure 3: SARS-CoV-2 Proteins; Adapted from <span class="citation" data-cites="kandwal2023genetic">[<a href="#/references" role="doc-biblioref" onclick="">4</a>]</span>, pg. 99</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="word-embeddings-1" class="slide level2">
+<h2>Word Embeddings (1)</h2>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">Before we introduce GenSLM and embeddings for Sequences, what is an embedding and why would ever embed something?</li>
+<li class="fragment">If we consider English text, how might we ever measure the similarity of words in terms of their meaning, said differently, <strong>How can we measure semantic similarity between words</strong></li>
+<li class="fragment">For example, what is the semantic difference between the words “King” and “Woman”</li>
+<li class="fragment">This initially sounds outlandish, but if there were a way to represent words as numeric vectors, then we would be able to use the same linear algebra we would use to compare vectors of force, speed or velocity.</li>
 </ul>
 </div>
 </div>
 </section>
-<section id="webr-code-execution" class="slide level2">
-<h2>Webr Code Execution</h2>
-
-<img data-src="images/webr.gif" class="quarto-figure quarto-figure-center r-stretch"><div>
+<section id="word-embeddings-2" class="slide level2">
+<h2>Word Embeddings (2)</h2>
+<div>
+<div style="font-size: 0.6em;">
 <ul>
-<li class="fragment"><p>Use <code>cmd</code> <code>+</code> <code>enter</code> to execute a line</p></li>
-<li class="fragment"><p>As of <code>webR 0.2.3</code>, <code>webr</code> does not support smart execution, so for multiline code highlight the entire section before hitting <code>cmd</code> <code>+</code> <code>enter</code></p></li>
+<li class="fragment">Here is where neural network embedding algorithms enters</li>
+<li class="fragment">For example, given a corpus (a massive training set of structured text) how are the words “King”, “Quen”, “Man”, “Woman” related within the given corpus</li>
+<li class="fragment">It turns out given a sufficiently large corpus of text you can train an embedding algorithm (such as word2vec for NLP) to generate vectors for words included within the corpus</li>
 </ul>
 </div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="fu">library</span>(word2vec)</span>
+<span id="cb1-2"><a href=""></a><span class="co"># using british national corpus http://vectors.nlpl.eu/repository/</span></span>
+<span id="cb1-3"><a href=""></a>model <span class="ot">&lt;-</span> <span class="fu">read.word2vec</span>(<span class="st">"/path_to_folder/British_National_Corpus_Vector_size_300_skipgram/model.bin"</span>, <span class="at">normalize =</span> <span class="cn">TRUE</span>)  <span class="fu">head</span>(<span class="fu">summary</span>(model, <span class="at">type =</span> <span class="st">"vocabulary"</span>), <span class="at">n =</span> <span class="dv">100</span>)</span>
+<span id="cb1-4"><a href=""></a>Word_embeddings <span class="ot">&lt;-</span> <span class="fu">predict</span>(model,<span class="at">newdata =</span> <span class="fu">c</span>(<span class="st">"king_NOUN"</span>,<span class="st">"man_NOUN"</span>,<span class="st">"woman_NOUN"</span>,<span class="st">"queen_NOUN"</span>),<span class="at">type=</span><span class="st">"embedding"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="qwebr-insertion-location-2"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</section>
+<section id="word-embeddings-3" class="slide level2">
+<h2>Word Embeddings (3)</h2>
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/King_Man_Woman_Queen.png"></p>
+<figcaption>Figure 4</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="sequence-representations" class="slide level2">
+<h2>Sequence Representations</h2>
+<div style="text-align:center; font-size: 0.5em;">
+<p><img data-src="images/ml_rep_obj.png"></p>
+</div>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">An effective representation (embedding) of a genomic sequence is crucial for all downstream tasks
+<ul>
+<li class="fragment">i.e., clustering, classification, regression, protein function identification, structural analysis, and predicting genetic disorders <span class="citation" data-cites="angermueller2016deep">[<a href="#/references" role="doc-biblioref" onclick="">5</a>]</span></li>
+</ul></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="genslm" class="slide level2">
+<h2>GenSLM</h2>
 </section></section>
 <section>
-<section id="loops-functions-and-logical-statements" class="title-slide slide level1 center" data-background-color="#8FA9C2">
-<h1><span style="color:white;">Loops, Functions, and Logical Statements</span></h1>
+<section id="data-and-processing" class="title-slide slide level1 center" data-background-color="#8FA9C2">
+<h1><span style="color:white;">Data and Processing</span></h1>
+
+</section>
+<section id="data-description" class="slide level2">
+<h2>Data Description</h2>
+</section>
+<section id="data-cleaning-pre-processing" class="slide level2">
+<h2>Data Cleaning &amp; Pre-Processing</h2>
+</section>
+<section id="exploratory-data-analysis" class="slide level2">
+<h2>Exploratory Data Analysis</h2>
+</section>
+<section id="generating-embeddings" class="slide level2">
+<h2>Generating Embeddings</h2>
+</section></section>
+<section>
+<section id="methodology" class="title-slide slide level1 center" data-background-color="#8FA9C2">
+<h1><span style="color:white;">Methodology</span></h1>
 
 </section>
 <section id="what-is-the-difference-between-vectorization-and-iteration" class="slide level2">
@@ -1551,12 +1726,12 @@ A R Ladies Workshop
 </section>
 <section id="now-for-the-math-in-r" class="slide level2">
 <h2>Now for the Math in R</h2>
-<div id="qwebr-insertion-location-1"></div>
+<div id="qwebr-insertion-location-3"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="now-onto-a-more-complex-for-loop" class="slide level2 scrollable">
 <h2>Now Onto a More Complex <code>for</code> Loop</h2>
-<div id="qwebr-insertion-location-2"></div>
+<div id="qwebr-insertion-location-4"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <!--
 -   There are also while and repeat loops, but you shouldn't be writing code in R if you are using them.
@@ -1567,12 +1742,12 @@ A R Ladies Workshop
 <aside><ol class="aside-footnotes"><li id="fn1"><p>Their usage, however, can be more niche as they are used when the number of iterations is not known a priori and reach completion via convergence criterion such as the max number of iterations or some metric like Euclidean Distance</p></li></ol></aside></section>
 <section id="now-for-apply-functions" class="slide level2">
 <h2>Now for <code>apply</code> Functions</h2>
-<div id="qwebr-insertion-location-3"></div>
+<div id="qwebr-insertion-location-5"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="apply-functions-contd" class="slide level2">
 <h2><code>apply</code> Functions (cont’d)</h2>
-<div id="qwebr-insertion-location-4"></div>
+<div id="qwebr-insertion-location-6"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="fragment">
 <ul>
@@ -1582,12 +1757,12 @@ A R Ladies Workshop
 </section>
 <section id="logical-statements-1" class="slide level2">
 <h2>Logical Statements (1)</h2>
-<div id="qwebr-insertion-location-5"></div>
+<div id="qwebr-insertion-location-7"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="logical-statements-2" class="slide level2">
 <h2>Logical Statements (2)</h2>
-<div id="qwebr-insertion-location-6"></div>
+<div id="qwebr-insertion-location-8"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section></section>
 <section>
@@ -1602,11 +1777,11 @@ A R Ladies Workshop
 <div class="tab-content">
 <div id="tabset-1-1">
 <p>Read in the 20 “Weather Station” data files with a <code>for</code> loop and combine into one dataframe.</p>
-<div id="qwebr-insertion-location-7"></div>
+<div id="qwebr-insertion-location-9"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div id="tabset-1-2">
-<div id="qwebr-insertion-location-8"></div>
+<div id="qwebr-insertion-location-10"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -1619,11 +1794,11 @@ A R Ladies Workshop
 <div class="tab-content">
 <div id="tabset-2-1">
 <p>Now modify your <code>for</code> loop to omit any files that contain an <code>NA</code>.</p>
-<div id="qwebr-insertion-location-9"></div>
+<div id="qwebr-insertion-location-11"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div id="tabset-2-2">
-<div id="qwebr-insertion-location-10"></div>
+<div id="qwebr-insertion-location-12"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -1636,11 +1811,11 @@ A R Ladies Workshop
 <div class="tab-content">
 <div id="tabset-3-1">
 <p>Use an <code>apply</code> function to perform a Shapiro-Wilk test on each column of the data set created below (dat) to determine if the data in each column is normally distributed.</p>
-<div id="qwebr-insertion-location-11"></div>
+<div id="qwebr-insertion-location-13"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div id="tabset-3-2">
-<div id="qwebr-insertion-location-12"></div>
+<div id="qwebr-insertion-location-14"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -1653,11 +1828,11 @@ A R Ladies Workshop
 <div class="tab-content">
 <div id="tabset-4-1">
 <p>Make a column in the data created below (a subset of the weather station data) for week. When <code>X</code> (this is the row ID or day of the month) is 1-7, <code>Week</code> should be 1; when <code>X</code> (day) is 8-14, <code>Week</code> should be 2; when <code>X</code> (day) is 15-21, <code>Week</code> should be 3; when <code>X</code> (day) is 22-28, <code>Week</code> should be 4; and for <code>X</code> (day) from 28-30, <code>Week</code> should be assigned a value of <code>NA</code>.</p>
-<div id="qwebr-insertion-location-13"></div>
+<div id="qwebr-insertion-location-15"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div id="tabset-4-2">
-<div id="qwebr-insertion-location-14"></div>
+<div id="qwebr-insertion-location-16"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -1679,27 +1854,27 @@ A R Ladies Workshop
 <aside><ol class="aside-footnotes"><li id="fn2"><p>See Hadley’s section on <a href="https://adv-r.hadley.nz/functions.html#function-fundamentals">function-fundamentals</a> for more details</p></li></ol></aside></section>
 <section id="lets-write-some-functions" class="slide level2">
 <h2>Lets Write Some Functions</h2>
-<div id="qwebr-insertion-location-15"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<div class="fragment">
-<div style="margin-top: 10px;">
-
-</div>
-<div id="qwebr-insertion-location-16"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div class="fragment">
-<div style="margin-top: 10px;">
-
-</div>
 <div id="qwebr-insertion-location-17"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
 <div class="fragment">
 <div style="margin-top: 10px;">
 
 </div>
 <div id="qwebr-insertion-location-18"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div class="fragment">
+<div style="margin-top: 10px;">
+
+</div>
+<div id="qwebr-insertion-location-19"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div class="fragment">
+<div style="margin-top: 10px;">
+
+</div>
+<div id="qwebr-insertion-location-20"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </section>
@@ -1713,7 +1888,7 @@ A R Ladies Workshop
 </section>
 <section id="function-formals-body-and-environment" class="slide level2">
 <h2>Function <code>formals()</code>, <code>body()</code> and <code>environment()</code></h2>
-<div id="qwebr-insertion-location-19"></div>
+<div id="qwebr-insertion-location-21"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 
 <aside><div>
@@ -1721,7 +1896,7 @@ A R Ladies Workshop
 </div></aside></section>
 <section id="more-on-environments" class="slide level2">
 <h2>More on Environments</h2>
-<div id="qwebr-insertion-location-20"></div>
+<div id="qwebr-insertion-location-22"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="fragment">
 <ul>
@@ -1735,7 +1910,7 @@ A R Ladies Workshop
 <div class="column" style="padding-right: 0px;">
 <p><img data-src="images/castle.jpeg" height="425"></p>
 </div><div class="column" style="padding-right: 0px;">
-<div id="qwebr-insertion-location-21"></div>
+<div id="qwebr-insertion-location-23"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -1762,38 +1937,38 @@ A R Ladies Workshop
 </div></aside></section>
 <section id="default-argument-assignment" class="slide level2">
 <h2>Default Argument Assignment</h2>
-<div id="qwebr-insertion-location-22"></div>
+<div id="qwebr-insertion-location-24"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="null-conditional-execution-1" class="slide level2">
 <h2><code>NULL</code> Conditional Execution (1)</h2>
-<div id="qwebr-insertion-location-23"></div>
+<div id="qwebr-insertion-location-25"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="message-warning-and-stop" class="slide level2">
 <h2><code>message()</code>, <code>warning()</code>, and <code>stop()</code></h2>
-<div id="qwebr-insertion-location-24"></div>
+<div id="qwebr-insertion-location-26"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="null-conditional-execution-2" class="slide level2">
 <h2><code>NULL</code> Conditional Execution (2)</h2>
-<div id="qwebr-insertion-location-25"></div>
+<div id="qwebr-insertion-location-27"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="conditional-execution-with-missing" class="slide level2">
 <h2>Conditional Execution with <code>missing()</code></h2>
-<div id="qwebr-insertion-location-26"></div>
+<div id="qwebr-insertion-location-28"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="dot-dot-dot-1" class="slide level2">
 <h2><code>...</code> dot-dot-dot (1)</h2>
-<div id="qwebr-insertion-location-27"></div>
+<div id="qwebr-insertion-location-29"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="fragment">
 <div style="margin-top: 10px;">
 
 </div>
-<div id="qwebr-insertion-location-28"></div>
+<div id="qwebr-insertion-location-30"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div class="fragment">
@@ -1804,7 +1979,7 @@ A R Ladies Workshop
 </section>
 <section id="dot-dot-dot-2" class="slide level2">
 <h2><code>...</code> dot-dot-dot (2)</h2>
-<div id="qwebr-insertion-location-29"></div>
+<div id="qwebr-insertion-location-31"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>`<code>...</code>` has pros and cons, for more info see <a href="https://adv-r.hadley.nz/functions.html#fun-dot-dot-dot">here</a></p>
 <aside class="notes">
@@ -1827,9 +2002,9 @@ A R Ladies Workshop
 <section id="dot-dot-dot-3" class="slide level2">
 <h2><code>...</code> dot-dot-dot (3)</h2>
 <p>So why does <code>f5</code> work?</p>
-<div id="qwebr-insertion-location-30"></div>
+<div id="qwebr-insertion-location-32"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<div id="qwebr-insertion-location-31"></div>
+<div id="qwebr-insertion-location-33"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="anonymous-functions" class="slide level2">
@@ -1846,7 +2021,7 @@ A R Ladies Workshop
 <div style="font-size: 0.65em;">
 <p><code>base</code> R anonymous function syntax:</p>
 </div>
-<div id="qwebr-insertion-location-32"></div>
+<div id="qwebr-insertion-location-34"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div class="fragment">
@@ -1856,7 +2031,7 @@ A R Ladies Workshop
 <div style="font-size: 0.65em;">
 <p><code>purrr</code>’s anonymous function syntax:</p>
 </div>
-<div id="qwebr-insertion-location-33"></div>
+<div id="qwebr-insertion-location-35"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </section></section>
@@ -1926,28 +2101,28 @@ A R Ladies Workshop
 <ul id="tabset-5" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-5-1"><code>apply</code></a></li><li><a href="#tabset-5-2"><code>sapply</code></a></li><li><a href="#tabset-5-3"><code>lapply</code></a></li><li><a href="#tabset-5-4"><code>vapply</code></a></li><li><a href="#tabset-5-5"><code>tapply</code></a></li></ul>
 <div class="tab-content">
 <div id="tabset-5-1">
-<div id="qwebr-insertion-location-34"></div>
+<div id="qwebr-insertion-location-36"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div style="margin-top: 10px;">
 
 </div>
-<div id="qwebr-insertion-location-35"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-5-2">
-<div id="qwebr-insertion-location-36"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-5-3">
 <div id="qwebr-insertion-location-37"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
-<div id="tabset-5-4">
+<div id="tabset-5-2">
 <div id="qwebr-insertion-location-38"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
-<div id="tabset-5-5">
+<div id="tabset-5-3">
 <div id="qwebr-insertion-location-39"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-5-4">
+<div id="qwebr-insertion-location-40"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-5-5">
+<div id="qwebr-insertion-location-41"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -1959,19 +2134,19 @@ A R Ladies Workshop
 <ul id="tabset-6" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-6-1"><code>do.call</code></a></li><li><a href="#tabset-6-2"><code>mapply</code></a></li><li><a href="#tabset-6-3"><code>Map</code></a></li><li><a href="#tabset-6-4"><code>Reduce</code></a></li></ul>
 <div class="tab-content">
 <div id="tabset-6-1">
-<div id="qwebr-insertion-location-40"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-6-2">
-<div id="qwebr-insertion-location-41"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-6-3">
 <div id="qwebr-insertion-location-42"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
-<div id="tabset-6-4">
+<div id="tabset-6-2">
 <div id="qwebr-insertion-location-43"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-6-3">
+<div id="qwebr-insertion-location-44"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-6-4">
+<div id="qwebr-insertion-location-45"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div style="font-size: 0.65em;">
 <ul>
@@ -2032,15 +2207,15 @@ A R Ladies Workshop
 <ul id="tabset-7" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-7-1"><code>map</code></a></li><li><a href="#tabset-7-2"><code>map2</code></a></li><li><a href="#tabset-7-3"><code>pmap</code></a></li><li><a href="#tabset-7-4"><code>reduce</code></a></li></ul>
 <div class="tab-content">
 <div id="tabset-7-1">
-<div id="qwebr-insertion-location-44"></div>
+<div id="qwebr-insertion-location-46"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div id="tabset-7-2">
-<div id="qwebr-insertion-location-45"></div>
+<div id="qwebr-insertion-location-47"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div id="tabset-7-3">
-<div id="qwebr-insertion-location-46"></div>
+<div id="qwebr-insertion-location-48"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <aside class="notes">
 <ul>
@@ -2060,7 +2235,7 @@ A R Ladies Workshop
       }</style></aside>
 </div>
 <div id="tabset-7-4">
-<div id="qwebr-insertion-location-47"></div>
+<div id="qwebr-insertion-location-49"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -2074,25 +2249,25 @@ A R Ladies Workshop
 <section id="parallel-computing-with-furrr" class="slide level2">
 <h2>Parallel Computing with <code>furrr</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>fib_n <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
-<span id="cb1-2"><a href=""></a>    <span class="cf">if</span> ((n <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|</span> (n <span class="sc">==</span> <span class="dv">1</span>)) </span>
-<span id="cb1-3"><a href=""></a>        <span class="fu">return</span>(<span class="dv">1</span>)</span>
-<span id="cb1-4"><a href=""></a>    <span class="cf">else</span></span>
-<span id="cb1-5"><a href=""></a>        <span class="fu">return</span>(<span class="fu">fib_n</span>(n<span class="dv">-1</span>) <span class="sc">+</span> <span class="fu">fib_n</span>(n<span class="dv">-2</span>))</span>
-<span id="cb1-6"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a>fib_n <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
+<span id="cb2-2"><a href=""></a>    <span class="cf">if</span> ((n <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|</span> (n <span class="sc">==</span> <span class="dv">1</span>)) </span>
+<span id="cb2-3"><a href=""></a>        <span class="fu">return</span>(<span class="dv">1</span>)</span>
+<span id="cb2-4"><a href=""></a>    <span class="cf">else</span></span>
+<span id="cb2-5"><a href=""></a>        <span class="fu">return</span>(<span class="fu">fib_n</span>(n<span class="dv">-1</span>) <span class="sc">+</span> <span class="fu">fib_n</span>(n<span class="dv">-2</span>))</span>
+<span id="cb2-6"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="fragment">
 <div style="margin-top: 20px;">
 
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2" data-code-line-numbers="1-2|4|5-7|1-7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="fu">library</span>(furrr) <span class="co"># library(furrr) loads future by default</span></span>
-<span id="cb2-2"><a href=""></a><span class="fu">library</span>(tictoc)</span>
-<span id="cb2-3"><a href=""></a></span>
-<span id="cb2-4"><a href=""></a>future<span class="sc">::</span><span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="dv">1</span>) <span class="co"># setting num of cores/workers</span></span>
-<span id="cb2-5"><a href=""></a><span class="fu">tic</span>()</span>
-<span id="cb2-6"><a href=""></a>num <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span> <span class="sc">|&gt;</span> <span class="fu">future_map</span>(fib_n)</span>
-<span id="cb2-7"><a href=""></a><span class="fu">toc</span>() <span class="co"># 4.151 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3" data-code-line-numbers="1-2|4|5-7|1-7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">library</span>(furrr) <span class="co"># library(furrr) loads future by default</span></span>
+<span id="cb3-2"><a href=""></a><span class="fu">library</span>(tictoc)</span>
+<span id="cb3-3"><a href=""></a></span>
+<span id="cb3-4"><a href=""></a>future<span class="sc">::</span><span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="dv">1</span>) <span class="co"># setting num of cores/workers</span></span>
+<span id="cb3-5"><a href=""></a><span class="fu">tic</span>()</span>
+<span id="cb3-6"><a href=""></a>num <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span> <span class="sc">|&gt;</span> <span class="fu">future_map</span>(fib_n)</span>
+<span id="cb3-7"><a href=""></a><span class="fu">toc</span>() <span class="co"># 4.151 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div class="fragment">
@@ -2100,10 +2275,10 @@ A R Ladies Workshop
 
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3" data-code-line-numbers="1|2-4|1-4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>future<span class="sc">::</span><span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="dv">2</span>) <span class="co"># Using 1 additional core</span></span>
-<span id="cb3-2"><a href=""></a><span class="fu">tic</span>()</span>
-<span id="cb3-3"><a href=""></a>num <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span> <span class="sc">|&gt;</span> <span class="fu">future_map</span>(fib_n)</span>
-<span id="cb3-4"><a href=""></a><span class="fu">toc</span>() <span class="co"># 2.174 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4" data-code-line-numbers="1|2-4|1-4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>future<span class="sc">::</span><span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="dv">2</span>) <span class="co"># Using 1 additional core</span></span>
+<span id="cb4-2"><a href=""></a><span class="fu">tic</span>()</span>
+<span id="cb4-3"><a href=""></a>num <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span> <span class="sc">|&gt;</span> <span class="fu">future_map</span>(fib_n)</span>
+<span id="cb4-4"><a href=""></a><span class="fu">toc</span>() <span class="co"># 2.174 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -2126,99 +2301,84 @@ A R Ladies Workshop
 <div class="cell">
 <details class="code-fold">
 <summary>expand for <code>random_walk()</code> source code</summary>
-<div class="sourceCode cell-code" id="cb4" data-code-line-numbers="4|5-16|6|7|8-14|8|9-10|11-13|5-16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="fu">library</span>(furrr)</span>
-<span id="cb4-2"><a href=""></a><span class="fu">library</span>(tictoc)</span>
-<span id="cb4-3"><a href=""></a></span>
-<span id="cb4-4"><a href=""></a>nworkers <span class="ot">=</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span> <span class="co"># select nworkers to amount of cores - 1 </span></span>
-<span id="cb4-5"><a href=""></a>random_walk <span class="ot">&lt;-</span> <span class="cf">function</span>(steps) {</span>
-<span id="cb4-6"><a href=""></a>  position <span class="ot">&lt;-</span> <span class="fu">numeric</span>(steps) <span class="co"># Initialize the position vector</span></span>
-<span id="cb4-7"><a href=""></a>  position[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co"># Start at the origin</span></span>
-<span id="cb4-8"><a href=""></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>steps) {                   <span class="co"># Simulate each step of the walk</span></span>
-<span id="cb4-9"><a href=""></a>    <span class="cf">if</span> (<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;</span> <span class="fl">0.5</span>) {</span>
-<span id="cb4-10"><a href=""></a>      position[i] <span class="ot">&lt;-</span> position[i <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">+</span> <span class="dv">1</span> <span class="co"># Move forward</span></span>
-<span id="cb4-11"><a href=""></a>    } <span class="cf">else</span> {</span>
-<span id="cb4-12"><a href=""></a>      position[i] <span class="ot">&lt;-</span> position[i <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">-</span> <span class="dv">1</span> <span class="co"># Move backward</span></span>
-<span id="cb4-13"><a href=""></a>    }</span>
-<span id="cb4-14"><a href=""></a>  }</span>
-<span id="cb4-15"><a href=""></a>  <span class="fu">return</span>(position)</span>
-<span id="cb4-16"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5" data-code-line-numbers="4|5-16|6|7|8-14|8|9-10|11-13|5-16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="fu">library</span>(furrr)</span>
+<span id="cb5-2"><a href=""></a><span class="fu">library</span>(tictoc)</span>
+<span id="cb5-3"><a href=""></a></span>
+<span id="cb5-4"><a href=""></a>nworkers <span class="ot">=</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span> <span class="co"># select nworkers to amount of cores - 1 </span></span>
+<span id="cb5-5"><a href=""></a>random_walk <span class="ot">&lt;-</span> <span class="cf">function</span>(steps) {</span>
+<span id="cb5-6"><a href=""></a>  position <span class="ot">&lt;-</span> <span class="fu">numeric</span>(steps) <span class="co"># Initialize the position vector</span></span>
+<span id="cb5-7"><a href=""></a>  position[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co"># Start at the origin</span></span>
+<span id="cb5-8"><a href=""></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>steps) {                   <span class="co"># Simulate each step of the walk</span></span>
+<span id="cb5-9"><a href=""></a>    <span class="cf">if</span> (<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;</span> <span class="fl">0.5</span>) {</span>
+<span id="cb5-10"><a href=""></a>      position[i] <span class="ot">&lt;-</span> position[i <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">+</span> <span class="dv">1</span> <span class="co"># Move forward</span></span>
+<span id="cb5-11"><a href=""></a>    } <span class="cf">else</span> {</span>
+<span id="cb5-12"><a href=""></a>      position[i] <span class="ot">&lt;-</span> position[i <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">-</span> <span class="dv">1</span> <span class="co"># Move backward</span></span>
+<span id="cb5-13"><a href=""></a>    }</span>
+<span id="cb5-14"><a href=""></a>  }</span>
+<span id="cb5-15"><a href=""></a>  <span class="fu">return</span>(position)</span>
+<span id="cb5-16"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5" data-code-line-numbers="1|3-6|7-11|13-18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>steps <span class="ot">=</span> <span class="dv">10000</span>; n_random_walks <span class="ot">=</span> <span class="dv">300</span> <span class="co"># Define the number of steps and walks</span></span>
-<span id="cb5-2"><a href=""></a></span>
-<span id="cb5-3"><a href=""></a>future<span class="sc">::</span><span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="dv">1</span>) <span class="co"># setting num of cores/workers</span></span>
-<span id="cb5-4"><a href=""></a><span class="fu">tic</span>() <span class="co"># Measure time taken to execute the random walk</span></span>
-<span id="cb5-5"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">1</span>); walks <span class="ot">=</span> <span class="fu">future_map</span>(<span class="dv">1</span><span class="sc">:</span>n_random_walks , <span class="sc">~</span><span class="fu">random_walk</span>(steps),<span class="at">.options =</span> <span class="fu">furrr_options</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>)) </span>
-<span id="cb5-6"><a href=""></a><span class="fu">toc</span>() <span class="co"># 3.088 sec elapsed</span></span>
-<span id="cb5-7"><a href=""></a></span>
-<span id="cb5-8"><a href=""></a><span class="fu">tic</span>()</span>
-<span id="cb5-9"><a href=""></a>future<span class="sc">::</span><span class="fu">plan</span>(multisession, <span class="at">workers =</span> nworkers) <span class="co"># setting num of cores/workers</span></span>
-<span id="cb5-10"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">1</span>);walks <span class="ot">=</span> <span class="fu">future_map</span>(<span class="dv">1</span><span class="sc">:</span>n_random_walks , <span class="sc">~</span><span class="fu">random_walk</span>(steps),<span class="at">.options =</span> <span class="fu">furrr_options</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>)) </span>
-<span id="cb5-11"><a href=""></a><span class="fu">toc</span>() <span class="co"># 1.713 sec elapsed</span></span>
-<span id="cb5-12"><a href=""></a></span>
-<span id="cb5-13"><a href=""></a><span class="fu">pdf</span>(<span class="st">"random_walks.pdf"</span>)</span>
-<span id="cb5-14"><a href=""></a><span class="fu">invisible</span>(</span>
-<span id="cb5-15"><a href=""></a>  <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="cf">function</span>(i) </span>
-<span id="cb5-16"><a href=""></a>    <span class="fu">plot</span>(walks[[i]],<span class="at">type =</span> <span class="st">"l"</span>, <span class="at">ylab =</span> <span class="st">"Position"</span>, <span class="at">xlab =</span> <span class="st">"Step"</span>,</span>
-<span id="cb5-17"><a href=""></a>         <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Random Walk"</span>,i)))</span>
-<span id="cb5-18"><a href=""></a>  );<span class="fu">dev.off</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6" data-code-line-numbers="1|3-6|7-11|13-18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>steps <span class="ot">=</span> <span class="dv">10000</span>; n_random_walks <span class="ot">=</span> <span class="dv">300</span> <span class="co"># Define the number of steps and walks</span></span>
+<span id="cb6-2"><a href=""></a></span>
+<span id="cb6-3"><a href=""></a>future<span class="sc">::</span><span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="dv">1</span>) <span class="co"># setting num of cores/workers</span></span>
+<span id="cb6-4"><a href=""></a><span class="fu">tic</span>() <span class="co"># Measure time taken to execute the random walk</span></span>
+<span id="cb6-5"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">1</span>); walks <span class="ot">=</span> <span class="fu">future_map</span>(<span class="dv">1</span><span class="sc">:</span>n_random_walks , <span class="sc">~</span><span class="fu">random_walk</span>(steps),<span class="at">.options =</span> <span class="fu">furrr_options</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>)) </span>
+<span id="cb6-6"><a href=""></a><span class="fu">toc</span>() <span class="co"># 3.088 sec elapsed</span></span>
+<span id="cb6-7"><a href=""></a></span>
+<span id="cb6-8"><a href=""></a><span class="fu">tic</span>()</span>
+<span id="cb6-9"><a href=""></a>future<span class="sc">::</span><span class="fu">plan</span>(multisession, <span class="at">workers =</span> nworkers) <span class="co"># setting num of cores/workers</span></span>
+<span id="cb6-10"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">1</span>);walks <span class="ot">=</span> <span class="fu">future_map</span>(<span class="dv">1</span><span class="sc">:</span>n_random_walks , <span class="sc">~</span><span class="fu">random_walk</span>(steps),<span class="at">.options =</span> <span class="fu">furrr_options</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>)) </span>
+<span id="cb6-11"><a href=""></a><span class="fu">toc</span>() <span class="co"># 1.713 sec elapsed</span></span>
+<span id="cb6-12"><a href=""></a></span>
+<span id="cb6-13"><a href=""></a><span class="fu">pdf</span>(<span class="st">"random_walks.pdf"</span>)</span>
+<span id="cb6-14"><a href=""></a><span class="fu">invisible</span>(</span>
+<span id="cb6-15"><a href=""></a>  <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="cf">function</span>(i) </span>
+<span id="cb6-16"><a href=""></a>    <span class="fu">plot</span>(walks[[i]],<span class="at">type =</span> <span class="st">"l"</span>, <span class="at">ylab =</span> <span class="st">"Position"</span>, <span class="at">xlab =</span> <span class="st">"Step"</span>,</span>
+<span id="cb6-17"><a href=""></a>         <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Random Walk"</span>,i)))</span>
+<span id="cb6-18"><a href=""></a>  );<span class="fu">dev.off</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="our-first-10-random-walks-plots" class="slide level2">
-<h2>Our First 10 Random Walks Plots</h2>
-<p><object data="random_walks.pdf" type="application/pdf" width="1000" height="650"><iframe src="random_walks.pdf" width="1000" height="650">This browser does not support PDFs. Please download the PDF to view it: <a href="random_walks.pdf">Download PDF</a></iframe></object></p>
 </section>
 <section id="bootstraps-in-parallel" class="slide level2">
 <h2>Bootstraps in Parallel</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>expand for source code for <code>boot()</code> and <code>samp.o()</code></summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>boot <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">B =</span> <span class="dv">5000</span>, m, theta.f, <span class="at">w =</span> <span class="dv">1</span>, rdist, ...) {</span>
-<span id="cb6-2"><a href=""></a>  <span class="fu">plan</span>(multisession, <span class="at">workers =</span> w) <span class="co"># Set up for parallel execution</span></span>
-<span id="cb6-3"><a href=""></a>  b_indices <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>B <span class="co"># vector of indices for bootstrapping iterations</span></span>
-<span id="cb6-4"><a href=""></a>  iterate_func <span class="ot">&lt;-</span> <span class="cf">function</span>(b) { <span class="co"># apply for each bootstrap iteration</span></span>
-<span id="cb6-5"><a href=""></a>    <span class="cf">if</span> (m <span class="sc">==</span> <span class="st">"p"</span>) {</span>
-<span id="cb6-6"><a href=""></a>      d.b <span class="ot">&lt;-</span> <span class="fu">rdist</span>(...) <span class="co"># parametric bootstrap</span></span>
-<span id="cb6-7"><a href=""></a>    } <span class="cf">else</span> <span class="cf">if</span> (m <span class="sc">==</span> <span class="st">"np"</span>) {</span>
-<span id="cb6-8"><a href=""></a>      d.b <span class="ot">&lt;-</span> x[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x), <span class="at">replace =</span> <span class="cn">TRUE</span>)] <span class="co"># nonparametric bootstrap</span></span>
-<span id="cb6-9"><a href=""></a>    } <span class="cf">else</span> {</span>
-<span id="cb6-10"><a href=""></a>      <span class="fu">stop</span>(<span class="st">"possible arguments for m is 'p' (parametric) or 'np' (nonparametric)"</span>)</span>
-<span id="cb6-11"><a href=""></a>    }</span>
-<span id="cb6-12"><a href=""></a>    <span class="fu">theta.f</span>(d.b)</span>
-<span id="cb6-13"><a href=""></a>  }</span>
-<span id="cb6-14"><a href=""></a>  <span class="co"># future_map_dbl to apply iterate_func over each index in parallel with proper seeding</span></span>
-<span id="cb6-15"><a href=""></a>  t.s <span class="ot">&lt;-</span> <span class="fu">future_map_dbl</span>(b_indices, iterate_func, <span class="at">.options =</span> <span class="fu">furrr_options</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb6-16"><a href=""></a>  <span class="fu">samp.o</span>(t.s) <span class="co"># Summarize the bootstrap results</span></span>
-<span id="cb6-17"><a href=""></a>}</span>
-<span id="cb6-18"><a href=""></a>samp.o <span class="ot">=</span> <span class="cf">function</span>(t.s) {</span>
-<span id="cb6-19"><a href=""></a>  <span class="fu">round</span>(<span class="fu">c</span>(<span class="at">mean=</span><span class="fu">mean</span>(t.s),<span class="at">sd=</span><span class="fu">sd</span>(t.s),<span class="at">lower=</span><span class="fu">quantile</span>(t.s, <span class="fl">0.025</span>, <span class="at">names =</span> F),</span>
-<span id="cb6-20"><a href=""></a>  <span class="at">upper=</span> <span class="fu">quantile</span>(t.s, <span class="fl">0.975</span>, <span class="at">names =</span> F)),<span class="at">digits=</span><span class="dv">6</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>boot <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">B =</span> <span class="dv">5000</span>, m, theta.f, <span class="at">w =</span> <span class="dv">1</span>, rdist, ...) {</span>
+<span id="cb7-2"><a href=""></a>  <span class="fu">plan</span>(multisession, <span class="at">workers =</span> w) <span class="co"># Set up for parallel execution</span></span>
+<span id="cb7-3"><a href=""></a>  b_indices <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>B <span class="co"># vector of indices for bootstrapping iterations</span></span>
+<span id="cb7-4"><a href=""></a>  iterate_func <span class="ot">&lt;-</span> <span class="cf">function</span>(b) { <span class="co"># apply for each bootstrap iteration</span></span>
+<span id="cb7-5"><a href=""></a>    <span class="cf">if</span> (m <span class="sc">==</span> <span class="st">"p"</span>) {</span>
+<span id="cb7-6"><a href=""></a>      d.b <span class="ot">&lt;-</span> <span class="fu">rdist</span>(...) <span class="co"># parametric bootstrap</span></span>
+<span id="cb7-7"><a href=""></a>    } <span class="cf">else</span> <span class="cf">if</span> (m <span class="sc">==</span> <span class="st">"np"</span>) {</span>
+<span id="cb7-8"><a href=""></a>      d.b <span class="ot">&lt;-</span> x[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x), <span class="at">replace =</span> <span class="cn">TRUE</span>)] <span class="co"># nonparametric bootstrap</span></span>
+<span id="cb7-9"><a href=""></a>    } <span class="cf">else</span> {</span>
+<span id="cb7-10"><a href=""></a>      <span class="fu">stop</span>(<span class="st">"possible arguments for m is 'p' (parametric) or 'np' (nonparametric)"</span>)</span>
+<span id="cb7-11"><a href=""></a>    }</span>
+<span id="cb7-12"><a href=""></a>    <span class="fu">theta.f</span>(d.b)</span>
+<span id="cb7-13"><a href=""></a>  }</span>
+<span id="cb7-14"><a href=""></a>  <span class="co"># future_map_dbl to apply iterate_func over each index in parallel with proper seeding</span></span>
+<span id="cb7-15"><a href=""></a>  t.s <span class="ot">&lt;-</span> <span class="fu">future_map_dbl</span>(b_indices, iterate_func, <span class="at">.options =</span> <span class="fu">furrr_options</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb7-16"><a href=""></a>  <span class="fu">samp.o</span>(t.s) <span class="co"># Summarize the bootstrap results</span></span>
+<span id="cb7-17"><a href=""></a>}</span>
+<span id="cb7-18"><a href=""></a>samp.o <span class="ot">=</span> <span class="cf">function</span>(t.s) {</span>
+<span id="cb7-19"><a href=""></a>  <span class="fu">round</span>(<span class="fu">c</span>(<span class="at">mean=</span><span class="fu">mean</span>(t.s),<span class="at">sd=</span><span class="fu">sd</span>(t.s),<span class="at">lower=</span><span class="fu">quantile</span>(t.s, <span class="fl">0.025</span>, <span class="at">names =</span> F),</span>
+<span id="cb7-20"><a href=""></a>  <span class="at">upper=</span> <span class="fu">quantile</span>(t.s, <span class="fl">0.975</span>, <span class="at">names =</span> F)),<span class="at">digits=</span><span class="dv">6</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a><span class="fu">library</span>(purrr)</span>
-<span id="cb7-2"><a href=""></a><span class="fu">library</span>(future)</span>
-<span id="cb7-3"><a href=""></a><span class="fu">library</span>(tictoc)</span>
-<span id="cb7-4"><a href=""></a></span>
-<span id="cb7-5"><a href=""></a><span class="co"># boot &lt;- function(x, B = 5000, m, theta.f, w = 1, rdist, ...) {} # see above</span></span>
-<span id="cb7-6"><a href=""></a><span class="co"># samp.o = function(t.s) {} # see above</span></span>
-<span id="cb7-7"><a href=""></a>theta.f <span class="ot">=</span> <span class="cf">function</span>(d.b) {p <span class="ot">=</span> <span class="fu">sum</span>(d.b)<span class="sc">/</span>n; p<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>p)} </span>
-<span id="cb7-8"><a href=""></a></span>
-<span id="cb7-9"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">1</span>); n <span class="ot">=</span> <span class="dv">800000</span>; y <span class="ot">=</span> <span class="dv">480</span>; B <span class="ot">=</span> <span class="dv">5000</span></span>
-<span id="cb7-10"><a href=""></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, y), <span class="fu">rep</span>(<span class="dv">0</span>, n<span class="sc">-</span>y)); phat <span class="ot">&lt;-</span> <span class="fu">sum</span>(data)<span class="sc">/</span>n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<div class="fragment">
-<div style="margin-top: 20px;">
-
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a><span class="fu">tic</span>()</span>
-<span id="cb8-2"><a href=""></a>(b_p_future <span class="ot">&lt;-</span> <span class="fu">boot</span>(data, <span class="at">B =</span> B, <span class="at">m =</span> <span class="st">"p"</span>, <span class="at">theta.f =</span> theta.f, <span class="at">w =</span> <span class="dv">1</span>,</span>
-<span id="cb8-3"><a href=""></a>                    <span class="at">rdist =</span> rbinom, <span class="at">n =</span> n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> phat))</span>
-<span id="cb8-4"><a href=""></a><span class="fu">toc</span>() <span class="co"># 49.859 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a><span class="fu">library</span>(purrr)</span>
+<span id="cb8-2"><a href=""></a><span class="fu">library</span>(future)</span>
+<span id="cb8-3"><a href=""></a><span class="fu">library</span>(tictoc)</span>
+<span id="cb8-4"><a href=""></a></span>
+<span id="cb8-5"><a href=""></a><span class="co"># boot &lt;- function(x, B = 5000, m, theta.f, w = 1, rdist, ...) {} # see above</span></span>
+<span id="cb8-6"><a href=""></a><span class="co"># samp.o = function(t.s) {} # see above</span></span>
+<span id="cb8-7"><a href=""></a>theta.f <span class="ot">=</span> <span class="cf">function</span>(d.b) {p <span class="ot">=</span> <span class="fu">sum</span>(d.b)<span class="sc">/</span>n; p<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>p)} </span>
+<span id="cb8-8"><a href=""></a></span>
+<span id="cb8-9"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">1</span>); n <span class="ot">=</span> <span class="dv">800000</span>; y <span class="ot">=</span> <span class="dv">480</span>; B <span class="ot">=</span> <span class="dv">5000</span></span>
+<span id="cb8-10"><a href=""></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, y), <span class="fu">rep</span>(<span class="dv">0</span>, n<span class="sc">-</span>y)); phat <span class="ot">&lt;-</span> <span class="fu">sum</span>(data)<span class="sc">/</span>n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div class="fragment">
@@ -2227,9 +2387,20 @@ A R Ladies Workshop
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a><span class="fu">tic</span>()</span>
-<span id="cb9-2"><a href=""></a>(<span class="at">b_p_future =</span> <span class="fu">boot</span>(data, <span class="at">B =</span> B, <span class="at">m =</span> <span class="st">"p"</span>, <span class="at">theta.f =</span> theta.f, <span class="at">w =</span> <span class="dv">9</span>,</span>
+<span id="cb9-2"><a href=""></a>(b_p_future <span class="ot">&lt;-</span> <span class="fu">boot</span>(data, <span class="at">B =</span> B, <span class="at">m =</span> <span class="st">"p"</span>, <span class="at">theta.f =</span> theta.f, <span class="at">w =</span> <span class="dv">1</span>,</span>
 <span id="cb9-3"><a href=""></a>                    <span class="at">rdist =</span> rbinom, <span class="at">n =</span> n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> phat))</span>
-<span id="cb9-4"><a href=""></a><span class="fu">toc</span>() <span class="co"># 8.014 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-4"><a href=""></a><span class="fu">toc</span>() <span class="co"># 49.859 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<div style="margin-top: 20px;">
+
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="fu">tic</span>()</span>
+<span id="cb10-2"><a href=""></a>(<span class="at">b_p_future =</span> <span class="fu">boot</span>(data, <span class="at">B =</span> B, <span class="at">m =</span> <span class="st">"p"</span>, <span class="at">theta.f =</span> theta.f, <span class="at">w =</span> <span class="dv">9</span>,</span>
+<span id="cb10-3"><a href=""></a>                    <span class="at">rdist =</span> rbinom, <span class="at">n =</span> n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> phat))</span>
+<span id="cb10-4"><a href=""></a><span class="fu">toc</span>() <span class="co"># 8.014 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section></section>
@@ -2246,11 +2417,11 @@ A R Ladies Workshop
 <div id="tabset-8-1">
 <!--Basic If-Else-->
 <p>Write an R function named <code>is_positive</code> that takes a single numeric input and returns <code>TRUE</code> if the number is positive, and <code>FALSE</code> otherwise.</p>
-<div id="qwebr-insertion-location-48"></div>
+<div id="qwebr-insertion-location-50"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div id="tabset-8-2">
-<div id="qwebr-insertion-location-49"></div>
+<div id="qwebr-insertion-location-51"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -2264,11 +2435,11 @@ A R Ladies Workshop
 <div class="tab-content">
 <div id="tabset-9-1">
 <p>Create a function named <code>sqrt_safe</code> that computes the square root of a number. If the input is negative, the function should stop execution and return an error message <code>"Cannot take square root of a negative number."</code></p>
-<div id="qwebr-insertion-location-50"></div>
+<div id="qwebr-insertion-location-52"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div id="tabset-9-2">
-<div id="qwebr-insertion-location-51"></div>
+<div id="qwebr-insertion-location-53"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -2282,11 +2453,11 @@ A R Ladies Workshop
 <div class="tab-content">
 <div id="tabset-10-1">
 <p>Write a function named <code>find_first_negative</code> that takes a numeric vector and returns the position of the first negative number. If there are no negative numbers, return <code>NA</code>.</p>
-<div id="qwebr-insertion-location-52"></div>
+<div id="qwebr-insertion-location-54"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div id="tabset-10-2">
-<div id="qwebr-insertion-location-53"></div>
+<div id="qwebr-insertion-location-55"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -2300,11 +2471,11 @@ A R Ladies Workshop
 <div class="tab-content">
 <div id="tabset-11-1">
 <p>Create a function named <code>halve_until_less_than_one</code> that takes a single numeric argument and keeps halving it until it is less than 1, then returns the result. Keep track of the number of times the input is halved; print the function output as <code>list(result = x, nsteps = count)</code></p>
-<div id="qwebr-insertion-location-54"></div>
+<div id="qwebr-insertion-location-56"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div id="tabset-11-2">
-<div id="qwebr-insertion-location-55"></div>
+<div id="qwebr-insertion-location-57"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -2318,11 +2489,11 @@ A R Ladies Workshop
 <div class="tab-content">
 <div id="tabset-12-1">
 <p>Write a function named <code>scale_columns</code> that takes a matrix and scales (normalizes) each column to have a mean of 0 and a standard deviation of 1. Use the given dataframe <code>M</code></p>
-<div id="qwebr-insertion-location-56"></div>
+<div id="qwebr-insertion-location-58"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div id="tabset-12-2">
-<div id="qwebr-insertion-location-57"></div>
+<div id="qwebr-insertion-location-59"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -2336,11 +2507,11 @@ A R Ladies Workshop
 <div class="tab-content">
 <div id="tabset-13-1">
 <p>Using the <code>purrr</code> package, write a function that takes a list of numeric vectors and returns a list of their means. Use <code>purrr::map</code>.</p>
-<div id="qwebr-insertion-location-58"></div>
+<div id="qwebr-insertion-location-60"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div id="tabset-13-2">
-<div id="qwebr-insertion-location-59"></div>
+<div id="qwebr-insertion-location-61"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -2354,11 +2525,11 @@ A R Ladies Workshop
 <div class="tab-content">
 <div id="tabset-14-1">
 <p>Create a function named <code>multiply_and_add</code> that takes an arbitrary number of numeric vectors. It should multiply each vector by its index in the argument list and then sum all the results into a single number.</p>
-<div id="qwebr-insertion-location-60"></div>
+<div id="qwebr-insertion-location-62"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 <div id="tabset-14-2">
-<div id="qwebr-insertion-location-61"></div>
+<div id="qwebr-insertion-location-63"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
@@ -2378,8 +2549,6 @@ A R Ladies Workshop
 
 <section id="wanna-hear-from-us" class="title-slide slide level1 center" data-background-color="#8FA9C2">
 <h1><span style="color:white; font-size: 70px;">Wanna Hear From Us?</span></h1>
-<div class="columns">
-<div class="column" style="width:50%;">
 <p align="center">
 <img src="images/Dan.png" alt="Cover Image" height="250px">
 </p>
@@ -2387,22 +2556,35 @@ A R Ladies Workshop
 <p><svg aria-hidden="true" role="img" viewbox="0 0 496 512" style="height:1em;width:0.97em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:black;overflow:visible;position:relative;"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg> <a href="https://github.com/DHintz137" class="custom-link">DHintz137</a></p>
 <p><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:black;overflow:visible;position:relative;"><path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z"></path></svg> <a href="https://dhintz137.github.io/quartz/" class="custom-link">dhintz137.github.io</a></p>
 <p><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:black;overflow:visible;position:relative;"><path d="M64 112c-8.8 0-16 7.2-16 16v22.1L220.5 291.7c20.7 17 50.4 17 71.1 0L464 150.1V128c0-8.8-7.2-16-16-16H64zM48 212.2V384c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V212.2L322 328.8c-38.4 31.5-93.7 31.5-132 0L48 212.2zM0 128C0 92.7 28.7 64 64 64H448c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z"></path></svg> <a href="dhintz1@uwyo.edu" class="custom-link">dhintz1@uwyo.edu</a></p>
-</div><div class="column" style="width:50%;">
-<p align="center">
-<img src="images/Seth.png" alt="Cover Image" height="250px">
-</p>
-<p><svg aria-hidden="true" role="img" viewbox="0 0 496 512" style="height:1em;width:0.97em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:black;overflow:visible;position:relative;"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg> <a href="https://github.com/STRankins" class="custom-link">STRankins</a></p>
-<p><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:black;overflow:visible;position:relative;"><path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z"></path></svg> <a href="https://wyocoopunit.org/people/seth-rankins/" class="custom-link">wyocoopunit.org</a></p>
-<p><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:black;overflow:visible;position:relative;"><path d="M64 112c-8.8 0-16 7.2-16 16v22.1L220.5 291.7c20.7 17 50.4 17 71.1 0L464 150.1V128c0-8.8-7.2-16-16-16H64zM48 212.2V384c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V212.2L322 328.8c-38.4 31.5-93.7 31.5-132 0L48 212.2zM0 128C0 92.7 28.7 64 64 64H448c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z"></path></svg> <a href="srankins@uwyo.edu" class="custom-link">srankins@uwyo.edu</a></p>
-</div>
-</div>
 </section>
 
 <section id="thank-you" class="title-slide slide level1 center" data-background-color="#447099">
 <h1>Thank you!!</h1>
+
+</section>
+
+<section id="references" class="title-slide slide level1 smaller scrollable" data-background-color="#447099">
+<h1>References</h1>
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
+</div>
+</div>
+<div id="refs" class="references csl-bib-body" role="list">
+<div id="ref-NHGRI2024" class="csl-entry" role="listitem">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">National Human Genome Research Institute (2024) <a href="https://www.genome.gov/genetics-glossary/Base-Pair">Base pair</a></div>
+</div>
+<div id="ref-carbo2023comparison" class="csl-entry" role="listitem">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Carbo EC, Mourik K, Boers SA, et al (2023) A comparison of five illumina, ion torrent, and nanopore sequencing technology-based approaches for whole genome sequencing of SARS-CoV-2. European Journal of Clinical Microbiology &amp; Infectious Diseases 42(6):701–713</div>
+</div>
+<div id="ref-Illumina2016Nextera" class="csl-entry" role="listitem">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">(2016) <a href="https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nexteradna/nextera-dna-library-prep-reference-guide-15027987-01.pdf"><span>Nextera<sup></sup> DNA Library Prep Reference Guide</span></a>. Illumina</div>
+</div>
+<div id="ref-kandwal2023genetic" class="csl-entry" role="listitem">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Kandwal S, Fayne D (2023) Genetic conservation across SARS-CoV-2 non-structural proteins–insights into possible targets for treatment of future viral outbreaks. Virology</div>
+</div>
+<div id="ref-angermueller2016deep" class="csl-entry" role="listitem">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">Angermueller C, Pärnamaa T, Parts L, Stegle O (2016) Deep learning for computational biology. Molecular systems biology 12(7):878</div>
 </div>
 </div>
 </section>

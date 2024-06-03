@@ -71,8 +71,10 @@ filters:
 ## SARS-COV-2
 
 ```{webr-r}
-url <- "https://coatless.github.io/raw-data/flights.csv"
-download.file(url, "flights.csv")
+url <- "https://dhintz137.github.io/Embedding_Presentation/raw-data/King_Man_Woman_Queen_pred.csv"
+download.file(url, "King_Man_Woman_Queen_pred.csv")
+King_Man_Woman_Queen_pred <- read.csv("King_Man_Woman_Queen_pred")
+head(King_Man_Woman_Queen_pred)
 ```
 
 
@@ -181,7 +183,7 @@ download.file(url, "flights.csv")
 ```{r, echo=TRUE, eval=FALSE}
 library(word2vec)
 # using british national corpus http://vectors.nlpl.eu/repository/
-model <- read.word2vec("/Users/danielhintz/Embedding_Presentation/British_National_Corpus_Vector_size_300_skipgram/model.bin", normalize = TRUE)  head(summary(model, type = "vocabulary"), n = 100)
+model <- read.word2vec("/path_to_folder/British_National_Corpus_Vector_size_300_skipgram/model.bin", normalize = TRUE)  head(summary(model, type = "vocabulary"), n = 100)
 Word_embeddings <- predict(model,newdata = c("king_NOUN","man_NOUN","woman_NOUN","queen_NOUN"),type="embedding")
 ```
 
