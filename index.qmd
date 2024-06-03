@@ -2,7 +2,7 @@
 engine: knitr
 webr: 
   show-startup-message: false  
-  packages: ['purrr']
+  packages: ['word2vec']
 format:
   revealjs:
     include-in-header:
@@ -14,83 +14,222 @@ format:
     highlight-style: github
     slide-number: c/t
     chalkboard: true
+    resources:
+      - British_National_Corpus_Vector_size_300_skipgram/model.bin
+bibliography: references.bib
+csl: diabetologia.csl
 filters: 
  - webr
 ---
 
-# [An Advanced Introduction to R]{
+# [An Exploration of Information Loss in Transformer Embedding Spaces for Enhancing Predictive AI in Genomics]{
   style="color:#FFFFFF; 
-         font-size: 110px; 
-         text-shadow: -0.5px -0.5px 0 #000, 
-                      0.5px -0.5px 0 #000, 
-                      -0.5px 0.5px 0 #000, 
-                      0.5px 0.5px 0 #000;"
-}{background-image="images/conny-schneider-xuTJZ7uD7PI-unsplash.jpg" background-size="cover" background-color="#4f6952"}
+         font-size: 55px; 
+         position: relative;
+         bottom: 60px; 
+         text-shadow: -1px -1px 0 #000, 
+                      1px -1px 0 #000, 
+                      -1px 1px 0 #000, 
+                      1px 1px 0 #000;"
+}{background-image="images/DALL_E_DNA_Image_edited.png" background-size="cover" background-color="#4f6952"}
 
 
 <h2 style="color:#FFFFFF; 
-         font-size: 35px; 
-         text-shadow: -1px -1px 0 #000, 
-                      1px -1px 0 #000, 
-                      -1px 1px 0 #000, 
-                      1px 1px 0 #000;">Daniel Hintz | Seth Rankins | 2024-03-25</h2>
-
-<h3 style="color:#FFFFFF; 
-         font-size: 25px; 
-         text-shadow: -1px -1px 0 #000, 
-                      1px -1px 0 #000, 
-                      -1px 1px 0 #000, 
-                      1px 1px 0 #000;">A R Ladies Workshop</h3>
-
+         font-size: 28px; 
+         text-align: center;
+         position: absolute; 
+         top: 325px; 
+         width: 100%; 
+         text-shadow: -0.5px -0.5px 0 #000, 
+                      0.5px -0.5px 0 #000, 
+                      -0.5px 0.5px 0 #000, 
+                      0.5px 0.5px 0 #000;">Daniel Hintz <br> 2024-06-06</h2>
 
 # [Outline (1)]{style="font-size: 55px;"} 
 
 ::: incremental
 ::: {style="font-size: 0.6em;"}
--   Loops, Functionals (to replace loops), and Logicals
--   R function Basics
-    -   Structure
-    -   Some practice to start
--   R function's Extended
-    -   `formals()`, `body()`, and `environment()`
-    -   More on Environments
-    -   Default Argument Assignment
-    -   `NULL` Conditional Execution
-    -   `message()`, `warning()`, and `stop()`
-    -   Conditional Execution with `missing()`
-    -   Using the Three Dots Ellipsis, `...`
-    -   Anonymous Functions
+-   Background
+    - SARS-COV-2
+    - DNA
+    - Coding regions and Proteins
+    - Sequence Representations
+    - GenSLM
+-   Data and Processing
+    - Data Description
+    - Data Cleaning & Pre-Processing
+    - Exploratory Data Analysis
+    - Generating Embeddings
+-   Methodology
 :::
 :::
 
-## [Outline (2)]{style="font-size: 55px;"} 
+
+
+# [Background]{style="color:white;"}{background-color="#8FA9C2"}
+
+## SARS-COV-2
+
+```{webr-r}
+url <- "https://coatless.github.io/raw-data/flights.csv"
+download.file(url, "flights.csv")
+```
+
+
+## DNA
+
+::: columns
+::: {.column width="80%"}
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Deoxyribonucleic acid (DNA) is a molecule that contains the genetic code that provides the instructions for building and maintaining life.
+- The structure of DNA can be thought of as rungs on a ladder (known as base pairs) involving the pairing of four nucleotides - Adenine (A), Cytosine (C),Guanine (G) and Thymine (T).
+- Genomic sequencing is a process used to decipher the genetic material found in an organism
+- For reference, the SARS-CoV2 virus is approximately 30,0000 base pairs (bp’s), whereas the human genome is approximately 3 billion bp.
+:::
+:::
+:::
+::: {.column width="20%"}
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 1: DNA Base Pairs; [@NHGRI2024]](images/DNA_diagram.png)
+:::
+:::
+:::
+
+## DNA Sequencing Technology
+
+::: columns
+::: {.column width="60%"}
+::: incremental
+::: {style="font-size: 0.6em;"}
+- The two main technologies for DNA Sequencing is Ilumina and Nanopore
+- Big Picture, the workflow for sequencing is the same for each technology:
+    - Someone gets tested for Covid, PCA is ran to detect if the assay is indeed positive
+    - Positive tests are ran though Library prep workflow before going onto a sequencing protocol within a lab
+    - This takes in the Covid Assay and arrives at a digital copy of DNA sequences
+:::
+:::
+:::
+::: {.column width="40%"}
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 2: Overview of Lab processing for SARS-CoV-2; Adapted from [@carbo2023comparison], pg. 702](images/sequencing_technology_edit.png)
+:::
+:::
+:::
+
+
+## DNA Library Prep Workflow
+
+::: columns
+::: {.column width="60%"}
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Library prep contains many steps, with lab technicians performing tasks to prepare the assay
+- Library prep comes with the possibility of human error, in addition to the natural machine error in sequencing.
+- Often between steps in the Library prep, the assay can diminish in quality without there being a clear reason as to why this happened.
+-  Post-sequencing, median genome coverage rates for SARS-CoV-2 can range from 81.6 to 99.8% [@carbo2023comparison].
+- A genome coverage of 99.8% means that the sequencing process has successfully captured and sequenced 99.8% of the entire genome of the virus.
+:::
+:::
+:::
+::: {.column width="40%"}
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 3: Nextera DNA Library Prep Workflow; [@Illumina2016Nextera]](images/library-prep.png)
+:::
+:::
+:::
+
+
+## Coding regions and Proteins
+
+::: columns
+::: {.column width="40%"}
+::: incremental
+::: {style="font-size: 0.6em;"}
+- The coding region specifically encodes proteins that are essential for all the functions necessary for life.
+- the whole SARS-CoV2 genome, marking structural and nonstructural proteins within the coding region along with the first 43 nucleotides for the nsp1 protein
+:::
+:::
+:::
+::: {.column width="60%"}
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 3: SARS-CoV-2 Proteins; Adapted from [@kandwal2023genetic], pg. 99](images/nsp1_str_non_str.png)
+:::
+:::
+:::
+
+## Word Embeddings (1)
 
 ::: incremental
 ::: {style="font-size: 0.6em;"}
--   Functional Programming with `base` R
-    -   Function Look Table
-    -   Examples
--   Functional programming with `purrr`
-    -   Function Look Table
-    -   Examples
--   Parallel Computing
-    -   Parallel Computing with `furrr`
-    -   A Note on Parallel Computing
--   Practice Questions
+- Before we introduce GenSLM and embeddings for Sequences, what is an embedding and why would ever embed something? 
+- If we consider English text, how might we ever measure the similarity of words in terms of their meaning, said differently, **How can we measure semantic similarity between words**
+- For example, what is the semantic difference between the words "King" and "Woman"
+- This initially sounds outlandish, but if there were a way to represent words as numeric vectors, then we would be able to use the same linear algebra we would use to compare vectors of force, speed or velocity. 
 :::
 :::
 
-## Webr Code Execution
+## Word Embeddings (2)
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Here is where neural network embedding algorithms enters
+- For example, given a corpus (a massive training set of structured text) how are the words "King", "Quen", "Man", "Woman" related within the given corpus
+- It turns out given a sufficiently large corpus of text you can train an embedding algorithm (such as word2vec for NLP) to generate vectors for words included within the corpus 
+:::
+:::
 
-![](images/webr.gif){fig-align="center"}
+```{r, echo=TRUE, eval=FALSE}
+library(word2vec)
+# using british national corpus http://vectors.nlpl.eu/repository/
+model <- read.word2vec("/Users/danielhintz/Embedding_Presentation/British_National_Corpus_Vector_size_300_skipgram/model.bin", normalize = TRUE)  head(summary(model, type = "vocabulary"), n = 100)
+Word_embeddings <- predict(model,newdata = c("king_NOUN","man_NOUN","woman_NOUN","queen_NOUN"),type="embedding")
+```
+
+```{webr-r}
+url <- "https://dhintz137.github.io/Embedding_Presentation/raw-data/King_Man_Woman_Queen_pred.csv"
+download.file(url, "King_Man_Woman_Queen_pred.csv")
+list.files()
+pred_from_csv <- read.csv("King_Man_Woman_Queen_pred.csv")
+```
+
+## Word Embeddings (3)
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 4](images/King_Man_Woman_Queen.png)
+:::
+
+
+
+## Sequence Representations
+
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![](images/ml_rep_obj.png)
+:::
 
 ::: incremental
-- Use `cmd` `+` `enter` to execute a line  
+::: {style="font-size: 0.6em;"}
+-  An effective representation (embedding) of a genomic sequence is crucial for all downstream tasks
+    - i.e., clustering, classification, regression, protein function identification, structural analysis, and predicting genetic disorders [@angermueller2016deep]
 
-- As of `webR 0.2.3`, `webr` does not support smart execution, so for multiline code highlight the entire section before hitting `cmd` `+` `enter`
+:::
 :::
 
-# [Loops, Functions, and Logical Statements]{style="color:white;"} {background-color="#8FA9C2"}
+## GenSLM
+
+# [Data and Processing]{style="color:white;"}{background-color="#8FA9C2"}
+
+## Data Description
+
+## Data Cleaning & Pre-Processing
+
+## Exploratory Data Analysis
+
+## Generating Embeddings
+
+# [Methodology]{style="color:white;"}{background-color="#8FA9C2"}
+
+
 
 ## What is the Difference Between Vectorization and Iteration?
 
@@ -959,10 +1098,6 @@ invisible(
   );dev.off()
 ```
 
-## Our First 10 Random Walks Plots
-
-{{< pdf random_walks.pdf width=1000 height=650 >}}
-
 
 ## Bootstraps in Parallel
 
@@ -1279,8 +1414,6 @@ sum(c(1, 2) * 1) + sum(c(3, 4) * 2)
 
 # [Wanna Hear From Us?]{style="color:white; font-size: 70px;"} {background-color="#8FA9C2"}
 
-::: columns
-::: {.column width="50%"}
 <p align="center">
   <img src="images/Dan.png" alt="Cover Image" height="250px">
 </p>
@@ -1292,18 +1425,7 @@ sum(c(1, 2) * 1) + sum(c(3, 4) * 2)
 `r fontawesome::fa("globe", "black")` <a href="https://dhintz137.github.io/quartz/" class="custom-link">dhintz137.github.io</a>
 
 `r fontawesome::fa("envelope", "black")` <a href="dhintz1@uwyo.edu" class="custom-link">dhintz1@uwyo.edu</a>
-:::
-::: {.column width="50%"}
-<p align="center">
-  <img src="images/Seth.png" alt="Cover Image" height="250px">
-</p>
-
-`r fontawesome::fa("github", "black")` <a href="https://github.com/STRankins" class="custom-link">STRankins</a>
-
-`r fontawesome::fa("globe", "black")` <a href="https://wyocoopunit.org/people/seth-rankins/" class="custom-link">wyocoopunit.org</a>
-
-`r fontawesome::fa("envelope", "black")` <a href="srankins@uwyo.edu" class="custom-link">srankins@uwyo.edu</a>
-:::
-:::
 
 # Thank you!! {.center background-color="#447099"}
+
+# References {.center background-color="#447099"}
