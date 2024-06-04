@@ -7,7 +7,11 @@
 <link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="index_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
-<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/quarto-contrib/reveal-header-1.0.0/add_header.js" defer="true"></script>
+<link href="index_files/libs/quarto-contrib/reveal-header-1.0.0/add_header.css" rel="stylesheet">
+<script src="index_files/libs/quarto-contrib/sc-sb-title-1.0.0/sc_sb_title.js" defer="true"></script>
+<link href="index_files/libs/quarto-contrib/grid-no-htext-1.0.0/grid_no_htext.css" rel="stylesheet"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.4.549">
 
   <title>index</title>
@@ -576,7 +580,7 @@
   };
 
   // Store cell data
-  globalThis.qwebrCellDetails = [{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-1","results":"markup","autorun":"true","context":"setup","out-height":"","out-width":"700px"},"code":"options(max.print = 10)\n# Download a dataset\nurl <- \"https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/King_Man_Woman_Queen_pred.csv\"\ndownload.file(url, \"King_Man_Woman_Queen_pred.csv\")\nembedding_raw <- read.csv(\"King_Man_Woman_Queen_pred.csv\")\nembedding <- t(data.frame(embedding_raw[,-1] ,row.names = embedding_raw[,1]))\ncolnames(embedding) <- c(\"King\", \"Man\", \"Woman\", \"Queen\")\nembedding <- as_tibble(embedding)","id":1},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-2","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"embedding\nembedding[ ,\"King\"] - embedding[ , \"Man\"] + embedding[ , \"Woman\"]\nembedding[ ,\"Queen\"]","id":2},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-3","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"# First let's make some data to play with.\nvec_dat <- data.frame(x = 1:5, y = NA_real_)\nvec_dat\nloop_dat <- data.frame(t = 1:5, N = NA_real_)\nloop_dat\n\n# What is the difference between vectorization and iteration?\nvec_dat$y <- 4*vec_dat$x + 3\nvec_dat\n\nloop_dat$N[1] <- 2\nfor(i in 1:4) {\n  loop_dat$N[i + 1] <- loop_dat$N[i]*exp(0.5*(1 - loop_dat$N[i]/30))\n}\nloop_dat","id":3},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-4","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"# This is a stupid example, but it creates some data for us.\nfor(i in 1:20) {\n  write.csv(data.frame(ID = paste0(\"DataLogger-\", i),\n                    Temperature = runif(30, 10, 20),\n                    Wind = runif(30, 0, 15),\n                    Battery = \"Normal\"),\n            paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))\n}\n\n# Now lets check our work.\nlist.files(getwd(), pattern = \"WeatherStation_\")","id":4},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-5","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"# This is the code we just wrote.\nfor(i in 1:20) {write.csv(data.frame(ID = paste0(\"DataLogger-\", i),\n                Temperature = runif(30, 10, 20), Wind = runif(30, 0, 15),\n                Battery = \"Normal\"),paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}\n\n# What if we want to read in a bunch of data files?\ndf <- lapply(paste0(getwd(), \"/\", list.files(getwd(), pattern = \".csv\")), read.csv)\n\nlapply(df, function(x) head(x,3))[1:2]\n\ndf2 <- do.call(rbind, lapply(paste0(getwd(), \"/\",\n                             list.files(getwd(), pattern = \".csv\")), read.csv))\nhead(df2)","id":5},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-6","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"# Create some genetic data.\ngenetic_data <- data.frame(matrix(data = sample(c(\"A\", \"T\", \"G\", \"C\"), 3000, replace = TRUE),\n                                  nrow = 300, ncol = 10))\nhead(genetic_data)\n\n# I want to know how many A's there are in each column.\napply(genetic_data, 2, table)[1,]","id":6},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-7","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"if(TRUE) {print(\"I have to work today.\")}\n\nif(FALSE) {print(\"I have to work today.\")\n} else {print(\"It is the weekend!\")}\n\nif(FALSE) {print(\"I have to work today.\")\n} else if(TRUE) {print(\"It is the weekend!\")}\n\nx <- 10\nx == 10\nx != 10","id":7},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-8","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"column1 <- c(1:10, NA)\ncolumn1\nany(is.na(column1))\nis.numeric(column1)\n!is.numeric(column1)\n\nifelse(TRUE, \"cold\", \"hot\")\n\n# Make some data.\ndf2 <- data.frame(ID = \"DataLogger-20\", Temperature = runif(30, 10, 20),\n                  Wind = runif(30, 0, 15), Battery = \"Normal\")\n                    \nhead(df2)\ndf2$WindClass <- ifelse(df2$Wind >= 10, \"Windy\", \"Still\")","id":8},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-9","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"# This is the code from before to make the data.\nfor(i in 1:20) {\nwrite.csv(data.frame(ID = paste0(\"DataLogger-\", i), Temperature = runif(30, 10, 20),\nWind = runif(30, 0, 15), Battery = \"Normal\"), paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}","id":9},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-10","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"# This is the code from before to make the data.\nfor(i in 1:20) {\nwrite.csv(data.frame(ID = paste0(\"DataLogger-\", i), Temperature = runif(30, 10, 20),\nWind = runif(30, 0, 15), Battery = \"Normal\"), paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}\n\nfor(i in seq_along(list.files(getwd(), pattern = \"WeatherStation_\"))) {\n  tmp <- read.csv(paste0(getwd(), \"/\", list.files(getwd(), pattern = \".csv\"))[i])\n  if(i == 1) {weather_dat <- tmp\n  } else {weather_dat <- rbind(weather_dat, tmp)}}","id":10},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-11","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"# This is the code from before to make the data.\nfor(i in 1:20) {\nwrite.csv(data.frame(ID = paste0(\"DataLogger-\", i), Temperature = runif(30, 10, 20),\nWind = runif(30, 0, 15), Battery = \"Normal\"), paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}\n\n# Use this code to put some NA's into the \"Weather Station\" files.\nwrite.csv(data.frame(ID = \"DataLogger-7\", Temperature = c(runif(28, 10, 20), NA, NA),\n          Wind = c(runif(28, 0, 15), NA, NA), Battery = c(rep(\"Normal\", 28), \"Low\", \"Low\")),\n          paste0(getwd(), \"/WeatherStation_7.csv\"))\n\n","id":11},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-12","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"# This is the code from before to make the data.\nfor(i in 1:20) {\nwrite.csv(data.frame(ID = paste0(\"DataLogger-\", i), Temperature = runif(30, 10, 20),\nWind = runif(30, 0, 15), Battery = \"Normal\"), paste0(getwd(), \"/WeatherStation_\", i, \".csv\"))}\n\n# Use this code to put some NA's into the \"Weather Station\" files.\nwrite.csv(data.frame(ID = \"DataLogger-7\", Temperature = c(runif(28, 10, 20), NA, NA),\n          Wind = c(runif(28, 0, 15), NA, NA), Battery = c(rep(\"Normal\", 28), \"Low\", \"Low\")),\n          paste0(getwd(), \"/WeatherStation_7.csv\"))\n\nfor(i in seq_along(list.files(getwd(), pattern = \"WeatherStation_\"))) {\n  tmp <- read.csv(paste0(getwd(), \"/\", list.files(getwd(), pattern = \".csv\"))[i])\n  if(!any(is.na(tmp))) {\n  if(i == 1) {weather_dat <- tmp\n  } else {weather_dat <- rbind(weather_dat, tmp)}}}","id":12},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-13","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"dat <- data.frame(A = rnorm(100, 10, 5), B = rpois(100, 10), C = rnorm(100, 50, 10),\n                  X = runif(100, 0, 100), Y = rbeta(100, 1, 2), Z = rnorm(100, 0, 1))\n","id":13},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-14","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"dat <- data.frame(A = rnorm(100, 10, 5), B = rpois(100, 10), C = rnorm(100, 50, 10),\n                  X = runif(100, 0, 100), Y = rbeta(100, 1, 2), Z = rnorm(100, 0, 1))\n\napply(dat, 2, shapiro.test)","id":14},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-15","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"# Make some data.\ndf2 <- data.frame(X = 1:30, ID = \"DataLogger-20\", Temperature = runif(30, 10, 20),\n                  Wind = runif(30, 0, 15), Battery = \"Normal\")\n","id":15},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-16","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"# Make some data.\ndf2 <- data.frame(X = 1:30, ID = \"DataLogger-20\", Temperature = runif(30, 10, 20),\n                  Wind = runif(30, 0, 15), Battery = \"Normal\")\n\ndf2$Week <- ifelse(df2$X <= 7, 1,\n              ifelse(df2$X >= 8 & df2$X <= 14, 2,\n                ifelse(df2$X >= 15 & df2$X <= 21, 3,\n                  ifelse(df2$X >= 22 & df2$X <= 28, 4, NA))))","id":16},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-17","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"i <- function(x) x^2 # same as `i <- function(x) print(x^2)`\ni(3)\nj <- function(x) return(x^2)\nj(3)","id":17},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-18","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"k <- function(x) {X = x^2; Y = x^3}\nk(3) # nothing is printed to the screen, last assignment is returned as an invisible()\npaste(\"k(3):\", k(3))\nk_val = k(3); k_val","id":18},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-19","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"l <- function(x) {X = x^2; Y = x^3; Z = x^4; invisible(x+1)}\nl(3)\npaste(\"l(3):\", l(3))","id":19},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-20","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"m <- function(x){X = x^2; invisible(x+1); Y = x^3}\npaste(m(3))","id":20},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-21","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"f <- function(x) x^2\nf\nformals(f) #> $x\nbody(f) #> x^2\nenvironment(f) # <environment: R_GlobalEnv>","id":21},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-22","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"k <- function() list(ls(),environment())\nk() # k() has its own environment\nlist(ls()[1:5],environment()) \n# all other environments sit on top of the global environments ","id":22},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-23","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"f1 <- function(){L = 1; L}\nf1()\nL # Error: object 'L' not found\n\nK = 3\nf2 <- function() {K} \nf2() # Functions can access the global environment\n\nf3 <- function() {L <<- 10} \nf3() # returns L to the parent environment\nL    # now we also prints L from global environment\n\nremove(L)\nf4 <- function(){L = 100; f3(); L}\nf4()\nL\n# Avoid using `<<-` when possible!!","id":23},{"options":{"read-only":"false","warning":"true","comment":"","output":"true","fig-width":7,"fig-height":5,"label":"unnamed-chunk-24","echo":"true","fig-cap":"","message":"true","classes":"","dpi":72,"results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"f <- function(a = 1) a\nf()","id":24},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-25","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"f <- function(a, b = NULL) c(a,b)\nf(1)\nf(1,2)","id":25},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-26","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"message(\"notify the user, although we are not indicating any problems\")\n\nwarning(\"notify the user of something potentially problematic\")\n\nstop(\"A condition has been met that is problematic enough to warrant forcing an error.\")\n","id":26},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-27","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"k <- function(a,b) a^(b)\nf <- function(a, b = NULL) {\n  if(is.null(b)){\n    warning(\"{warning()} b is missing, just returning `a`\")\n    return(a)\n  } \n  if(a < 0 && b == 1/2){\n    stop(\"{stop()} can't take the sqrt of a negative number\")\n  } else {\n    message(\"{message()} function completion without conditional execution\")\n    a^(b)\n  }\n}\nk(1) # error without user defined error handling \nf(1) # here we see the `NULL` Conditional Execution\nf(-2,1/2)\nf(3,2)","id":27},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-28","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"f <- function(a, b, c) {\n  if(missing(c)) {\n  return(sum(a,b))\n    }\n  if(!missing(c)) {\n  return(sum(a,b,c))\n    }\n}\nf(1,2)\nf(1,2,3)","id":28},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-29","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"f1 <- function(x, ...){...length()}\nf1(1)      # 0 argument passed to `...`\nf1(1,2)    # 1 arguments passed to `...`\nf1(1,2,3)  # 2 arguments passed to `...`\n\nf2 <- function(x, ...){list(...)}\nf2(1,2,3) # `1` passed to `x`, `2` and `3` passed to `...`","id":29},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-30","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"rnorm\nrandom_num_gen <- function(x, ...) {\n  rnorm(x, ...)\n}\n\nset.seed(1); random_num_gen(5)\nset.seed(1); random_num_gen(5, mean = 3, sd = 1.5)","id":30},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-31","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"# mean and median defined with `...`\nf3 <- function(x, ...){\n  out <- list(mean(x, ...), median(x, ...))\n  out\n}\n\n(k = c(1:8,NA))\nf3(x=k, na.rm = TRUE)                                        # Works \nf3(x=k, na.rm = TRUE, random_message = \"Save the bees\")      # Works \n\n# matrix not defined with \"...\"\nf4 <- function(x, ...){\n  out <- list(mean(x, ...), median(x, ...), matrix(x,...))\n  return(out)\n}\n\nf4(x=k, na.rm = TRUE)                                        # Fails\nlist(mean(k,na.rm = TRUE),median(k,na.rm = TRUE),matrix(k))","id":31},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-32","results":"markup","autorun":"true","context":"setup","out-height":"","out-width":"700px"},"code":"defined_arguments <- function(...){\n  f <- list(...);out = lapply(f,function(x) names(formals(x)))\n  names(out) = as.character(substitute(list(...)))[-1];out\n}","id":32},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-33","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"defined_arguments(matrix, data.frame, as.data.frame) # which are defined with `...` ?\n(k = c(1:3,NA))\n\nmatrix(k, na.rm = TRUE)\ndata.frame(k, na.rm = TRUE)\nas.data.frame(k,na.rm = TRUE)\n\nf5 <- function(x, ...){\n  out <- list(mean(x, ...), median(x, ...), as.data.frame(x,...))\n  return(out)\n}\nf5(x=k, na.rm = TRUE)","id":33},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-34","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"function(x) x * 2\nsapply(1:5,function(x) x * 2)","id":34},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-35","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"library(purrr)\n# ~ .x * 2  or \\(x) x*2\nmap_dbl(1:5,~ .x * 2)\nmap_dbl(1:5,\\(x) x*2)","id":35},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-36","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"(X <- cbind(x1 = 3, x2 = c(4:1, 2:5)))\n\napply(X, 1, mean) # row-wise \napply(X, 2, mean) # col-wise","id":36},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-37","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"(J = array(rep(1,12), c(2, 2, 3)))\napply(J, c(1), sum)\napply(J, c(2), sum)\napply(J, c(3), sum)\napply(J, c(1,2), sum)\napply(J, c(1,3), sum)","id":37},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-38","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"(Y <- list(a = 1:10, beta = exp(-3:3)))\n\nsapply(Y, quantile)","id":38},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-39","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"(Y <- list(a = 1:10, beta = exp(-3:3)))\n\nlapply(Y, quantile)","id":39},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-40","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"try2 <- function(x,m){tryCatch({x}, error =function(e) {finally = print(m)})}\n(Y <- list(a = 1:10, beta = exp(-3:3)))\n\ntry2(vapply(Y,quantile),\"Error:`FUN.VALUE` is missing\")\nvapply(Y,quantile,seq(0, 1, 0.25))","id":40},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-41","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"W <- warpbreaks; head(W,3) \n\n# contingency table \ntapply(W$breaks, subset(W, select = -breaks), sum) ","id":41},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-42","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"(Z <- lapply(rep(2,2), function(x) data.frame(x=rnorm(x))))\n\ndo.call(cbind, Z)","id":42},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-43","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"abs_dif <- function(x,y) abs(x-y)\nmapply(abs_dif, c(2,10), c(2,30))\n\nmapply(sum, c(1,2,3,5), c(1,2,3,10),c(1,2,3,15))","id":43},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-44","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"abs_dif <- function(x,y) abs(x-y)\nMap(abs_dif, c(2,10), c(2,30))\n\nMap(sum, c(1,2,3,5), c(1,2,3,10),c(1,2,3,15))","id":44},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-45","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"set.seed(1)\n(L <- purrr::map(1:3, ~ sample(1:3, 5, replace = T)))\n\nintersect(c(1,2,3), c(1,2,4)) # demo of intersect()\nReduce(intersect,L)","id":45},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-46","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"set.seed(0); 1:5 |> map(rnorm, n = 4)\n\n# You can also use an anonymous function\nset.seed(0); 1:5 |> map(\\(x) rnorm(n=4, mean = x, sd = 1))\nset.seed(0); 1:5 |> map(~ rnorm(n=4, mean = .x, sd = 1))","id":46},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-47","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"x <- list(1, 1, 1)\ny <- list(10, 20, 30)\n\nmap2(x, y, \\(x, y) x + y)","id":47},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-48","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"x <- list(1, 1, 1)\ny <- list(10, 20, 30)\nz <- list(100, 200, 300)\n\npmap(list(x, y, z), sum)\n\nset.seed(0); list(1:2,1:2,1:2) |> pmap(\\(x,y,z) rhyper(3, m = x, n = y, k = z))\n# These numbers represent the number of white balls drawn in each of the 3 draws from the urn","id":48},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-49","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"set.seed(1)\n(L <- purrr::map(1:3, ~ sample(1:3, 5, replace = T)))\n\npurrr::reduce(L,intersect)","id":49},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-50","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"is_positive <- function(x) {\n\n}","id":50},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-51","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"is_positive <- function(x) {\n  if (x > 0) {\n    TRUE\n  } else {\n    FALSE\n  }\n}\n\nis_positive(5)","id":51},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-52","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"sqrt_safe <- function(x) {\n\n}","id":52},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-53","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"sqrt_safe <- function(x) {\n  if (x < 0) {\n    stop(\"Cannot take square root of a negative number.\")\n  }\n  sqrt(x)\n}\nsqrt_safe(-2)\nsqrt_safe(5)","id":53},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-54","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"find_first_negative <- function(vec) {\n\n}","id":54},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-55","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"find_first_negative <- function(vec) {\n  for (i in 1:length(vec)) {\n    if (vec[i] < 0) {\n      return(i)\n    }\n  }\n  NA\n}\n\nfind_first_negative(c(5, 2, -4, 6, -1))","id":55},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-56","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"halve_until_less_than_one <- function(x) {\n\n}","id":56},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-57","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"halve_until_less_than_one <- function(x) {\n  count = 0\n  while (x >= 1) {\n    x <- x / 2\n    count <- count+1\n  }\n  list(result = x, nsteps = count)\n}\nhalve_until_less_than_one(14)","id":57},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-58","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"set.seed(1)\nM <- as.data.frame(\n  lapply(c(400,400), function(x) data.frame(x=rgamma(x, shape =2, scale = 2)))\n  )\n\nscale_columns <- function(mat) {\n  \n}","id":58},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-59","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"set.seed(1)\nM <- as.data.frame(\n  lapply(c(400,400), function(x) data.frame(x=rgamma(x, shape =2, scale = 2)))\n  )\n\nscale_columns <- function(mat) {\n  apply(mat, 2, function(x) (x - mean(x)) / sd(x))\n}\n\nM_new <- scale_columns(M)\npar(mfrow = c(1,2))\nhist(M$x);hist(M_new)","id":59},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-60","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"set.seed(1)\n(K <- lapply(rep(4,3), rnorm))\n\nlibrary(purrr)\ncalc_means <- function(list_of_vectors) {\n  \n}","id":60},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-61","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"set.seed(1)\n(K <- lapply(rep(4,3), rnorm))\n\nlibrary(purrr)\ncalc_means <- function(list_of_vectors) {\n  map_dbl(list_of_vectors, mean)\n}\n\ncalc_means(K)","id":61},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-62","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"multiply_and_add <- function(...) {\n  \n}","id":62},{"options":{"message":"true","warning":"true","comment":"","classes":"","dpi":72,"output":"true","fig-cap":"","read-only":"false","fig-width":7,"fig-height":5,"label":"unnamed-chunk-63","results":"markup","autorun":"false","context":"interactive","out-height":"","out-width":"700px"},"code":"multiply_and_add <- function(...) {\n  vectors <- list(...)\n  result <- 0\n  for (i in seq_along(vectors)) {\n    result <- result + sum(vectors[[i]] * i)\n  }\n  result\n}\nmultiply_and_add(c(1,2),c(3,4))\n# ie \nsum(c(1, 2) * 1) + sum(c(3, 4) * 2)  ","id":63}];
+  globalThis.qwebrCellDetails = [{"id":1,"code":"options(max.print = 10)\n# Download a dataset\nurl <- \"https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/King_Man_Woman_Queen_pred.csv\"\ndownload.file(url, \"King_Man_Woman_Queen_pred.csv\")\nembedding_raw <- read.csv(\"King_Man_Woman_Queen_pred.csv\")\nembedding <- t(data.frame(embedding_raw[,-1] ,row.names = embedding_raw[,1]))\ncolnames(embedding) <- c(\"King\", \"Man\", \"Woman\", \"Queen\")\nembedding <- as_tibble(embedding)","options":{"dpi":72,"classes":"","out-width":"700px","label":"unnamed-chunk-1","warning":"true","out-height":"","context":"setup","autorun":"true","output":"true","message":"true","results":"markup","fig-cap":"","fig-height":5,"comment":"","fig-width":7,"read-only":"false"}},{"id":2,"code":"embedding\nembedding[ ,\"King\"] - embedding[ , \"Man\"] + embedding[ , \"Woman\"]\nembedding[ ,\"Queen\"]","options":{"dpi":72,"classes":"","out-width":"700px","label":"unnamed-chunk-2","warning":"true","out-height":"","context":"interactive","autorun":"false","output":"true","message":"true","results":"markup","fig-cap":"","fig-height":5,"comment":"","fig-width":7,"read-only":"false"}}];
 
   </script>
   <script type="module">
@@ -1474,7 +1478,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 
 <section id="an-exploration-of-information-loss-in-transformer-embedding-spaces-for-enhancing-predictive-ai-in-genomics" class="title-slide slide level1 center" data-background-image="images/DALL_E_DNA_Image_edited.png" data-background-size="cover" data-background-color="#4f6952">
 <h1><span style="color:#FFFFFF;           font-size: 55px;           position: relative;          bottom: 60px;           text-shadow: -1px -1px 0 #000,                        1px -1px 0 #000,                        -1px 1px 0 #000,                        1px 1px 0 #000;">An Exploration of Information Loss in Transformer Embedding Spaces for Enhancing Predictive AI in Genomics</span></h1>
-<h2 style="color:#FFFFFF; 
+<h1 style="color:#FFFFFF; 
          font-size: 28px; 
          text-align: center;
          position: absolute; 
@@ -1485,7 +1489,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
                       -0.75px 0.75px 0 #000, 
                       0.75px 0.75px 0 #000;">
 Daniel Hintz <br> 2024-06-06
-</h2>
+</h1>
 </section>
 
 <section id="outline-1" class="title-slide slide level1 center">
@@ -1519,7 +1523,7 @@ Daniel Hintz <br> 2024-06-06
 <h1><span style="color:white;">Background</span></h1>
 
 </section>
-<section id="dna" class="slide level2">
+<section id="dna" class="title-slide slide level2 center">
 <h2>DNA</h2>
 <div class="columns">
 <div class="column" style="width:80%;">
@@ -1545,7 +1549,8 @@ Daniel Hintz <br> 2024-06-06
 </div>
 </div>
 </section>
-<section id="dna-sequencing-technology" class="slide level2">
+
+<section id="dna-sequencing-technology" class="title-slide slide level2 center">
 <h2>DNA Sequencing Technology</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
@@ -1574,7 +1579,8 @@ Daniel Hintz <br> 2024-06-06
 </div>
 </div>
 </section>
-<section id="coding-regions-and-proteins" class="slide level2">
+
+<section id="coding-regions-and-proteins" class="title-slide slide level2 center">
 <h2>Coding regions and Proteins</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -1598,7 +1604,8 @@ Daniel Hintz <br> 2024-06-06
 </div>
 </div>
 </section>
-<section id="word-embeddings-1" class="slide level2">
+
+<section id="word-embeddings-1" class="title-slide slide level2 center">
 <h2>Word Embeddings (1)</h2>
 <div>
 <div style="font-size: 0.6em;">
@@ -1611,7 +1618,8 @@ Daniel Hintz <br> 2024-06-06
 </div>
 </div>
 </section>
-<section id="word-embeddings-2" class="slide level2">
+
+<section id="word-embeddings-2" class="title-slide slide level2 center">
 <h2>Word Embeddings (2)</h2>
 <div>
 <div style="font-size: 0.6em;">
@@ -1641,7 +1649,8 @@ Daniel Hintz <br> 2024-06-06
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </section>
-<section id="word-embeddings-3" class="slide level2">
+
+<section id="word-embeddings-3" class="title-slide slide level2 center">
 <h2>Word Embeddings (3)</h2>
 <ul>
 <li>We can Plot the vectors shown in the previous slide to demonstrate how word2vec produces embeddings that measures semantic similarity between words</li>
@@ -1657,7 +1666,8 @@ Daniel Hintz <br> 2024-06-06
 </div>
 </div>
 </section>
-<section id="sequence-representations" class="slide level2">
+
+<section id="sequence-representations" class="title-slide slide level2 center">
 <h2>Sequence Representations</h2>
 <div style="font-size: 0.6em;">
 <ul>
@@ -1687,7 +1697,8 @@ Daniel Hintz <br> 2024-06-06
 </div>
 </div>
 </section>
-<section id="genslm" class="slide level2">
+
+<section id="genslm" class="title-slide slide level2 center">
 <h2>GenSLM</h2>
 <div class="panel-tabset">
 <ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Overview</a></li><li><a href="#tabset-1-2">Transformer</a></li><li><a href="#tabset-1-3">Diffusian + Transformer</a></li></ul>
@@ -1752,887 +1763,270 @@ Daniel Hintz <br> 2024-06-06
 </div>
 </div>
 </div>
-</section></section>
+</section>
+</section>
+<section>
+<section id="workflow" class="title-slide slide level1 center" data-background-color="#8FA9C2">
+<h1><span style="color:white;">Workflow</span></h1>
+
+</section>
+<section id="overview-1" class="title-slide slide level2 center">
+<h2>Overview</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">foo</li>
+</ul>
+</div>
+</div>
+</div><div class="column" style="width:60%;">
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/Overall_workflow.png" style="width:45.0%"></p>
+<figcaption>Figure 5: Workflow</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
 <section>
 <section id="data-and-processing" class="title-slide slide level1 center" data-background-color="#8FA9C2">
 <h1><span style="color:white;">Data and Processing</span></h1>
 
 </section>
-<section id="data-description" class="slide level2">
+<section id="data-description" class="title-slide slide level2 center">
 <h2>Data Description</h2>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">All Covid sequences were downloaded with permission from the Global Initiative on Sharing All Influenza Data (GISAID)</li>
+<li class="fragment">API GISAIDR was used for convenience</li>
+<li class="fragment">No geographical or temporal restrictions were placed on the sequences extracted</li>
+</ul>
+</div>
+</div>
 </section>
-<section id="data-cleaning-pre-processing" class="slide level2">
-<h2>Data Cleaning &amp; Pre-Processing</h2>
+
+<section id="data-cleaning" class="title-slide slide level2 center">
+<h2>Data Cleaning</h2>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">GISAID’s exclusion criteria was used to remove sequences of poor quality</li>
+<li class="fragment">Additional exclusion criteria was implemented to remove all sequence with ambiguous nucleotides (the <code>NA's</code> of the genomic world)</li>
+</ul>
+</div>
+</div>
 </section>
-<section id="exploratory-data-analysis" class="slide level2">
+
+<section id="alignment" class="title-slide slide level2 center">
+<h2>Alignment</h2>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">Sequences need to be aligned in order to find nucleotides responsible for coding proteins across multiple sequences</li>
+<li class="fragment">The Clustal Omega algorithm was used from the msa package in R (Sievers et al., 2011; Bodenhofer et al., 2015).</li>
+<li class="fragment">To obtain the locations of proteins in terms of base pairs, the Wuhan reference sequence (NC_045512.2), was included in the alignment for which protein locations are documented (NCBI Reference Sequence, 2023; Bai et al., 2022, p.&nbsp;283).</li>
+<li class="fragment">Protein locations for the reference sequence</li>
+<li class="fragment">Using these locations you can string matching unaligned reference sequences to the aligned reference sequence to find the updated protein locations</li>
+<li class="fragment">Now specific proteins can be selected and are reading for embedding</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="exploratory-data-analysis" class="title-slide slide level2 center">
 <h2>Exploratory Data Analysis</h2>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">For Exploratory Data Analysis, the goal was the characterise the structure of the data</li>
+<li class="fragment">This served as a later compasrions to struture as seen through the embedding</li>
+</ul>
+</div>
+</div>
+<div class="fragment">
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/Whole_Genome_Mutation_Count_Hamming_Distances.png" style="width:65.0%"></p>
+<figcaption>Figure 5: Radial Dendrogram</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="generating-embeddings" class="slide level2">
-<h2>Generating Embeddings</h2>
-</section></section>
+
+<section id="section" class="title-slide slide level2 center">
+<h2></h2>
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/hamming_prot_heatmap_581_all_variants.png" style="width:100.0%"></p>
+<figcaption>Figure 5: Radial Dendrogram</figcaption>
+</figure>
+</div>
+</div>
+</section>
+
+<section id="section-1" class="title-slide slide level2 center">
+<h2></h2>
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/high_res_tree_595_patients_gapinc_cropped.png" style="width:65.0%"></p>
+<figcaption>Figure 5: Radial Dendrogram</figcaption>
+</figure>
+</div>
+</div>
+</section>
+</section>
+<section>
 <section id="methodology" class="title-slide slide level1 center" data-background-color="#8FA9C2">
 <h1><span style="color:white;">Methodology</span></h1>
 
 </section>
+<section id="goals" class="title-slide slide level2 center">
+<h2>Goals</h2>
+<p>This study aimed to assess the quality of the GenSLM embedding algorithms when applied to genomic analyses. The quality of an embedding is assessed based upon its information richness and the degree of non-redundancy.</p>
+<p>When downstream learning tasks are evaluated, it’s often referred to as extrinsic evaluation. While when the qualities of the embedding matrix itself are assessed it is often referred to as intrinsic evaluation (Lavrač et al., 2021).</p>
+</section>
 
+<section id="intrinsic-evaluation" class="title-slide slide level2 center">
+<h2>Intrinsic Evaluation</h2>
+<p>Studying an embedding’s redundancy reveals the efficiency of its encoding; more efficient encodings tend to perform better and use fewer computational resources. Separability gives practical insight into whether or not the embedding output can be separated into meaningful genomic groups (i.e., variants). Meanwhile, exploring the preservation of semantic distance is important for determining if the structural representation of information remains valid for subsequent tasks.</p>
+</section>
+
+<section id="extrinsic-evaluation" class="title-slide slide level2 center">
+<h2>Extrinsic Evaluation</h2>
+
+</section>
+</section>
 <section>
 <section id="results" class="title-slide slide level1 center" data-background-color="#8FA9C2">
 <h1><span style="color:white;">Results</span></h1>
 
 </section>
-<section id="what-is-the-difference-between-vectorization-and-iteration" class="slide level2">
-<h2>What is the Difference Between Vectorization and Iteration?</h2>
-<div>
-<ul>
-<li class="fragment">If y = 4x + 3, what is y for x = 4?</li>
-<li class="fragment">If <span class="math inline">\(N_{(t + 1)} = N_{t}e^{r\left(1 ~-~ \frac{N_{t}}{K}\right)}\)</span>, what is <span class="math inline">\(N\)</span> for <span class="math inline">\(t = 4\)</span> <span class="math inline">\(~~\)</span>(<span class="math inline">\(N_{1} = 2\)</span>, <span class="math inline">\(r = 0.5\)</span>, and <span class="math inline">\(K = 30\)</span>)?</li>
-</ul>
-</div>
-</section>
-<section id="now-for-the-math-in-r" class="slide level2">
-<h2>Now for the Math in R</h2>
-<div id="qwebr-insertion-location-3"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</section>
-<section id="now-onto-a-more-complex-for-loop" class="slide level2 scrollable">
-<h2>Now Onto a More Complex <code>for</code> Loop</h2>
-<div id="qwebr-insertion-location-4"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<!--
--   There are also while and repeat loops, but you shouldn't be writing code in R if you are using them.
--->
-<ul>
-<li>For people that write their own algorithms, <code>while</code> loops are a good skill to know<sup>1</sup></li>
-</ul>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>Their usage, however, can be more niche as they are used when the number of iterations is not known a priori and reach completion via convergence criterion such as the max number of iterations or some metric like Euclidean Distance</p></li></ol></aside></section>
-<section id="now-for-apply-functions" class="slide level2">
-<h2>Now for <code>apply</code> Functions</h2>
-<div id="qwebr-insertion-location-5"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</section>
-<section id="apply-functions-contd" class="slide level2">
-<h2><code>apply</code> Functions (cont’d)</h2>
-<div id="qwebr-insertion-location-6"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<div class="fragment">
-<ul>
-<li>You might want to look at the <code>pbapply</code> package if you regularly parallelize your code.</li>
-</ul>
-</div>
-</section>
-<section id="logical-statements-1" class="slide level2">
-<h2>Logical Statements (1)</h2>
-<div id="qwebr-insertion-location-7"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</section>
-<section id="logical-statements-2" class="slide level2">
-<h2>Logical Statements (2)</h2>
-<div id="qwebr-insertion-location-8"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</section></section>
-<section>
-<section id="lets-try-some-exercises" class="title-slide slide level1 center" data-background-color="#8FA9C2">
-<h1><svg aria-hidden="true" role="img" viewbox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:white;overflow:visible;position:relative;"><path d="M64 96c0-35.3 28.7-64 64-64H512c35.3 0 64 28.7 64 64V352H512V96H128V352H64V96zM0 403.2C0 392.6 8.6 384 19.2 384H620.8c10.6 0 19.2 8.6 19.2 19.2c0 42.4-34.4 76.8-76.8 76.8H76.8C34.4 480 0 445.6 0 403.2zM281 209l-31 31 31 31c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-48-48c-9.4-9.4-9.4-24.6 0-33.9l48-48c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM393 175l48 48c9.4 9.4 9.4 24.6 0 33.9l-48 48c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l31-31-31-31c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"></path></svg> <span style="color:white;">Lets Try Some Exercises</span></h1>
+<section id="intrinsic-evaluation-results" class="title-slide slide level2 center">
+<h2><span style="color:#6FB1D1;">Intrinsic Evaluation Results</span></h2>
 
 </section>
-<section id="q1" class="slide level2">
-<h2>Q1</h2>
+<section id="redundancy" class="slide level3">
+<h3>Redundancy</h3>
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/SVD_582.png" style="width:65.0%"></p>
+<figcaption>Figure 5: Radial Dendrogram</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="preservation-of-semantic-distance" class="slide level3">
+<h3>Preservation of Semantic Distance</h3>
 <div class="panel-tabset">
-<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Question</a></li><li><a href="#tabset-2-2">Answer</a></li></ul>
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Distance matrices</a></li><li><a href="#tabset-2-2">Kullback–Leibler Divergence (KLD)</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1">
-<p>Read in the 20 “Weather Station” data files with a <code>for</code> loop and combine into one dataframe.</p>
-<div id="qwebr-insertion-location-9"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/distances_matrices_labelled.png" style="width:65.0%"></p>
+<figcaption>Figure 5: Radial Dendrogram</figcaption>
+</figure>
+</div>
+</div>
 </div>
 <div id="tabset-2-2">
-<div id="qwebr-insertion-location-10"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/CKL_vs_DKL_ver2.png" style="width:65.0%"></p>
+<figcaption>Figure 5: Radial Dendrogram</figcaption>
+</figure>
 </div>
 </div>
-</div>
-</section>
-<section id="q2" class="slide level2">
-<h2>Q2</h2>
-<div class="panel-tabset">
-<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1">Question</a></li><li><a href="#tabset-3-2">Answer</a></li></ul>
-<div class="tab-content">
-<div id="tabset-3-1">
-<p>Now modify your <code>for</code> loop to omit any files that contain an <code>NA</code>.</p>
-<div id="qwebr-insertion-location-11"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-3-2">
-<div id="qwebr-insertion-location-12"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
 </div>
 </section>
-<section id="q3" class="slide level2">
-<h2>Q3</h2>
-<div class="panel-tabset">
-<ul id="tabset-4" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-4-1">Question</a></li><li><a href="#tabset-4-2">Answer</a></li></ul>
-<div class="tab-content">
-<div id="tabset-4-1">
-<p>Use an <code>apply</code> function to perform a Shapiro-Wilk test on each column of the data set created below (dat) to determine if the data in each column is normally distributed.</p>
-<div id="qwebr-insertion-location-13"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-4-2">
-<div id="qwebr-insertion-location-14"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</div>
-</div>
 </section>
-<section id="q4" class="slide level2">
-<h2>Q4</h2>
-<div class="panel-tabset">
-<ul id="tabset-5" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-5-1">Question</a></li><li><a href="#tabset-5-2">Answer</a></li></ul>
-<div class="tab-content">
-<div id="tabset-5-1">
-<p>Make a column in the data created below (a subset of the weather station data) for week. When <code>X</code> (this is the row ID or day of the month) is 1-7, <code>Week</code> should be 1; when <code>X</code> (day) is 8-14, <code>Week</code> should be 2; when <code>X</code> (day) is 15-21, <code>Week</code> should be 3; when <code>X</code> (day) is 22-28, <code>Week</code> should be 4; and for <code>X</code> (day) from 28-30, <code>Week</code> should be assigned a value of <code>NA</code>.</p>
-<div id="qwebr-insertion-location-15"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-5-2">
-<div id="qwebr-insertion-location-16"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</div>
-</div>
-</section></section>
 <section>
-<section id="r-function-basics" class="title-slide slide level1 center" data-background-color="#8FA9C2">
-<h1><span style="color:white;">R Function Basics</span></h1>
+<section id="section-2" class="title-slide slide level1 center">
+<h1></h1>
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/high_res_tree_581_patients_emb.png" style="width:65.0%"></p>
+<figcaption>Figure 5: Radial Dendrogram</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="separability" class="slide level3">
+<h3>Separability</h3>
+</section>
+<section id="extrinsic-evaluation-results" class="title-slide slide level2 center">
+<h2><span style="color:#6FB1D1;">Extrinsic Evaluation Results</span></h2>
 
 </section>
-<section id="function-structure" class="slide level2 scrollable">
-<h2>Function Structure</h2>
-<blockquote>
-<p>Functions are like a grammatically correct sentences; they require arguments, a body, and an environment<sup>1</sup>.</p>
-</blockquote>
-<div class="fragment">
-<p><img data-src="images/function-structure.png" height="300"></p>
-</div>
-<aside><ol class="aside-footnotes"><li id="fn2"><p>See Hadley’s section on <a href="https://adv-r.hadley.nz/functions.html#function-fundamentals">function-fundamentals</a> for more details</p></li></ol></aside></section>
-<section id="lets-write-some-functions" class="slide level2">
-<h2>Lets Write Some Functions</h2>
-<div id="qwebr-insertion-location-17"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<div class="fragment">
-<div style="margin-top: 10px;">
-
-</div>
-<div id="qwebr-insertion-location-18"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div class="fragment">
-<div style="margin-top: 10px;">
-
-</div>
-<div id="qwebr-insertion-location-19"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div class="fragment">
-<div style="margin-top: 10px;">
-
-</div>
-<div id="qwebr-insertion-location-20"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
+<section id="variant-classification" class="slide level3">
+<h3>Variant Classification</h3>
 </section>
-<section id="functions-need-an-object-call-i.e.-x-or-a-returnx-in-order-to-return-output-from-x-to-the-global-environment" class="slide level2" data-background-color="#447099">
-<h2><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:white;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <span style="color:white;">Functions need an object call (i.e.&nbsp;<code>x</code> or a <code>return(x)</code>) in order to return output from <code>x</code> to the global environment</span></h2>
-</section></section>
-<section>
-<section id="r-functions-extended" class="title-slide slide level1 center" data-background-color="#8FA9C2">
-<h1><span style="color:white;">R Function’s Extended</span></h1>
+<section id="protein-classification" class="slide level3">
+<h3>Protein Classification</h3>
+</section>
+</section>
+<section id="appendix" class="title-slide slide level1 center" data-background-color="#8FA9C2">
+<h1><span style="color:white;">Appendix</span></h1>
 
 </section>
-<section id="function-formals-body-and-environment" class="slide level2">
-<h2>Function <code>formals()</code>, <code>body()</code> and <code>environment()</code></h2>
-<div id="qwebr-insertion-location-21"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 
-<aside><div>
-<p>See <a href="https://adv-r.hadley.nz/functions.html#fun-components">Function-Components</a></p>
-</div></aside></section>
-<section id="more-on-environments" class="slide level2">
-<h2>More on Environments</h2>
-<div id="qwebr-insertion-location-22"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<div class="fragment">
-<ul>
-<li>Environments are important to understand as they relate to <strong>Lexical scoping</strong></li>
-</ul>
-</div>
+<section id="section-3" class="title-slide slide level1 center">
+<h1></h1>
+<p><object data="DHintz_PlanB_Submission.pdf" type="application/pdf" width="1000" height="650"><iframe src="DHintz_PlanB_Submission.pdf" width="1000" height="650">This browser does not support PDFs. Please download the PDF to view it: <a href="DHintz_PlanB_Submission.pdf">Download PDF</a></iframe></object></p>
 </section>
-<section id="lexical-scoping" class="slide level2">
-<h2>Lexical Scoping</h2>
-<div class="columns">
-<div class="column" style="padding-right: 0px;">
-<p><img data-src="images/castle.jpeg" height="425"></p>
-</div><div class="column" style="padding-right: 0px;">
-<div id="qwebr-insertion-location-23"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</div>
-<aside class="notes">
-<ul>
-<li><p>Imagine a castle where of the three levels (Keep, Main, Lower), some levels can see more levels than others. For example from the Keep, you can see inside the keep, into the Main level as well as the lower level. In <code>R</code>, their are also varying degrees of <em>“sight”</em>. For example, inside a function, objects that were defined inside the function are visible as well as objects that were defined outside the function, say like the global environment.</p></li>
-<li><p>If you were in the castle and you wanted to search for an object, one possible procedure is to first search the lower level (say a f3), then if you still haven’t found it, proceed to search the main level (f4) and finally, if still haven’t found it, you would search the keep and if were still not found you would declare the object is not in the castle. This is analogous to how lexical scoping works in R.</p></li>
-<li><p>In R, the <code>&lt;&lt;-</code> operator does not simply assign a value to a variable in the parent environment; it assigns a value to a variable in the parent environment if the variable already exists there. If the variable does not exist in the parent environment, R searches up through the chain of environments until it finds an environment where the variable exists and assigns the value there. If it does not find the variable in any parent environments, it will assign the value in the global environment.</p></li>
-</ul>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
 
-<aside><div>
-<p>For more information see <a href="https://adv-r.hadley.nz/functions.html#lexical-scoping">here</a>.</p>
-</div></aside></section>
-<section id="default-argument-assignment" class="slide level2">
-<h2>Default Argument Assignment</h2>
-<div id="qwebr-insertion-location-24"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</section>
-<section id="null-conditional-execution-1" class="slide level2">
-<h2><code>NULL</code> Conditional Execution (1)</h2>
-<div id="qwebr-insertion-location-25"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</section>
-<section id="message-warning-and-stop" class="slide level2">
-<h2><code>message()</code>, <code>warning()</code>, and <code>stop()</code></h2>
-<div id="qwebr-insertion-location-26"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</section>
-<section id="null-conditional-execution-2" class="slide level2">
-<h2><code>NULL</code> Conditional Execution (2)</h2>
-<div id="qwebr-insertion-location-27"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</section>
-<section id="conditional-execution-with-missing" class="slide level2">
-<h2>Conditional Execution with <code>missing()</code></h2>
-<div id="qwebr-insertion-location-28"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</section>
-<section id="dot-dot-dot-1" class="slide level2">
-<h2><code>...</code> dot-dot-dot (1)</h2>
-<div id="qwebr-insertion-location-29"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<div class="fragment">
-<div style="margin-top: 10px;">
-
-</div>
-<div id="qwebr-insertion-location-30"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div class="fragment">
-<ul>
-<li>The `<code>...</code>` argument is also known as an Ellipsis or simply dot-dot-dot.</li>
-</ul>
-</div>
-</section>
-<section id="dot-dot-dot-2" class="slide level2">
-<h2><code>...</code> dot-dot-dot (2)</h2>
-<div id="qwebr-insertion-location-31"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>`<code>...</code>` has pros and cons, for more info see <a href="https://adv-r.hadley.nz/functions.html#fun-dot-dot-dot">here</a></p>
-<aside class="notes">
-<ul>
-<li><p>Functions that were defined without <code>...</code>, will fail to execute when arguments are given to the Ellipsis, and restricts future users of having full access to arguments nested function arguments with the larger function</p></li>
-<li><p>Because of this, some package developers in R, are advocates for <strong>all</strong> functions being defined with <code>...</code>!</p></li>
-</ul>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="dot-dot-dot-3" class="slide level2">
-<h2><code>...</code> dot-dot-dot (3)</h2>
-<p>So why does <code>f5</code> work?</p>
-<div id="qwebr-insertion-location-32"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<div id="qwebr-insertion-location-33"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</section>
-<section id="anonymous-functions" class="slide level2">
-<h2>Anonymous Functions</h2>
-<div style="font-size: 0.7em;">
-<blockquote>
-<p>“An Anonymous Function (also known as a lambda expression) is a function definition that is not bound to an identifier. That is, it is a function that is created and used, but never assigned to a variable” (see <a href="https://coolbutuseless.github.io/2019/03/13/anonymous-functions-in-r-part-1/">link</a>)</p>
-</blockquote>
-</div>
-<div class="fragment">
-<div style="margin-top: 40px;">
-
-</div>
-<div style="font-size: 0.65em;">
-<p><code>base</code> R anonymous function syntax:</p>
-</div>
-<div id="qwebr-insertion-location-34"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div class="fragment">
-<div style="margin-top: 40px;">
-
-</div>
-<div style="font-size: 0.65em;">
-<p><code>purrr</code>’s anonymous function syntax:</p>
-</div>
-<div id="qwebr-insertion-location-35"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</section></section>
-<section>
-<section id="functional-programming-with-base-r" class="title-slide slide level1 center" data-background-color="#8FA9C2">
-<h1><span style="color:white;">Functional Programming with <code>base</code> R</span></h1>
-
-</section>
-<section id="functional-programming-with-base-r-1" class="slide level2">
-<h2>Functional Programming with <code>base</code> R</h2>
-<div style="font-size: 0.45em;">
-<table>
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Function</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>apply(X, MARGIN, FUN, ...)</code></td>
-<td>Applies a function over the margins (rows or columns) of an array or matrix.</td>
-</tr>
-<tr class="even">
-<td><code>sapply(X, FUN, ...)</code></td>
-<td>Simplifies the result of <code>lapply()</code> by attempting to reduce the result to a vector, matrix, or higher-dimensional array.</td>
-</tr>
-<tr class="odd">
-<td><code>vapply(X, FUN, FUN.VALUE)</code></td>
-<td>Similar to <code>sapply()</code>, but with a specified type of return value, making it safer and faster by avoiding unexpected type coercion.</td>
-</tr>
-<tr class="even">
-<td><code>lapply(X, FUN, ...)</code></td>
-<td>Applies a function to each element of a list or vector and returns a list.</td>
-</tr>
-<tr class="odd">
-<td><code>tapply(X, INDEX, FUN = NULL)</code></td>
-<td>Applies a function over subsets of a vector, array, or data frame, split by the levels of a factor or list of factors</td>
-</tr>
-<tr class="even">
-<td><code>do.call(what, args, ...)</code></td>
-<td>constructs and executes a function call from a name or a function and a list of arguments to be passed to it</td>
-</tr>
-<tr class="odd">
-<td><code>mapply(FUN, ...)</code></td>
-<td>A multivariate version of <code>sapply()</code>, applies a function to the 1st elements of each argument, then the 2nd elements of each argument, and so on.</td>
-</tr>
-<tr class="even">
-<td><code>Map(f, ...)</code></td>
-<td>Similar to <code>mapply()</code> but always returns a list, regardless of the output type.</td>
-</tr>
-<tr class="odd">
-<td><code>Reduce(f, x, init, ...)</code></td>
-<td>Applies a function successively to elements of a vector from left to right so as to reduce the vector to a single value.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="base-r-examples-1" class="slide level2">
-<h2><code>base</code> R Examples (1)</h2>
-<div class="panel-tabset">
-<ul id="tabset-6" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-6-1"><code>apply</code></a></li><li><a href="#tabset-6-2"><code>sapply</code></a></li><li><a href="#tabset-6-3"><code>lapply</code></a></li><li><a href="#tabset-6-4"><code>vapply</code></a></li><li><a href="#tabset-6-5"><code>tapply</code></a></li></ul>
-<div class="tab-content">
-<div id="tabset-6-1">
-<div id="qwebr-insertion-location-36"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<div style="margin-top: 10px;">
-
-</div>
-<div id="qwebr-insertion-location-37"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-6-2">
-<div id="qwebr-insertion-location-38"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-6-3">
-<div id="qwebr-insertion-location-39"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-6-4">
-<div id="qwebr-insertion-location-40"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-6-5">
-<div id="qwebr-insertion-location-41"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</div>
-</div>
-</section>
-<section id="base-r-examples-2" class="slide level2">
-<h2><code>base</code> R Examples (2)</h2>
-<div class="panel-tabset">
-<ul id="tabset-7" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-7-1"><code>do.call</code></a></li><li><a href="#tabset-7-2"><code>mapply</code></a></li><li><a href="#tabset-7-3"><code>Map</code></a></li><li><a href="#tabset-7-4"><code>Reduce</code></a></li></ul>
-<div class="tab-content">
-<div id="tabset-7-1">
-<div id="qwebr-insertion-location-42"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-7-2">
-<div id="qwebr-insertion-location-43"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-7-3">
-<div id="qwebr-insertion-location-44"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-7-4">
-<div id="qwebr-insertion-location-45"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<div style="font-size: 0.65em;">
-<ul>
-<li>“[1] 3 2” indicates that among the three random samples generated, the numbers 3 and 2 are the only ones that appear at least once in all three vectors.</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</section></section>
-<section>
-<section id="functional-programming-with-purrr" class="title-slide slide level1 center" data-background-color="#8FA9C2">
-<h1><span style="color:white;">Functional Programming with <code>purrr</code></span></h1>
-
-</section>
-<section id="functional-programming-with-purrr-1" class="slide level2">
-<h2>Functional Programming with <code>purrr</code></h2>
-<div style="font-size: 0.65em;">
-<table>
-<colgroup>
-<col style="width: 44%">
-<col style="width: 55%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Function</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>map(.x, .f, ...)</code></td>
-<td>Applies a function to each element of a list or vector and returns a list. Useful for operations on list elements.</td>
-</tr>
-<tr class="even">
-<td><code>map2(.x, .y, .f, ...)</code></td>
-<td>Applies a function to the corresponding elements of two vectors/lists, useful for element-wise operations on two inputs.</td>
-</tr>
-<tr class="odd">
-<td><code>pmap(.l, .f, ...)</code></td>
-<td>Applies a function to each element of a list or vector in parallel, taking multiple arguments from parallel lists or vectors.</td>
-</tr>
-<tr class="even">
-<td><code>reduce(.x, .f, ..., .init, .)</code></td>
-<td>Reduces a list or vector to a single value by iteratively applying a function that takes two arguments.</td>
-</tr>
-<tr class="odd">
-<td><code>_dbl,</code> <code>_int</code> <code>_chr</code>, <code>_lgl and</code> <code>_vec</code></td>
-<td><code>map, map2</code> and <code>pmap</code> variants to change output type, e.g., <code>map_dbl</code>, <code>map_int</code>, <code>map_chr</code>, <code>map_lgl</code>, <code>map_vec</code>, <code>map2_dbl ...</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="purrr-examples" class="slide level2">
-<h2><code>purrr</code> Examples</h2>
-<div class="panel-tabset">
-<ul id="tabset-8" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-8-1"><code>map</code></a></li><li><a href="#tabset-8-2"><code>map2</code></a></li><li><a href="#tabset-8-3"><code>pmap</code></a></li><li><a href="#tabset-8-4"><code>reduce</code></a></li></ul>
-<div class="tab-content">
-<div id="tabset-8-1">
-<div id="qwebr-insertion-location-46"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-8-2">
-<div id="qwebr-insertion-location-47"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-8-3">
-<div id="qwebr-insertion-location-48"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<aside class="notes">
-<ul>
-<li><p>For the first combination <code>(x = 1, y = 1, z = 1)</code>, three numbers are generated based on the hypergeometric distribution parameters, resulting in [1] 0 1 1.</p></li>
-<li><p>For the second combination <code>(x = 2, y = 2, z = 2)</code>, it generates another set of three numbers, resulting in [1] 1 0 1.</p></li>
-</ul>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</div>
-<div id="tabset-8-4">
-<div id="qwebr-insertion-location-49"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</div>
-</div>
-</section></section>
-<section>
-<section id="parallel-computing" class="title-slide slide level1 center" data-background-color="#8FA9C2">
-<h1><span style="color:white;">Parallel Computing</span></h1>
-
-</section>
-<section id="parallel-computing-with-furrr" class="slide level2">
-<h2>Parallel Computing with <code>furrr</code></h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a>fib_n <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
-<span id="cb2-2"><a href=""></a>    <span class="cf">if</span> ((n <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|</span> (n <span class="sc">==</span> <span class="dv">1</span>)) </span>
-<span id="cb2-3"><a href=""></a>        <span class="fu">return</span>(<span class="dv">1</span>)</span>
-<span id="cb2-4"><a href=""></a>    <span class="cf">else</span></span>
-<span id="cb2-5"><a href=""></a>        <span class="fu">return</span>(<span class="fu">fib_n</span>(n<span class="dv">-1</span>) <span class="sc">+</span> <span class="fu">fib_n</span>(n<span class="dv">-2</span>))</span>
-<span id="cb2-6"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="fragment">
-<div style="margin-top: 20px;">
-
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3" data-code-line-numbers="1-2|4|5-7|1-7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">library</span>(furrr) <span class="co"># library(furrr) loads future by default</span></span>
-<span id="cb3-2"><a href=""></a><span class="fu">library</span>(tictoc)</span>
-<span id="cb3-3"><a href=""></a></span>
-<span id="cb3-4"><a href=""></a>future<span class="sc">::</span><span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="dv">1</span>) <span class="co"># setting num of cores/workers</span></span>
-<span id="cb3-5"><a href=""></a><span class="fu">tic</span>()</span>
-<span id="cb3-6"><a href=""></a>num <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span> <span class="sc">|&gt;</span> <span class="fu">future_map</span>(fib_n)</span>
-<span id="cb3-7"><a href=""></a><span class="fu">toc</span>() <span class="co"># 4.151 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<div class="fragment">
-<div style="margin-top: 20px;">
-
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4" data-code-line-numbers="1|2-4|1-4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>future<span class="sc">::</span><span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="dv">2</span>) <span class="co"># Using 1 additional core</span></span>
-<span id="cb4-2"><a href=""></a><span class="fu">tic</span>()</span>
-<span id="cb4-3"><a href=""></a>num <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span> <span class="sc">|&gt;</span> <span class="fu">future_map</span>(fib_n)</span>
-<span id="cb4-4"><a href=""></a><span class="fu">toc</span>() <span class="co"># 2.174 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</section>
-<section id="a-note-on-parallel-computing" class="slide level2">
-<h2>A Note on Parallel Computing</h2>
-<blockquote>
-<p>Parallel Computing is not a magic bullet. Performance depends on Overhead of Parallelization, Task Granularity, and whether or not the task is sequential</p>
-</blockquote>
-<div class="fragment">
-<div>
-<ul>
-<li class="fragment">Sequential Tasks, generally speaking, are not capable of being parallized, though they can be <em>“functionally parallized”</em>; meaning given a function, <code>seq_func</code>, the internals of <code>seq_func</code> <strong>cannot</strong> not be parallized, but the call to <code>seq_func</code> <strong>can</strong> be parallized.</li>
-<li class="fragment">We will illustrate this concept with Random Walks</li>
-</ul>
-</div>
-</div>
-</section>
-<section id="random-walks" class="slide level2">
-<h2>Random Walks</h2>
-<div class="cell">
-<details class="code-fold">
-<summary>expand for <code>random_walk()</code> source code</summary>
-<div class="sourceCode cell-code" id="cb5" data-code-line-numbers="4|5-16|6|7|8-14|8|9-10|11-13|5-16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="fu">library</span>(furrr)</span>
-<span id="cb5-2"><a href=""></a><span class="fu">library</span>(tictoc)</span>
-<span id="cb5-3"><a href=""></a></span>
-<span id="cb5-4"><a href=""></a>nworkers <span class="ot">=</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span> <span class="co"># select nworkers to amount of cores - 1 </span></span>
-<span id="cb5-5"><a href=""></a>random_walk <span class="ot">&lt;-</span> <span class="cf">function</span>(steps) {</span>
-<span id="cb5-6"><a href=""></a>  position <span class="ot">&lt;-</span> <span class="fu">numeric</span>(steps) <span class="co"># Initialize the position vector</span></span>
-<span id="cb5-7"><a href=""></a>  position[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co"># Start at the origin</span></span>
-<span id="cb5-8"><a href=""></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>steps) {                   <span class="co"># Simulate each step of the walk</span></span>
-<span id="cb5-9"><a href=""></a>    <span class="cf">if</span> (<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;</span> <span class="fl">0.5</span>) {</span>
-<span id="cb5-10"><a href=""></a>      position[i] <span class="ot">&lt;-</span> position[i <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">+</span> <span class="dv">1</span> <span class="co"># Move forward</span></span>
-<span id="cb5-11"><a href=""></a>    } <span class="cf">else</span> {</span>
-<span id="cb5-12"><a href=""></a>      position[i] <span class="ot">&lt;-</span> position[i <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">-</span> <span class="dv">1</span> <span class="co"># Move backward</span></span>
-<span id="cb5-13"><a href=""></a>    }</span>
-<span id="cb5-14"><a href=""></a>  }</span>
-<span id="cb5-15"><a href=""></a>  <span class="fu">return</span>(position)</span>
-<span id="cb5-16"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6" data-code-line-numbers="1|3-6|7-11|13-18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>steps <span class="ot">=</span> <span class="dv">10000</span>; n_random_walks <span class="ot">=</span> <span class="dv">300</span> <span class="co"># Define the number of steps and walks</span></span>
-<span id="cb6-2"><a href=""></a></span>
-<span id="cb6-3"><a href=""></a>future<span class="sc">::</span><span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="dv">1</span>) <span class="co"># setting num of cores/workers</span></span>
-<span id="cb6-4"><a href=""></a><span class="fu">tic</span>() <span class="co"># Measure time taken to execute the random walk</span></span>
-<span id="cb6-5"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">1</span>); walks <span class="ot">=</span> <span class="fu">future_map</span>(<span class="dv">1</span><span class="sc">:</span>n_random_walks , <span class="sc">~</span><span class="fu">random_walk</span>(steps),<span class="at">.options =</span> <span class="fu">furrr_options</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>)) </span>
-<span id="cb6-6"><a href=""></a><span class="fu">toc</span>() <span class="co"># 3.088 sec elapsed</span></span>
-<span id="cb6-7"><a href=""></a></span>
-<span id="cb6-8"><a href=""></a><span class="fu">tic</span>()</span>
-<span id="cb6-9"><a href=""></a>future<span class="sc">::</span><span class="fu">plan</span>(multisession, <span class="at">workers =</span> nworkers) <span class="co"># setting num of cores/workers</span></span>
-<span id="cb6-10"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">1</span>);walks <span class="ot">=</span> <span class="fu">future_map</span>(<span class="dv">1</span><span class="sc">:</span>n_random_walks , <span class="sc">~</span><span class="fu">random_walk</span>(steps),<span class="at">.options =</span> <span class="fu">furrr_options</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>)) </span>
-<span id="cb6-11"><a href=""></a><span class="fu">toc</span>() <span class="co"># 1.713 sec elapsed</span></span>
-<span id="cb6-12"><a href=""></a></span>
-<span id="cb6-13"><a href=""></a><span class="fu">pdf</span>(<span class="st">"random_walks.pdf"</span>)</span>
-<span id="cb6-14"><a href=""></a><span class="fu">invisible</span>(</span>
-<span id="cb6-15"><a href=""></a>  <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="cf">function</span>(i) </span>
-<span id="cb6-16"><a href=""></a>    <span class="fu">plot</span>(walks[[i]],<span class="at">type =</span> <span class="st">"l"</span>, <span class="at">ylab =</span> <span class="st">"Position"</span>, <span class="at">xlab =</span> <span class="st">"Step"</span>,</span>
-<span id="cb6-17"><a href=""></a>         <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Random Walk"</span>,i)))</span>
-<span id="cb6-18"><a href=""></a>  );<span class="fu">dev.off</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="bootstraps-in-parallel" class="slide level2">
-<h2>Bootstraps in Parallel</h2>
-<div class="cell">
-<details class="code-fold">
-<summary>expand for source code for <code>boot()</code> and <code>samp.o()</code></summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>boot <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">B =</span> <span class="dv">5000</span>, m, theta.f, <span class="at">w =</span> <span class="dv">1</span>, rdist, ...) {</span>
-<span id="cb7-2"><a href=""></a>  <span class="fu">plan</span>(multisession, <span class="at">workers =</span> w) <span class="co"># Set up for parallel execution</span></span>
-<span id="cb7-3"><a href=""></a>  b_indices <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>B <span class="co"># vector of indices for bootstrapping iterations</span></span>
-<span id="cb7-4"><a href=""></a>  iterate_func <span class="ot">&lt;-</span> <span class="cf">function</span>(b) { <span class="co"># apply for each bootstrap iteration</span></span>
-<span id="cb7-5"><a href=""></a>    <span class="cf">if</span> (m <span class="sc">==</span> <span class="st">"p"</span>) {</span>
-<span id="cb7-6"><a href=""></a>      d.b <span class="ot">&lt;-</span> <span class="fu">rdist</span>(...) <span class="co"># parametric bootstrap</span></span>
-<span id="cb7-7"><a href=""></a>    } <span class="cf">else</span> <span class="cf">if</span> (m <span class="sc">==</span> <span class="st">"np"</span>) {</span>
-<span id="cb7-8"><a href=""></a>      d.b <span class="ot">&lt;-</span> x[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x), <span class="at">replace =</span> <span class="cn">TRUE</span>)] <span class="co"># nonparametric bootstrap</span></span>
-<span id="cb7-9"><a href=""></a>    } <span class="cf">else</span> {</span>
-<span id="cb7-10"><a href=""></a>      <span class="fu">stop</span>(<span class="st">"possible arguments for m is 'p' (parametric) or 'np' (nonparametric)"</span>)</span>
-<span id="cb7-11"><a href=""></a>    }</span>
-<span id="cb7-12"><a href=""></a>    <span class="fu">theta.f</span>(d.b)</span>
-<span id="cb7-13"><a href=""></a>  }</span>
-<span id="cb7-14"><a href=""></a>  <span class="co"># future_map_dbl to apply iterate_func over each index in parallel with proper seeding</span></span>
-<span id="cb7-15"><a href=""></a>  t.s <span class="ot">&lt;-</span> <span class="fu">future_map_dbl</span>(b_indices, iterate_func, <span class="at">.options =</span> <span class="fu">furrr_options</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb7-16"><a href=""></a>  <span class="fu">samp.o</span>(t.s) <span class="co"># Summarize the bootstrap results</span></span>
-<span id="cb7-17"><a href=""></a>}</span>
-<span id="cb7-18"><a href=""></a>samp.o <span class="ot">=</span> <span class="cf">function</span>(t.s) {</span>
-<span id="cb7-19"><a href=""></a>  <span class="fu">round</span>(<span class="fu">c</span>(<span class="at">mean=</span><span class="fu">mean</span>(t.s),<span class="at">sd=</span><span class="fu">sd</span>(t.s),<span class="at">lower=</span><span class="fu">quantile</span>(t.s, <span class="fl">0.025</span>, <span class="at">names =</span> F),</span>
-<span id="cb7-20"><a href=""></a>  <span class="at">upper=</span> <span class="fu">quantile</span>(t.s, <span class="fl">0.975</span>, <span class="at">names =</span> F)),<span class="at">digits=</span><span class="dv">6</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a><span class="fu">library</span>(purrr)</span>
-<span id="cb8-2"><a href=""></a><span class="fu">library</span>(future)</span>
-<span id="cb8-3"><a href=""></a><span class="fu">library</span>(tictoc)</span>
-<span id="cb8-4"><a href=""></a></span>
-<span id="cb8-5"><a href=""></a><span class="co"># boot &lt;- function(x, B = 5000, m, theta.f, w = 1, rdist, ...) {} # see above</span></span>
-<span id="cb8-6"><a href=""></a><span class="co"># samp.o = function(t.s) {} # see above</span></span>
-<span id="cb8-7"><a href=""></a>theta.f <span class="ot">=</span> <span class="cf">function</span>(d.b) {p <span class="ot">=</span> <span class="fu">sum</span>(d.b)<span class="sc">/</span>n; p<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>p)} </span>
-<span id="cb8-8"><a href=""></a></span>
-<span id="cb8-9"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">1</span>); n <span class="ot">=</span> <span class="dv">800000</span>; y <span class="ot">=</span> <span class="dv">480</span>; B <span class="ot">=</span> <span class="dv">5000</span></span>
-<span id="cb8-10"><a href=""></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, y), <span class="fu">rep</span>(<span class="dv">0</span>, n<span class="sc">-</span>y)); phat <span class="ot">&lt;-</span> <span class="fu">sum</span>(data)<span class="sc">/</span>n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<div class="fragment">
-<div style="margin-top: 20px;">
-
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a><span class="fu">tic</span>()</span>
-<span id="cb9-2"><a href=""></a>(b_p_future <span class="ot">&lt;-</span> <span class="fu">boot</span>(data, <span class="at">B =</span> B, <span class="at">m =</span> <span class="st">"p"</span>, <span class="at">theta.f =</span> theta.f, <span class="at">w =</span> <span class="dv">1</span>,</span>
-<span id="cb9-3"><a href=""></a>                    <span class="at">rdist =</span> rbinom, <span class="at">n =</span> n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> phat))</span>
-<span id="cb9-4"><a href=""></a><span class="fu">toc</span>() <span class="co"># 49.859 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<div class="fragment">
-<div style="margin-top: 20px;">
-
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="fu">tic</span>()</span>
-<span id="cb10-2"><a href=""></a>(<span class="at">b_p_future =</span> <span class="fu">boot</span>(data, <span class="at">B =</span> B, <span class="at">m =</span> <span class="st">"p"</span>, <span class="at">theta.f =</span> theta.f, <span class="at">w =</span> <span class="dv">9</span>,</span>
-<span id="cb10-3"><a href=""></a>                    <span class="at">rdist =</span> rbinom, <span class="at">n =</span> n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> phat))</span>
-<span id="cb10-4"><a href=""></a><span class="fu">toc</span>() <span class="co"># 8.014 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</section></section>
-<section>
-<section id="its-time-for-some-more-exercises" class="title-slide slide level1 center" data-background-color="#8FA9C2">
-<h1><svg aria-hidden="true" role="img" viewbox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:white;overflow:visible;position:relative;"><path d="M64 96c0-35.3 28.7-64 64-64H512c35.3 0 64 28.7 64 64V352H512V96H128V352H64V96zM0 403.2C0 392.6 8.6 384 19.2 384H620.8c10.6 0 19.2 8.6 19.2 19.2c0 42.4-34.4 76.8-76.8 76.8H76.8C34.4 480 0 445.6 0 403.2zM281 209l-31 31 31 31c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-48-48c-9.4-9.4-9.4-24.6 0-33.9l48-48c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM393 175l48 48c9.4 9.4 9.4 24.6 0 33.9l-48 48c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l31-31-31-31c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"></path></svg> <span style="color:white;">Its Time for Some More Exercises</span></h1>
-
-</section>
-<section id="q5" class="slide level2">
-<h2>Q5</h2>
-<div class="panel-tabset">
-<ul id="tabset-9" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-9-1">Question</a></li><li><a href="#tabset-9-2">Answer</a></li></ul>
-<div class="tab-content">
-<div id="tabset-9-1">
-<!--Basic If-Else-->
-<p>Write an R function named <code>is_positive</code> that takes a single numeric input and returns <code>TRUE</code> if the number is positive, and <code>FALSE</code> otherwise.</p>
-<div id="qwebr-insertion-location-50"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-9-2">
-<div id="qwebr-insertion-location-51"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</div>
-</div>
-</section>
-<section id="q6" class="slide level2">
-<h2>Q6</h2>
-<!--Error Handling with Stop-->
-<div class="panel-tabset">
-<ul id="tabset-10" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-10-1">Question</a></li><li><a href="#tabset-10-2">Answer</a></li></ul>
-<div class="tab-content">
-<div id="tabset-10-1">
-<p>Create a function named <code>sqrt_safe</code> that computes the square root of a number. If the input is negative, the function should stop execution and return an error message <code>"Cannot take square root of a negative number."</code></p>
-<div id="qwebr-insertion-location-52"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-10-2">
-<div id="qwebr-insertion-location-53"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</div>
-</div>
-</section>
-<section id="q7" class="slide level2">
-<h2>Q7</h2>
-<!--Loop with Break-->
-<div class="panel-tabset">
-<ul id="tabset-11" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-11-1">Question</a></li><li><a href="#tabset-11-2">Answer</a></li></ul>
-<div class="tab-content">
-<div id="tabset-11-1">
-<p>Write a function named <code>find_first_negative</code> that takes a numeric vector and returns the position of the first negative number. If there are no negative numbers, return <code>NA</code>.</p>
-<div id="qwebr-insertion-location-54"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-11-2">
-<div id="qwebr-insertion-location-55"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</div>
-</div>
-</section>
-<section id="q8" class="slide level2">
-<h2>Q8</h2>
-<!--While Loop-->
-<div class="panel-tabset">
-<ul id="tabset-12" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-12-1">Question</a></li><li><a href="#tabset-12-2">Answer</a></li></ul>
-<div class="tab-content">
-<div id="tabset-12-1">
-<p>Create a function named <code>halve_until_less_than_one</code> that takes a single numeric argument and keeps halving it until it is less than 1, then returns the result. Keep track of the number of times the input is halved; print the function output as <code>list(result = x, nsteps = count)</code></p>
-<div id="qwebr-insertion-location-56"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-12-2">
-<div id="qwebr-insertion-location-57"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</div>
-</div>
-</section>
-<section id="q9" class="slide level2">
-<h2>Q9</h2>
-<!--Apply Function-->
-<div class="panel-tabset">
-<ul id="tabset-13" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-13-1">Question</a></li><li><a href="#tabset-13-2">Answer</a></li></ul>
-<div class="tab-content">
-<div id="tabset-13-1">
-<p>Write a function named <code>scale_columns</code> that takes a matrix and scales (normalizes) each column to have a mean of 0 and a standard deviation of 1. Use the given dataframe <code>M</code></p>
-<div id="qwebr-insertion-location-58"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-13-2">
-<div id="qwebr-insertion-location-59"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</div>
-</div>
-</section>
-<section id="q10" class="slide level2">
-<h2>Q10</h2>
-<!--`map` with purr-->
-<div class="panel-tabset">
-<ul id="tabset-14" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-14-1">Question</a></li><li><a href="#tabset-14-2">Answer</a></li></ul>
-<div class="tab-content">
-<div id="tabset-14-1">
-<p>Using the <code>purrr</code> package, write a function that takes a list of numeric vectors and returns a list of their means. Use <code>purrr::map</code>.</p>
-<div id="qwebr-insertion-location-60"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-14-2">
-<div id="qwebr-insertion-location-61"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</div>
-</div>
-</section>
-<section id="q11" class="slide level2">
-<h2>Q11</h2>
-<!--Using the Ellipsis (...)-->
-<div class="panel-tabset">
-<ul id="tabset-15" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-15-1">Question</a></li><li><a href="#tabset-15-2">Answer</a></li></ul>
-<div class="tab-content">
-<div id="tabset-15-1">
-<p>Create a function named <code>multiply_and_add</code> that takes an arbitrary number of numeric vectors. It should multiply each vector by its index in the argument list and then sum all the results into a single number.</p>
-<div id="qwebr-insertion-location-62"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-<div id="tabset-15-2">
-<div id="qwebr-insertion-location-63"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</div>
-</div>
-</section></section>
 <section id="acknowledgements" class="title-slide slide level1 center" data-background-color="#8FA9C2">
 <h1><svg aria-hidden="true" role="img" viewbox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:white;overflow:visible;position:relative;"><path d="M163.9 136.9c-29.4-29.8-29.4-78.2 0-108s77-29.8 106.4 0l17.7 18 17.7-18c29.4-29.8 77-29.8 106.4 0s29.4 78.2 0 108L310.5 240.1c-6.2 6.3-14.3 9.4-22.5 9.4s-16.3-3.1-22.5-9.4L163.9 136.9zM568.2 336.3c13.1 17.8 9.3 42.8-8.5 55.9L433.1 485.5c-23.4 17.2-51.6 26.5-80.7 26.5H192 32c-17.7 0-32-14.3-32-32V416c0-17.7 14.3-32 32-32H68.8l44.9-36c22.7-18.2 50.9-28 80-28H272h16 64c17.7 0 32 14.3 32 32s-14.3 32-32 32H288 272c-8.8 0-16 7.2-16 16s7.2 16 16 16H392.6l119.7-88.2c17.8-13.1 42.8-9.3 55.9 8.5zM193.6 384l0 0-.9 0c.3 0 .6 0 .9 0z"></path></svg> <span style="color:white; font-size: 70px;">Acknowledgements</span></h1>
 <div>
 <ul>
-<li class="fragment">Thank you Molly Caldwell your efforts organizing!</li>
-<li class="fragment">A big thanks to the R-Ladies Community!</li>
-<li class="fragment">Thank you Seth for your patience in my experiment using quarto revealjs and <code>webr</code>!!</li>
-<li class="fragment">Photo Credit: <a href="https://unsplash.com/photos/a-blue-background-with-lines-and-dots-xuTJZ7uD7PI">Conny Schneider</a> <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:white;overflow:visible;position:relative;"><path d="M220.6 121.2L271.1 96 448 96v96H333.2c-21.9-15.1-48.5-24-77.2-24s-55.2 8.9-77.2 24H64V128H192c9.9 0 19.7-2.3 28.6-6.8zM0 128V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H271.1c-9.9 0-19.7 2.3-28.6 6.8L192 64H160V48c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16l0 16C28.7 64 0 92.7 0 128zM168 304a88 88 0 1 1 176 0 88 88 0 1 1 -176 0z"></path></svg></li>
+<li class="fragment">Committee members</li>
+<li class="fragment">Cohort</li>
 </ul>
 </div>
 </section>
 
-<section id="wanna-hear-from-us" class="title-slide slide level1 center" data-background-color="#8FA9C2">
-<h1><span style="color:white; font-size: 70px;">Wanna Hear From Us?</span></h1>
-<p align="center">
-<img src="images/Dan.png" alt="Cover Image" height="250px">
-</p>
-<p><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:black;overflow:visible;position:relative;"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg> <a href="https://www.linkedin.com/in/daniel-hintz-rstat/" class="custom-link">daniel-hintz</a></p>
-<p><svg aria-hidden="true" role="img" viewbox="0 0 496 512" style="height:1em;width:0.97em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:black;overflow:visible;position:relative;"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg> <a href="https://github.com/DHintz137" class="custom-link">DHintz137</a></p>
-<p><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:black;overflow:visible;position:relative;"><path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z"></path></svg> <a href="https://dhintz137.github.io/quartz/" class="custom-link">dhintz137.github.io</a></p>
-<p><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:black;overflow:visible;position:relative;"><path d="M64 112c-8.8 0-16 7.2-16 16v22.1L220.5 291.7c20.7 17 50.4 17 71.1 0L464 150.1V128c0-8.8-7.2-16-16-16H64zM48 212.2V384c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V212.2L322 328.8c-38.4 31.5-93.7 31.5-132 0L48 212.2zM0 128C0 92.7 28.7 64 64 64H448c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z"></path></svg> <a href="dhintz1@uwyo.edu" class="custom-link">dhintz1@uwyo.edu</a></p>
-</section>
-
-<section id="thank-you" class="title-slide slide level1 center" data-background-color="#447099">
-<h1>Thank you!!</h1>
+<section id="thank-you" class="title-slide slide level1 center" data-background-color="#8FA9C2">
+<h1><span class="center" style="color:white;">Thank you!!</span></h1>
 
 </section>
 
-<section id="references" class="title-slide slide level1 smaller scrollable" data-background-color="#447099">
-<h1>References</h1>
+<section id="references" class="title-slide slide level1 smaller scrollable" data-background-color="#8FA9C2">
+<h1><span class="center" style="color:#464D58;">References</span></h1>
 <div class="quarto-auto-generated-content">
+<p><img src="images/quarto.png" class="slide-logo"></p>
 <div class="footer footer-default">
 
+</div>
+</div>
+<div class="reveal-header">
+<div class="header-logo" data-footer-logo-link="https://quarto.org">
+<img data-src="">
+</div>
+<div class="sc-title">
+<p> </p>
+</div>
+<div class="header-text">
+<p> </p>
+</div>
+<div class="sb-title">
+<p> </p>
 </div>
 </div>
 <div id="refs" class="references csl-bib-body" role="list">
@@ -2650,8 +2044,6 @@ Daniel Hintz <br> 2024-06-06
 </div>
 </div>
 </section>
-
-
     </div>
   </div>
 
