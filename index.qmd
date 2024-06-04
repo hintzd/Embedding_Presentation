@@ -2,7 +2,7 @@
 engine: knitr
 webr: 
   show-startup-message: false  
-  packages: ['word2vec']
+  packages: ['tibble', 'dplyr']
 format:
   revealjs:
     include-in-header:
@@ -13,6 +13,7 @@ format:
     transition: slide
     highlight-style: github
     slide-number: c/t
+    sc-sb-title: true
     chalkboard: true
     resources:
       - British_National_Corpus_Vector_size_300_skipgram/model.bin
@@ -40,10 +41,10 @@ filters:
          position: absolute; 
          top: 325px; 
          width: 100%; 
-         text-shadow: -0.5px -0.5px 0 #000, 
-                      0.5px -0.5px 0 #000, 
-                      -0.5px 0.5px 0 #000, 
-                      0.5px 0.5px 0 #000;">Daniel Hintz <br> 2024-06-06</h2>
+         text-shadow: -0.75px -0.75px 0 #000, 
+                      0.75px -0.75px 0 #000, 
+                      -0.75px 0.75px 0 #000, 
+                      0.75px 0.75px 0 #000;">Daniel Hintz <br> 2024-06-06</h2>
 
 # [Outline (1)]{style="font-size: 55px;"} 
 
@@ -68,16 +69,6 @@ filters:
 
 # [Background]{style="color:white;"}{background-color="#8FA9C2"}
 
-## SARS-COV-2
-
-```{webr-r}
-url <- "https://dhintz137.github.io/Embedding_Presentation/raw-data/King_Man_Woman_Queen_pred.csv"
-download.file(url, "King_Man_Woman_Queen_pred.csv")
-King_Man_Woman_Queen_pred <- read.csv("King_Man_Woman_Queen_pred")
-head(King_Man_Woman_Queen_pred)
-```
-
-
 ## DNA
 
 ::: columns
@@ -101,42 +92,20 @@ head(King_Man_Woman_Queen_pred)
 ## DNA Sequencing Technology
 
 ::: columns
-::: {.column width="60%"}
+::: {.column width="50%"}
 ::: incremental
 ::: {style="font-size: 0.6em;"}
 - The two main technologies for DNA Sequencing is Ilumina and Nanopore
 - Big Picture, the workflow for sequencing is the same for each technology:
     - Someone gets tested for Covid, PCA is ran to detect if the assay is indeed positive
-    - Positive tests are ran though Library prep workflow before going onto a sequencing protocol within a lab
-    - This takes in the Covid Assay and arrives at a digital copy of DNA sequences
+    - Positive tests sequence using a machine that is most likely either Ilumina or Oxford nanopore 
+    - This takes in the Covid Sample and arrives at a digital copy of DNA sequences
 :::
 :::
 :::
-::: {.column width="40%"}
+::: {.column width="50%"}
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 2: Overview of Lab processing for SARS-CoV-2; Adapted from [@carbo2023comparison], pg. 702](images/sequencing_technology_edit.png)
-:::
-:::
-:::
-
-
-## DNA Library Prep Workflow
-
-::: columns
-::: {.column width="60%"}
-::: incremental
-::: {style="font-size: 0.6em;"}
-- Library prep contains many steps, with lab technicians performing tasks to prepare the assay
-- Library prep comes with the possibility of human error, in addition to the natural machine error in sequencing.
-- Often between steps in the Library prep, the assay can diminish in quality without there being a clear reason as to why this happened.
--  Post-sequencing, median genome coverage rates for SARS-CoV-2 can range from 81.6 to 99.8% [@carbo2023comparison].
-- A genome coverage of 99.8% means that the sequencing process has successfully captured and sequenced 99.8% of the entire genome of the virus.
-:::
-:::
-:::
-::: {.column width="40%"}
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 3: Nextera DNA Library Prep Workflow; [@Illumina2016Nextera]](images/library-prep.png)
+![Figure 2: Simplified Schema of Sequencing Process for SARS-CoV-2](images/DNA_sequencing.png)
 :::
 :::
 :::
@@ -171,7 +140,7 @@ head(King_Man_Woman_Queen_pred)
 :::
 :::
 
-## Word Embeddings (2)
+## Word Embeddings  (2)
 ::: incremental
 ::: {style="font-size: 0.6em;"}
 - Here is where neural network embedding algorithms enters
@@ -180,44 +149,131 @@ head(King_Man_Woman_Queen_pred)
 :::
 :::
 
-```{r, echo=TRUE, eval=FALSE}
-library(word2vec)
-# using british national corpus http://vectors.nlpl.eu/repository/
-model <- read.word2vec("/path_to_folder/British_National_Corpus_Vector_size_300_skipgram/model.bin", normalize = TRUE)  head(summary(model, type = "vocabulary"), n = 100)
-Word_embeddings <- predict(model,newdata = c("king_NOUN","man_NOUN","woman_NOUN","queen_NOUN"),type="embedding")
-```
+. . .
 
 ```{webr-r}
-url <- "https://dhintz137.github.io/Embedding_Presentation/raw-data/King_Man_Woman_Queen_pred.csv"
+#| context: setup
+options(max.print = 10)
+# Download a dataset
+url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/King_Man_Woman_Queen_pred.csv"
 download.file(url, "King_Man_Woman_Queen_pred.csv")
-list.files()
-pred_from_csv <- read.csv("King_Man_Woman_Queen_pred.csv")
+embedding_raw <- read.csv("King_Man_Woman_Queen_pred.csv")
+embedding <- t(data.frame(embedding_raw[,-1] ,row.names = embedding_raw[,1]))
+colnames(embedding) <- c("King", "Man", "Woman", "Queen")
+embedding <- as_tibble(embedding)
+```
+
+
+```{r, echo=TRUE, eval=FALSE}
+## Pre-Ran Code ##
+library(word2vec)
+# using British National Corpus http://vectors.nlpl.eu/repository/
+model <- read.word2vec("British_National_Corpus_Vector_size_300_skipgram", normalize = TRUE)
+embedding <- predict(model,newdata = c("king_NOUN","man_NOUN","woman_NOUN","queen_NOUN"),type="embedding")
+```
+
+::: {style="margin-top: 20px;"}
+:::
+
+. . .
+
+```{webr-r}
+embedding
+embedding[ ,"King"] - embedding[ , "Man"] + embedding[ , "Woman"]
+embedding[ ,"Queen"]
 ```
 
 ## Word Embeddings (3)
+
+- We can Plot the vectors shown in the previous slide to demonstrate how word2vec produces embeddings that measures semantic similarity between words 
+
+. . .
 
 ::: {style="text-align:center; font-size: 0.5em;"}
 ![Figure 4](images/King_Man_Woman_Queen.png)
 :::
 
 
-
 ## Sequence Representations
 
+
+::: {style="font-size: 0.6em;"}
+- Just like we can represent words as vectors we can also represent sequences as vectors
+:::
+
+::: {style="margin-top: 20px;"}
+:::
+
+. . .
 
 ::: {style="text-align:center; font-size: 0.5em;"}
 ![](images/ml_rep_obj.png)
 :::
 
+::: {style="margin-top: 20px;"}
+:::
+
 ::: incremental
 ::: {style="font-size: 0.6em;"}
--  An effective representation (embedding) of a genomic sequence is crucial for all downstream tasks
+-  As seen in the equation above, an effective representation (embedding) of a genomic sequence is crucial for all downstream tasks
     - i.e., clustering, classification, regression, protein function identification, structural analysis, and predicting genetic disorders [@angermueller2016deep]
-
+- While there are many neural network embedding algorithms, the focus of this presentation is on GenSLM 
 :::
 :::
 
 ## GenSLM
+
+::: panel-tabset
+### Overview
+
+::: columns
+::: {.column width="40%"}
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Overall, the GenSLM algorithm first **tokenizes**, i.e., breaks up sequences in to chunks of three nucleotide 
+- Then, **vectorizes** the input sequence creating a $1 \times 512$ vector for each imputed sequence
+:::
+:::
+:::
+::: {.column width="60%"}
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 3](images/Tokenize_vectorize.png){width="50%"}
+:::
+:::
+:::
+
+### Transformer
+::: columns
+::: {.column width="40%"}
+::: incremental
+::: {style="font-size: 0.6em;"}
+- First the tokenized input sequence is passed to the transformer encoder
+- The transformer encoder converts 1,024 bp slices into numeric vectors 
+- This is ran recursively through a diffusion model to learn a condensed distribution of the whole sequence.
+- The transformers in GenSLM are used to capture local interactions within a genomic sequence
+:::
+:::
+:::
+::: {.column width="60%"}
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 5: GenSLM Transformer Architecture; [@genslms2023]](images/GenSLM.png)
+:::
+:::
+:::
+
+### Diffusian + Transformer
+
+
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Diffusion and Transformer models work in tandem
+- Transformers captures local interactions, while the diffusion model captures learns a representation of transformers vectors to represent the whole genome
+:::
+:::
+
+
+:::
 
 # [Data and Processing]{style="color:white;"}{background-color="#8FA9C2"}
 
@@ -230,6 +286,9 @@ pred_from_csv <- read.csv("King_Man_Woman_Queen_pred.csv")
 ## Generating Embeddings
 
 # [Methodology]{style="color:white;"}{background-color="#8FA9C2"}
+
+# [Results]{style="color:white;"}{background-color="#8FA9C2"}
+
 
 
 
