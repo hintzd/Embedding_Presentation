@@ -9,6 +9,10 @@ width: 90px !important;
 }
 */
 
+.small-code {
+    font-size: 22px;  
+}
+
 .custom-link {
     color: #003247 !important; /*  color for the link text */
     text-decoration: none; /* Optional: removes underline from links */

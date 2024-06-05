@@ -23,7 +23,7 @@ csl: diabetologia.csl
 filters: 
  - webr
  - reveal-header
-slide-level: 3
+slide-level: 4
 number-sections: false
 engine: knitr
 ---
@@ -64,6 +64,7 @@ engine: knitr
 - Methodology
     - Intrinsic and Extrinsic Evaluation
 - Results
+- Conclusion
 :::
 
 
@@ -87,7 +88,6 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 ::: {style="font-size: 0.6em;"}
 - Deoxyribonucleic acid (DNA) is a molecule that contains the genetic code that provides the instructions for building and maintaining life.
 - The structure of DNA can be thought of as rungs on a ladder (known as base pairs) involving the pairing of four nucleotides - Adenine (A), Cytosine (C),Guanine (G) and Thymine (T).
-- Genomic sequencing is a process used to decipher the genetic material found in an organism
 - For reference, the SARS-CoV2 virus is approximately 30,0000 base pairs (bp’s), whereas the human genome is approximately 3 billion bp.
 :::
 :::
@@ -105,10 +105,9 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 ::: {.column width="50%"}
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- The two main technologies for DNA Sequencing is Ilumina and Nanopore
 - Big Picture, the workflow for sequencing is the same for each technology:
     - Someone gets tested for Covid, PCA is ran to detect if the assay is indeed positive
-    - Positive tests sequence using a machine that is most likely either Ilumina or Oxford Nanopore 
+    - Positive tests sequence using a machine that is most likely either Ilumina or Oxford Nanopore machines
     - This takes in the Covid Sample and arrives at a digital copy of DNA sequences
 :::
 :::
@@ -121,14 +120,20 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 :::
 
 
-## Coding regions and Proteins
+## SARS-CoV-2 and Proteins
 
 ::: columns
 ::: {.column width="40%"}
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- The coding region specifically encodes proteins that are essential for all the functions necessary for life.
-- the whole SARS-CoV2 genome, marking structural and nonstructural proteins within the coding region along with the first 43 nucleotides for the nsp1 protein
+- SARS-CoV-2 has 29 proteins.
+- Different proteins have different functions.
+- Proteins are encoded from different sites of DNA.
+- In studying embeddings, tasks have been either **whole genome oriented** or **protein specific**. 
+<!--
+- In the context of SARS-CoV-2, proteins are responsible for the virus's structure and infectivity.
+-  Nonstructural Proteins primarily function in the replication and manipulation of the host cell's environment to favor viral replication.
+-->
 :::
 :::
 :::
@@ -139,25 +144,44 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 :::
 :::
 
-## Word Embeddings (1)
+## Embeddings
+
+::: incremental
+::: {style="font-size: 0.55em;"}
+ - An *embedding* is the name for the dense numeric vectors produced by *embedding algorithms*, such as word2vec or GenSLM.
+ 
+ -  "Embedding" generally refers to the embedding vector
+ 
+ -  Embeddings are representation of data in lower-dimensional space that preserves some aspects of the original structure of the data.
+
+- Embedding algorithms exist for languages (i.e., word2vec) as well as genomic sequences, such as GenSLM.
+
+- But why would you ever embed something?
+    - In natural language applications, words can be compared mathematically using their numeric representations, similar to comparing vectors in physics.
+    - Embedding vectors are generally more computationally efficient.
+:::
+:::
+
+::: {.notes}
+- As an introduction, it will be easier to first walk through an example of an Embedding for natural language.
+:::
+## Word Embeddings 
 
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- Before we introduce GenSLM and embeddings for Sequences, what is an embedding and why would ever embed something? 
-- If we consider English text, how might we ever measure the similarity of words in terms of their meaning, said differently, **How can we measure semantic similarity between words**
-- For example, what is the semantic difference between the words "King" and "Woman"
-- This initially sounds outlandish, but if there were a way to represent words as numeric vectors, then we would be able to use the same linear algebra we would use to compare vectors of force, speed or velocity. 
+- Before we introduce GenSLM, lets look at a simpler application in natural language.
+    - If we consider English text, **How can we measure the similarity between words?**
+    - For example, what is the semantic difference between the words "King" and "Woman".
+    - Let's demonstrate the semantic relationships of “King”, “Queen”, “Man”, “Woman”.
 :::
 :::
 
-## Word Embeddings  (2)
-::: incremental
-::: {style="font-size: 0.6em;"}
-- Here is where neural network embedding algorithms enters
-- For example, given a corpus (a massive training set of structured text) how are the words "King", "Quen", "Man", "Woman" related within the given corpus
-- It turns out given a sufficiently large corpus of text you can train an embedding algorithm (such as word2vec for NLP) to generate vectors for words included within the corpus 
+::: {.notes}
+- Embedding algorithms need data (a corpus of text) to construct numeric vectors relating words and their meaning.
 :::
-:::
+
+
+## Word2vec Example
 
 . . .
 
@@ -190,6 +214,9 @@ print_tidy <- function(x, ...) {
 
 
 ```{r, echo=TRUE, eval=FALSE}
+#| class-source: small-code
+#| classes: small-code
+
 ## Pre-Ran Code ##
 library(word2vec)
 # using British National Corpus http://vectors.nlpl.eu/repository/
@@ -197,20 +224,26 @@ model <- read.word2vec("British_National_Corpus_Vector_size_300_skipgram", norma
 embedding <- predict(model,newdata = c("king_NOUN","man_NOUN","woman_NOUN","queen_NOUN"),type="embedding")
 ```
 
+
 ::: {style="margin-top: 20px;"}
 :::
 
 . . .
 
 ```{webr-r}
+#| class-source: small-code
+#| classes: small-code
 print_tidy(embedding)
 print_tidy(embedding[ ,"King"] - embedding[ , "Man"] + embedding[ , "Woman"])
 print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 ```
 
-## Word Embeddings (3)
+## Plotting Word Embeddings
+
+. . .
+
 ::: {style="font-size: 0.6em;"}
-- We can Plot the vectors shown in the previous slide to demonstrate how word2vec produces embeddings that measures semantic similarity between words 
+- We can Plot the vectors shown in the previous slide to demonstrate how word2vec produces embeddings that measures semantic similarity between words. 
 :::
 
 . . .
@@ -220,34 +253,32 @@ print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 :::
 
 
-## Sequence Representations (1)
+## Sequence Embeddings
 
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- Just like we can represent words as vectors we can also represent sequences as vectors
-- There exist many neural network embedding algorithms for genomic data
-- For example, **GenSLM** (the focus of this presentation), DNABERT2, and HyenaDNA
-- These embeddings are lossy encodings, meaning that some information is lost in the transformation
-- They also can distort structural relationships present in the data
+- Neural network embedding algorithms for genomic data include **GenSLM (the focus of this presentation)**, DNABERT2, and HyenaDNA.
+- These embeddings are lossy encodings, meaning that some information is lost in the transformation.
+- They also can distort structural relationships present in the data.
 :::
 :::
 
-## Sequence Representations (2)
+::: {.notes}
+- Just like we can represent words as vectors we can also represent genomic sequences as vectors.
+:::
+
+## Why Data Representation Matters 
 
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- Thus, embedding evaluation is a rising field as embeddings are increasingly used in pipelines for predictive analytics and data discovery
-- How data is represented is very important!!
+- An embedding is one way of representing data.
 :::
-:::
-
-::: {style="margin-top: 20px;"}
 :::
 
 . . .
 
 ::: {style="text-align:center; font-size: 0.5em;"}
-![](images/ml_rep_obj.png){width="80%"}
+![](images/pred_rep_obj.png){width="65%"}
 :::
 
 ::: {style="margin-top: 20px;"}
@@ -255,9 +286,9 @@ print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 
 ::: incremental
 ::: {style="font-size: 0.6em;"}
--  As seen in the equation above, an effective representation (embedding) of a genomic sequence is crucial for all downstream tasks
-    - i.e., clustering, classification, regression, protein function identification, structural analysis, and predicting genetic disorders [@angermueller2016deep]
-- While there are many neural network embedding algorithms, the focus of this presentation is on GenSLM 
+-  An effective representation (embedding) of a genomic sequence is crucial for all downstream tasks.
+    - i.e., clustering, classification, regression, protein function identification, structural analysis, and predicting genetic disorders [@angermueller2016deep].
+- Given the increasing use of embeddings, embedding evolution has also become more important. 
 :::
 :::
 
@@ -270,8 +301,8 @@ print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 ::: {.column width="40%"}
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- Overall, the GenSLM algorithm first **tokenizes**, i.e., breaks up sequences in to chunks of three nucleotides 
-- Then, input sequence are **vectorized** creating a $1 \times 512$ vector for each imputed sequence
+- Overall, the GenSLM algorithm first **tokenizes**, i.e., breaks up sequences in to chunks of three nucleotides. 
+- Then, the input sequence are **vectorized** creating a $1 \times 512$ vector for each inputed sequence.
 :::
 :::
 :::
@@ -315,14 +346,14 @@ print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 
 :::
 
-# [Workflow]{style="color:white;"}{background-color="#8FA9C2"}
-## Overview 
+# [Data and Processing]{style="color:white;"}{background-color="#8FA9C2"}
+
+
+## Data Workflow 
 
 ::: {style="text-align:center; font-size: 0.5em;"}
 ![Figure 7: Project Workflow](images/Overall_workflow.png){width="30%"}
 :::
-
-# [Data and Processing]{style="color:white;"}{background-color="#8FA9C2"}
 
 ## Data Description
 
@@ -330,7 +361,6 @@ print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 ::: incremental
 ::: {style="font-size: 0.6em;"}
 - All Covid sequences were downloaded with permission from the Global Initiative on Sharing All Influenza Data (GISAID)
-- API GISAIDR was used for convenience
 - No geographical or temporal restrictions were placed on the sequences extracted
 :::
 :::
@@ -353,19 +383,21 @@ print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 :::
 ::: 
 
-## Exploratory Data Analysis
+# [Exploratory Data Analysis]{style="color:white;"}{background-color="#8FA9C2"}
+
+## [What are the Patterns and Structures Oberved from the Sequence Data?]{style="font-size: 52px;"}
 
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- For Exploratory Data Analysis, the goal was the characterize the structure of the data in its sequence presentation 
--  This served as a later comparisons to embedding structure 
+- For Exploratory Data Analysis, the goal was the characterize the structure of the data in its sequence presentation. 
+-  This served as a later comparisons to embedding structure. 
 :::
 ::: 
 
 . . .
 
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 8: Mutation Boxplot](images/Whole_Genome_Mutation_Count_Hamming_Distances.png){width="65%"}
+![Figure 8: Mutation Boxplot](images/Whole_Genome_Mutation_Count_Hamming_Distances.png){width="50%"}
 :::
 
 ## 
@@ -376,14 +408,6 @@ print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 
 
 
-
-## 
-
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 12: Aligned Sequence Radial Dendrogram](images/high_res_tree_595_patients_gapinc_cropped.png){width="65%"}
-:::
-
-
 # [Methodology]{style="color:white;"}{background-color="#8FA9C2"}
 
 ## Evaluating Embeddings 
@@ -392,10 +416,9 @@ print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 ::: {style="font-size: 0.6em;"}
 - Broadly speaking, the quality of an embedding is assessed based upon its information richness and the degree of non-redundancy.
 
-- Their are two main methodologies for evaluating embeddings 
-
-- When downstream learning tasks are evaluated, it’s referred to as **extrinsic evaluation**.
-- When the qualities of the embedding matrix itself are assessed it is referred to as **intrinsic evaluation** (Lavrač et al., 2021).
+- Their are two main methodologies for evaluating embeddings. 
+    - When downstream learning tasks are evaluated, it’s referred to as **extrinsic evaluation**.
+    - When the qualities of the embedding matrix itself are assessed it is referred to as **intrinsic evaluation** (Lavrač et al., 2021).
 :::
 :::
 
@@ -404,11 +427,9 @@ print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 ::: incremental
 ::: {style="font-size: 0.6em;"}
 - There are three main qualities to asses when studying the the quality of an embedding: **Redundancy**, **Separability**, **Preservation of Semantic Distance**
-- Redundancy reveals the efficiency of a embeddings encoding; more efficient encodings tend to perform better and use fewer computational resources.
-
-- Separability gives practical insight into whether or not the embedding output can be separated into meaningful genomic groups (i.e., variants). 
-
-- Preservation of semantic distance is important for determining if the structural representation of information remains valid for subsequent tasks.
+    - Redundancy reveals the efficiency of a embeddings encoding; more efficient encodings tend to perform better and use fewer computational resources.
+    - Separability gives practical insight into whether or not the embedding output can be separated into meaningful genomic groups (i.e., variants). 
+    - Preservation of semantic distance is important for determining if the structural representation of information remains valid for subsequent tasks.
 :::
 :::
 
@@ -416,56 +437,112 @@ print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- Extrinsic evaluation pursues practical benchmarks to assess the performance of an embeddings algorithm per its associated embedding matrix across varying levels of task complexity
-- For GenSLM, the subset of possible tasks chosen were variant and protein classification
+- Extrinsic evaluation pursues practical benchmarks to assess the performance of an embeddings algorithm per its associated embedding matrix across varying levels of task complexity.
+- For GenSLM, the subset of possible tasks chosen were variant and protein classification.
 :::
 :::
 
 # [Results]{style="color:white;"}{background-color="#8FA9C2"}
+
 ## [Intrinsic Evaluation Results]{style="color:#6FB1D1;"}
 
+### [Redundancy]{style="color:#A9D0E3;"}
 
-### Redundancy
+#### Singular Value Decomposition
 
 ::: {style="text-align:center; font-size: 0.5em;"}
 ![Figure 13: SVD CPE Plot](images/SVD_582.png){width="65%"}
 :::
 
+### [Preservation of Semantic Distance]{style="color:#A9D0E3;"}
 
-### Preservation of Semantic Distance
+#### Distance Matrices
 
 ::: panel-tabset
-#### Distance matrices
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 14: Distance Matrices](images/distances_matrices_labelled.png){width="65%"}
+##### Sequence 
+::: {style="margin-top: 50px;"}
 :::
+
+<iframe class="plotlyFrame" src="./seq_dist_matrix.html" style="border: none;"></iframe>
+
+##### Embeddings 
+::: {style="margin-top: 50px;"}
+:::
+
+<iframe class="plotlyFrame" src="./emb_dist_matrix.html" style="border: none;"></iframe>
+
+##### Abs. Diff.
+::: {style="margin-top: 50px;"}
+:::
+
+<iframe class="plotlyFrame" src="./abs_diff_dist_matrix.html" style="border: none;"></iframe>
+
+##### Reg. Diff.
+::: {style="margin-top: 50px;"}
+:::
+
+<iframe class="plotlyFrame" src="./diff_dist_matrix.html" style="border: none;"></iframe>
+
+:::
+
 
 #### Kullback–Leibler Divergence (KLD)
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 15: CKL vs DKL](images/CKL_vs_DKL_ver2.png){width="65%"}
+![Figure 15: CKL vs DKL](images/CKL_vs_DKL_ver2.png){width="85%"}
 :::
-:::
-# 
+
+
+#### Radial Dendrograms
+
+## 
 
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 16: Embedding Radial Dendrogram](images/high_res_tree_581_patients_emb.png){width="65%"}
+![Figure 12: Aligned Sequence Radial Dendrogram](images/high_res_tree_595_patients_gapinc_cropped.png){width="65%"}
 :::
 
-### Separability
+## 
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 16: Embedding Radial Dendrogram](images/high_res_tree_581_patients_emb_cropped.png){width="65%"}
+:::
+
+### [Separability]{style="color:#A9D0E3;"}
+
+### Principal Component Analysis
+
+::: {style="margin-top: 70px;"}
+:::
+
+<iframe class="plotlyFrame" src="./v_pc_plotly.html" style="border: none;"></iframe>
+
 
 ## [Extrinsic Evaluation Results]{style="color:#6FB1D1;"}
-### Variant Classification
-### Protein Classification
+
+### [Variant Classification]{style="color:#A9D0E3;"}
+
+#### Variant Classification (Embedding)
+
+{{< pdf images/variant_CART.gv.pdf width=1000 height=650 >}}
+
+#### Variant Classification (One-Hot-Encoding)
+
+{{< pdf images/CART_variant_binary_cropped.pdf width=1000 height=650 >}}
+
+### [Protein Classification]{style="color:#A9D0E3;"}
+
+#### Protein Classification (Embedding)
+
+{{< pdf images/protein_CART.gv.pdf width=1000 height=600 >}}
+
+#### Protein Classification (PCA Reduced Embedding)
+{{< pdf images/protein_CART_29_PCA_components.gv.pdf width=1000 height=650 >}}
+
 
 ## Conclusion
 
-<iframe id="plotlyFrame" src="./plotly_p1.html" style="border: none;"></iframe>
-
-
-
 # [Appendix]{style="color:white;"}{background-color="#8FA9C2"}
 
-## Alignment (Appendix)
+## Alignment Illustration
 
 ```{webr-r}
 #| context: setup
