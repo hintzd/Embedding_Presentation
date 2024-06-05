@@ -1,8 +1,8 @@
 library(word2vec)
 # using british national corpus http://vectors.nlpl.eu/repository/
-model <- read.word2vec("/Users/danielhintz/Library/CloudStorage/Dropbox/UNI/Embedding_Exploration/British_National_Corpus_Vector_size_300_skipgram", normalize = TRUE) # head(summary(model, type = "vocabulary"), n = 100)
+model <- read.word2vec("/Users/danielhintz/Library/CloudStorage/Dropbox/UNI/Embedding_Exploration/British_National_Corpus_Vector_size_300_skipgram/model.bin", normalize = TRUE) # head(summary(model, type = "vocabulary"), n = 100)
 Word_embeddings <- predict(model,newdata = c("king_NOUN","man_NOUN","woman_NOUN","queen_NOUN"),type="embedding")
-write.csv(Word_embeddings, "King_Man_Woman_Queen_pred.csv")
+# write.csv(Word_embeddings, "King_Man_Woman_Queen_pred.csv")
 df <- as.data.frame(Word_embeddings)
 glimpse(t(df))
 pca_result <- prcomp(df, scale. = TRUE)
@@ -12,7 +12,7 @@ transformation_vector <- pca_data["King", ] - pca_data["Man", ] + pca_data["Woma
 pca_data <- rbind(pca_data, `King - Man + Woman ≈ Queen` = transformation_vector)
 color_values <- c("King" = "#02B7EB", "Man" = "#F7766D", "Woman" = "#A58AFF", "Queen" = "#00C094", "King - Man + Woman ≈ Queen" = "#FB61D7")
 
-ggplot(pca_data, aes(x = 0, y = 0, xend = PC1, yend = PC2, color = rownames(pca_data))) +
+p1 <- ggplot(pca_data, aes(x = 0, y = 0, xend = PC1, yend = PC2, color = rownames(pca_data))) +
   geom_segment(arrow = arrow(type = "closed", length = unit(0.2, "inches")), size = 1) +
   geom_text(aes(x = PC1, y = PC2, label = rownames(pca_data)), hjust = 0.5, vjust = -1.6, size = 5.5,fontface = "bold") +
   scale_color_manual(values = color_values) +
@@ -34,6 +34,9 @@ theme_minimal() +
     ),
     panel.background = element_rect(fill = "white", color = "white")
   )
+p1
+plotly_p1 <- plotly::ggplotly(p1)
+htmltools::save_html(plotly_p1, file = "plotly_p1.html")
 ggsave("images/King_Man_Woman_Queen.png",width = 15,height=10)
 
 

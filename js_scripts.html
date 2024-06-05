@@ -1,0 +1,22 @@
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function resizeIframe() {
+        var iframe = document.getElementById('plotlyFrame');
+        if (iframe) {
+            // Set the dimensions relative to parent or custom logic
+            iframe.style.height = window.innerHeight * 0.8 + 'px'; // 80% of the viewport height
+            iframe.style.width = window.innerWidth * 0.8 + 'px';  // 80% of the viewport width
+        }
+    }
+
+    // Resize iframe when the window resizes
+    window.addEventListener('resize', resizeIframe);
+
+    // Initial resize
+    resizeIframe();
+});
+</script>
+<!-- This is also a suitable place for other snippets from JavaScript, CSS, or HTML elements, in order to have them included in the header -->

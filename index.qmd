@@ -5,7 +5,7 @@ webr:
 format:
   revealjs:
     include-in-header:
-      - file: MathJax.html
+      - file: js_scripts.html
     theme: [default, theme.scss]
     scrollable: true
     css: styles.css
@@ -51,23 +51,28 @@ engine: knitr
                       -0.75px 0.75px 0 #000, 
                       0.75px 0.75px 0 #000;">Daniel Hintz <br> 2024-06-06</h2>
 
-# [Outline (1)]{style="font-size: 55px;"} 
+# [Outline]{style="font-size: 55px;"} 
 
-::: incremental
-::: {style="font-size: 0.6em;"}
--   Background
-    - SARS-COV-2
+::: {style="font-size: 0.65em;"}
+- Thesis Question
+- Background
     - DNA
-    - Coding regions and Proteins
-    - Sequence Representations
-    - GenSLM
--   Data and Processing
-    - Data Description
-    - Data Cleaning & Pre-Processing
-    - Exploratory Data Analysis
-    - Generating Embeddings
--   Methodology
+    - Word Embeddings
+    - GenSLM Embedding Algorithm 
+- Data and Processing
+    - Source and Cleaning 
+- Methodology
+    - Intrinsic and Extrinsic Evaluation
+- Results
 :::
+
+
+## Thesis Question
+
+. . .
+
+::: {style="text-align:center; font-size: 0.85em;"}
+How easily can information be extracted from GenSLM embeddings while maintaining its original integrity; and what is the quality of the produced vector embeddings?
 :::
 
 
@@ -103,7 +108,7 @@ engine: knitr
 - The two main technologies for DNA Sequencing is Ilumina and Nanopore
 - Big Picture, the workflow for sequencing is the same for each technology:
     - Someone gets tested for Covid, PCA is ran to detect if the assay is indeed positive
-    - Positive tests sequence using a machine that is most likely either Ilumina or Oxford nanopore 
+    - Positive tests sequence using a machine that is most likely either Ilumina or Oxford Nanopore 
     - This takes in the Covid Sample and arrives at a digital copy of DNA sequences
 :::
 :::
@@ -158,14 +163,29 @@ engine: knitr
 
 ```{webr-r}
 #| context: setup
-options(max.print = 10)
+
+options(max.print = 15)
 # Download a dataset
 url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/King_Man_Woman_Queen_pred.csv"
 download.file(url, "King_Man_Woman_Queen_pred.csv")
 embedding_raw <- read.csv("King_Man_Woman_Queen_pred.csv")
 embedding <- t(data.frame(embedding_raw[,-1] ,row.names = embedding_raw[,1]))
 colnames(embedding) <- c("King", "Man", "Woman", "Queen")
-embedding <- as_tibble(embedding)
+# embedding <- as_tibble(embedding)
+
+print_tidy <- function(x, ...) {
+  if (is.matrix(x) || length(dim(x)) > 1) {
+    # If x is a matrix or array, convert each column into a tibble column
+    out <- as_tibble(as.data.frame(x))
+  } else if (is.vector(x)) {
+    # If x is a vector, convert it into a single column tibble
+    out <- tibble(value = x)
+  } else {
+    # Fallback for other data types
+    out <- as_tibble(x)
+  }
+  print(out, ...)
+}
 ```
 
 
@@ -183,27 +203,42 @@ embedding <- predict(model,newdata = c("king_NOUN","man_NOUN","woman_NOUN","quee
 . . .
 
 ```{webr-r}
-embedding
-embedding[ ,"King"] - embedding[ , "Man"] + embedding[ , "Woman"]
-embedding[ ,"Queen"]
+print_tidy(embedding)
+print_tidy(embedding[ ,"King"] - embedding[ , "Man"] + embedding[ , "Woman"])
+print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 ```
 
 ## Word Embeddings (3)
-
+::: {style="font-size: 0.6em;"}
 - We can Plot the vectors shown in the previous slide to demonstrate how word2vec produces embeddings that measures semantic similarity between words 
+:::
 
 . . .
 
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 4](images/King_Man_Woman_Queen.png)
+![Figure 4: Word Embedding Vectors ](images/King_Man_Woman_Queen.png){width="70%"}
 :::
 
 
-## Sequence Representations
+## Sequence Representations (1)
 
-
+::: incremental
 ::: {style="font-size: 0.6em;"}
 - Just like we can represent words as vectors we can also represent sequences as vectors
+- There exist many neural network embedding algorithms for genomic data
+- For example, **GenSLM** (the focus of this presentation), DNABERT2, and HyenaDNA
+- These embeddings are lossy encodings, meaning that some information is lost in the transformation
+- They also can distort structural relationships present in the data
+:::
+:::
+
+## Sequence Representations (2)
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Thus, embedding evaluation is a rising field as embeddings are increasingly used in pipelines for predictive analytics and data discovery
+- How data is represented is very important!!
+:::
 :::
 
 ::: {style="margin-top: 20px;"}
@@ -212,7 +247,7 @@ embedding[ ,"Queen"]
 . . .
 
 ::: {style="text-align:center; font-size: 0.5em;"}
-![](images/ml_rep_obj.png)
+![](images/ml_rep_obj.png){width="80%"}
 :::
 
 ::: {style="margin-top: 20px;"}
@@ -235,14 +270,14 @@ embedding[ ,"Queen"]
 ::: {.column width="40%"}
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- Overall, the GenSLM algorithm first **tokenizes**, i.e., breaks up sequences in to chunks of three nucleotide 
-- Then, **vectorizes** the input sequence creating a $1 \times 512$ vector for each imputed sequence
+- Overall, the GenSLM algorithm first **tokenizes**, i.e., breaks up sequences in to chunks of three nucleotides 
+- Then, input sequence are **vectorized** creating a $1 \times 512$ vector for each imputed sequence
 :::
 :::
 :::
 ::: {.column width="60%"}
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 3](images/Tokenize_vectorize.png){width="50%"}
+![Figure 5: Generic Embedding Workflow](images/Tokenize_vectorize.png){width="50%"}
 :::
 :::
 :::
@@ -261,18 +296,18 @@ embedding[ ,"Queen"]
 :::
 ::: {.column width="60%"}
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 5: GenSLM Transformer Architecture; [@genslms2023]](images/GenSLM.png)
+![Figure 6: GenSLM Transformer Architecture; [@genslms2023]](images/GenSLM.png)
 :::
 :::
 :::
 
-### Diffusian + Transformer
+### Diffusion  + Transformer
 
 
 
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- Diffusion and Transformer models work in tandem
+- Diffusion and Transformer models work in tandem in GenSLM
 - Transformers captures local interactions, while the diffusion model captures learns a representation of transformers vectors to represent the whole genome
 :::
 :::
@@ -283,21 +318,10 @@ embedding[ ,"Queen"]
 # [Workflow]{style="color:white;"}{background-color="#8FA9C2"}
 ## Overview 
 
-
-::: columns
-::: {.column width="40%"}
-::: incremental
-::: {style="font-size: 0.6em;"}
-- foo
-:::
-:::
-:::
-::: {.column width="60%"}
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 5: Workflow](images/Overall_workflow.png){width="45%"}
+![Figure 7: Project Workflow](images/Overall_workflow.png){width="30%"}
 :::
-:::
-:::
+
 # [Data and Processing]{style="color:white;"}{background-color="#8FA9C2"}
 
 ## Data Description
@@ -320,56 +344,34 @@ embedding[ ,"Queen"]
 :::
 :::
 
-## Alignment
+
+## Alignment 
 
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- Sequences need to be aligned in order to find nucleotides responsible for coding proteins across multiple sequences 
-- The Clustal Omega algorithm was used from the msa package in R (Sievers et al., 2011; Bodenhofer et al., 2015). 
-- To obtain the locations of proteins in terms of base pairs, the Wuhan reference sequence (NC_045512.2), was included in the alignment for which protein locations are documented (NCBI Reference Sequence, 2023; Bai et al., 2022, p. 283). 
-- Protein locations for the reference sequence
-- Using these locations you can string matching unaligned reference sequences to the aligned reference sequence to find the updated protein locations 
-- Now specific proteins can be selected and are reading for embedding
+- An multiple alignment alignment was performed to be able to slice the exact location of proteins across different sequences, for more details see the appendix
 :::
 ::: 
-
-
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 5: Radial Dendrogram](images/Whole_Genome_Mutation_Count_Hamming_Distances.png){width="65%"}
-:::
-
-
-
-```{webr-r}
-#| context: setup
-options(max.print = 10)
-# Download a dataset
-# url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/var_seq_595_A.feather"
-# download.file(url, "var_seq_595_A.feather")
-# var_seq_595_A <- read_feather("var_seq_595_A.feather")
-# var_seq_595_A$aligned_seq[c(1,2,4,78)] |> substr(640,745) |> Biostrings::DNAStringSet()
-```
-
 
 ## Exploratory Data Analysis
 
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- For Exploratory Data Analysis, the goal was the characterise the structure of the data
--  This served as a later compasrions to struture as seen through the embedding
+- For Exploratory Data Analysis, the goal was the characterize the structure of the data in its sequence presentation 
+-  This served as a later comparisons to embedding structure 
 :::
 ::: 
 
 . . .
 
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 5: Radial Dendrogram](images/Whole_Genome_Mutation_Count_Hamming_Distances.png){width="65%"}
+![Figure 8: Mutation Boxplot](images/Whole_Genome_Mutation_Count_Hamming_Distances.png){width="65%"}
 :::
 
 ## 
 
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 5: Radial Dendrogram](images/hamming_prot_heatmap_581_all_variants.png){width="100%"}
+![Figure 11: Hamming Distance of Aligned Proteins to Wuhan Reference Sequence](images/hamming_prot_heatmap_581_all_variants.png){width="100%"}
 :::
 
 
@@ -378,32 +380,56 @@ options(max.print = 10)
 ## 
 
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 5: Radial Dendrogram](images/high_res_tree_595_patients_gapinc_cropped.png){width="65%"}
+![Figure 12: Aligned Sequence Radial Dendrogram](images/high_res_tree_595_patients_gapinc_cropped.png){width="65%"}
 :::
 
 
 # [Methodology]{style="color:white;"}{background-color="#8FA9C2"}
 
-## Goals 
+## Evaluating Embeddings 
 
-This study aimed to assess the quality of the GenSLM embedding algorithms when applied to genomic analyses. The quality of an embedding is assessed based upon its information richness and the degree of non-redundancy.
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Broadly speaking, the quality of an embedding is assessed based upon its information richness and the degree of non-redundancy.
 
-When downstream learning tasks are evaluated, it’s often referred to as extrinsic evaluation. While when the qualities of the embedding matrix itself are assessed it is often referred to as intrinsic evaluation (Lavrač et al., 2021).
+- Their are two main methodologies for evaluating embeddings 
+
+- When downstream learning tasks are evaluated, it’s referred to as **extrinsic evaluation**.
+- When the qualities of the embedding matrix itself are assessed it is referred to as **intrinsic evaluation** (Lavrač et al., 2021).
+:::
+:::
 
 ## Intrinsic Evaluation
 
-Studying an embedding’s redundancy reveals the efficiency of its encoding; more efficient encodings tend to perform better and use fewer computational resources. Separability gives practical insight into whether or not the embedding output can be separated into meaningful genomic groups (i.e., variants). Meanwhile, exploring the preservation of semantic distance is important for determining if the structural representation of information remains valid for subsequent tasks.
+::: incremental
+::: {style="font-size: 0.6em;"}
+- There are three main qualities to asses when studying the the quality of an embedding: **Redundancy**, **Separability**, **Preservation of Semantic Distance**
+- Redundancy reveals the efficiency of a embeddings encoding; more efficient encodings tend to perform better and use fewer computational resources.
+
+- Separability gives practical insight into whether or not the embedding output can be separated into meaningful genomic groups (i.e., variants). 
+
+- Preservation of semantic distance is important for determining if the structural representation of information remains valid for subsequent tasks.
+:::
+:::
 
 ## Extrinsic Evaluation
 
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Extrinsic evaluation pursues practical benchmarks to assess the performance of an embeddings algorithm per its associated embedding matrix across varying levels of task complexity
+- For GenSLM, the subset of possible tasks chosen were variant and protein classification
+:::
+:::
+
 # [Results]{style="color:white;"}{background-color="#8FA9C2"}
 ## [Intrinsic Evaluation Results]{style="color:#6FB1D1;"}
+
+
 ### Redundancy
 
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 5: Radial Dendrogram](images/SVD_582.png){width="65%"}
+![Figure 13: SVD CPE Plot](images/SVD_582.png){width="65%"}
 :::
-
 
 
 ### Preservation of Semantic Distance
@@ -411,18 +437,18 @@ Studying an embedding’s redundancy reveals the efficiency of its encoding; mor
 ::: panel-tabset
 #### Distance matrices
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 5: Radial Dendrogram](images/distances_matrices_labelled.png){width="65%"}
+![Figure 14: Distance Matrices](images/distances_matrices_labelled.png){width="65%"}
 :::
 
 #### Kullback–Leibler Divergence (KLD)
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 5: Radial Dendrogram](images/CKL_vs_DKL_ver2.png){width="65%"}
+![Figure 15: CKL vs DKL](images/CKL_vs_DKL_ver2.png){width="65%"}
 :::
 :::
 # 
 
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 5: Radial Dendrogram](images/high_res_tree_581_patients_emb.png){width="65%"}
+![Figure 16: Embedding Radial Dendrogram](images/high_res_tree_581_patients_emb.png){width="65%"}
 :::
 
 ### Separability
@@ -431,7 +457,30 @@ Studying an embedding’s redundancy reveals the efficiency of its encoding; mor
 ### Variant Classification
 ### Protein Classification
 
+## Conclusion
+
+<iframe id="plotlyFrame" src="./plotly_p1.html" style="border: none;"></iframe>
+
+
+
 # [Appendix]{style="color:white;"}{background-color="#8FA9C2"}
+
+## Alignment (Appendix)
+
+```{webr-r}
+#| context: setup
+options(max.print = 10)
+# Download a dataset
+url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/var_seq_595_A.feather"
+download.file(url, "var_seq_595_A.feather")
+var_seq_595_A <- read_feather("var_seq_595_A.feather")
+```
+
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 9: Alignment Example](images/alignment.png){width="65%"}
+:::
+
 
 #
 

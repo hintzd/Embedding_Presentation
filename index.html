@@ -413,6 +413,25 @@
   </style>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+      function resizeIframe() {
+          var iframe = document.getElementById('plotlyFrame');
+          if (iframe) {
+              // Set the dimensions relative to parent or custom logic
+              iframe.style.height = window.innerHeight * 0.8 + 'px'; // 80% of the viewport height
+              iframe.style.width = window.innerWidth * 0.8 + 'px';  // 80% of the viewport width
+          }
+      }
+
+      // Resize iframe when the window resizes
+      window.addEventListener('resize', resizeIframe);
+
+      // Initial resize
+      resizeIframe();
+  });
+  </script>
   <!-- This is also a suitable place for other snippets from JavaScript, CSS, or HTML elements, in order to have them included in the header -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/editor/editor.main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -558,7 +577,7 @@
   // Document level settings ----
 
   // Determine if we need to install R packages
-  globalThis.qwebrInstallRPackagesList = ['tibble', 'dplyr'];
+  globalThis.qwebrInstallRPackagesList = ['tibble', 'dplyr', 'feather'];
 
   // Specify possible locations to search for the repository
   globalThis.qwebrPackageRepoURLS = ['https://repo.r-wasm.org/'];
@@ -580,7 +599,7 @@
   };
 
   // Store cell data
-  globalThis.qwebrCellDetails = [{"id":1,"code":"options(max.print = 10)\n# Download a dataset\nurl <- \"https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/King_Man_Woman_Queen_pred.csv\"\ndownload.file(url, \"King_Man_Woman_Queen_pred.csv\")\nembedding_raw <- read.csv(\"King_Man_Woman_Queen_pred.csv\")\nembedding <- t(data.frame(embedding_raw[,-1] ,row.names = embedding_raw[,1]))\ncolnames(embedding) <- c(\"King\", \"Man\", \"Woman\", \"Queen\")\nembedding <- as_tibble(embedding)","options":{"dpi":72,"classes":"","out-width":"700px","label":"unnamed-chunk-1","warning":"true","out-height":"","context":"setup","autorun":"true","output":"true","message":"true","results":"markup","fig-cap":"","fig-height":5,"comment":"","fig-width":7,"read-only":"false"}},{"id":2,"code":"embedding\nembedding[ ,\"King\"] - embedding[ , \"Man\"] + embedding[ , \"Woman\"]\nembedding[ ,\"Queen\"]","options":{"dpi":72,"classes":"","out-width":"700px","label":"unnamed-chunk-2","warning":"true","out-height":"","context":"interactive","autorun":"false","output":"true","message":"true","results":"markup","fig-cap":"","fig-height":5,"comment":"","fig-width":7,"read-only":"false"}}];
+  globalThis.qwebrCellDetails = [{"code":"\noptions(max.print = 15)\n# Download a dataset\nurl <- \"https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/King_Man_Woman_Queen_pred.csv\"\ndownload.file(url, \"King_Man_Woman_Queen_pred.csv\")\nembedding_raw <- read.csv(\"King_Man_Woman_Queen_pred.csv\")\nembedding <- t(data.frame(embedding_raw[,-1] ,row.names = embedding_raw[,1]))\ncolnames(embedding) <- c(\"King\", \"Man\", \"Woman\", \"Queen\")\n# embedding <- as_tibble(embedding)\n\nprint_tidy <- function(x, ...) {\n  if (is.matrix(x) || length(dim(x)) > 1) {\n    # If x is a matrix or array, convert each column into a tibble column\n    out <- as_tibble(as.data.frame(x))\n  } else if (is.vector(x)) {\n    # If x is a vector, convert it into a single column tibble\n    out <- tibble(value = x)\n  } else {\n    # Fallback for other data types\n    out <- as_tibble(x)\n  }\n  print(out, ...)\n}","id":1,"options":{"message":"true","output":"true","label":"unnamed-chunk-1","fig-cap":"","out-width":"700px","comment":"","dpi":72,"context":"setup","fig-width":7,"read-only":"false","results":"markup","fig-height":5,"warning":"true","autorun":"true","out-height":"","classes":""}},{"code":"print_tidy(embedding)\nprint_tidy(embedding[ ,\"King\"] - embedding[ , \"Man\"] + embedding[ , \"Woman\"])\nprint_tidy(t(embedding[ , \"Man\"]) %*% embedding[ , \"Woman\"])","id":2,"options":{"message":"true","output":"true","label":"unnamed-chunk-2","fig-cap":"","out-width":"700px","comment":"","dpi":72,"context":"interactive","fig-width":7,"read-only":"false","results":"markup","fig-height":5,"warning":"true","autorun":"false","out-height":"","classes":""}},{"code":"options(max.print = 10)\n# Download a dataset\nurl <- \"https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/var_seq_595_A.feather\"\ndownload.file(url, \"var_seq_595_A.feather\")\nvar_seq_595_A <- read_feather(\"var_seq_595_A.feather\")","id":3,"options":{"message":"true","output":"true","label":"unnamed-chunk-3","fig-cap":"","out-width":"700px","comment":"","dpi":72,"context":"setup","fig-width":7,"read-only":"false","results":"markup","fig-height":5,"warning":"true","autorun":"true","out-height":"","classes":""}}];
 
   </script>
   <script type="module">
@@ -1492,32 +1511,39 @@ Daniel Hintz <br> 2024-06-06
 </h1>
 </section>
 
-<section id="outline-1" class="title-slide slide level1 center">
-<h1><span style="font-size: 55px;">Outline (1)</span></h1>
-<div>
-<div style="font-size: 0.6em;">
+<section>
+<section id="outline" class="title-slide slide level1 center">
+<h1><span style="font-size: 55px;">Outline</span></h1>
+<div style="font-size: 0.65em;">
 <ul>
-<li class="fragment">Background
+<li>Thesis Question</li>
+<li>Background
 <ul>
-<li class="fragment">SARS-COV-2</li>
-<li class="fragment">DNA</li>
-<li class="fragment">Coding regions and Proteins</li>
-<li class="fragment">Sequence Representations</li>
-<li class="fragment">GenSLM</li>
+<li>DNA</li>
+<li>Word Embeddings</li>
+<li>GenSLM Embedding Algorithm</li>
 </ul></li>
-<li class="fragment">Data and Processing
+<li>Data and Processing
 <ul>
-<li class="fragment">Data Description</li>
-<li class="fragment">Data Cleaning &amp; Pre-Processing</li>
-<li class="fragment">Exploratory Data Analysis</li>
-<li class="fragment">Generating Embeddings</li>
+<li>Source and Cleaning</li>
 </ul></li>
-<li class="fragment">Methodology</li>
+<li>Methodology
+<ul>
+<li>Intrinsic and Extrinsic Evaluation</li>
+</ul></li>
+<li>Results</li>
 </ul>
+</div>
+</section>
+<section id="thesis-question" class="title-slide slide level2 center">
+<h2>Thesis Question</h2>
+<div class="fragment">
+<div style="text-align:center; font-size: 0.85em;">
+<p>How easily can information be extracted from GenSLM embeddings while maintaining its original integrity; and what is the quality of the produced vector embeddings?</p>
 </div>
 </div>
 </section>
-
+</section>
 <section>
 <section id="background" class="title-slide slide level1 center" data-background-color="#8FA9C2">
 <h1><span style="color:white;">Background</span></h1>
@@ -1561,7 +1587,7 @@ Daniel Hintz <br> 2024-06-06
 <li class="fragment">Big Picture, the workflow for sequencing is the same for each technology:
 <ul>
 <li class="fragment">Someone gets tested for Covid, PCA is ran to detect if the assay is indeed positive</li>
-<li class="fragment">Positive tests sequence using a machine that is most likely either Ilumina or Oxford nanopore</li>
+<li class="fragment">Positive tests sequence using a machine that is most likely either Ilumina or Oxford Nanopore</li>
 <li class="fragment">This takes in the Covid Sample and arrives at a digital copy of DNA sequences</li>
 </ul></li>
 </ul>
@@ -1652,34 +1678,54 @@ Daniel Hintz <br> 2024-06-06
 
 <section id="word-embeddings-3" class="title-slide slide level2 center">
 <h2>Word Embeddings (3)</h2>
+<div style="font-size: 0.6em;">
 <ul>
 <li>We can Plot the vectors shown in the previous slide to demonstrate how word2vec produces embeddings that measures semantic similarity between words</li>
 </ul>
+</div>
 <div class="fragment">
 <div style="text-align:center; font-size: 0.5em;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="images/King_Man_Woman_Queen.png"></p>
-<figcaption>Figure 4</figcaption>
+<p><img data-src="images/King_Man_Woman_Queen.png" style="width:70.0%"></p>
+<figcaption>Figure 4: Word Embedding Vectors</figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
 
-<section id="sequence-representations" class="title-slide slide level2 center">
-<h2>Sequence Representations</h2>
+<section id="sequence-representations-1" class="title-slide slide level2 center">
+<h2>Sequence Representations (1)</h2>
+<div>
 <div style="font-size: 0.6em;">
 <ul>
-<li>Just like we can represent words as vectors we can also represent sequences as vectors</li>
+<li class="fragment">Just like we can represent words as vectors we can also represent sequences as vectors</li>
+<li class="fragment">There exist many neural network embedding algorithms for genomic data</li>
+<li class="fragment">For example, <strong>GenSLM</strong> (the focus of this presentation), DNABERT2, and HyenaDNA</li>
+<li class="fragment">These embeddings are lossy encodings, meaning that some information is lost in the transformation</li>
+<li class="fragment">They also can distort structural relationships present in the data</li>
 </ul>
+</div>
+</div>
+</section>
+
+<section id="sequence-representations-2" class="title-slide slide level2 center">
+<h2>Sequence Representations (2)</h2>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">Thus, embedding evaluation is a rising field as embeddings are increasingly used in pipelines for predictive analytics and data discovery</li>
+<li class="fragment">How data is represented is very important!!</li>
+</ul>
+</div>
 </div>
 <div style="margin-top: 20px;">
 
 </div>
 <div class="fragment">
 <div style="text-align:center; font-size: 0.5em;">
-<p><img data-src="images/ml_rep_obj.png"></p>
+<p><img data-src="images/ml_rep_obj.png" style="width:80.0%"></p>
 </div>
 <div style="margin-top: 20px;">
 
@@ -1701,7 +1747,7 @@ Daniel Hintz <br> 2024-06-06
 <section id="genslm" class="title-slide slide level2 center">
 <h2>GenSLM</h2>
 <div class="panel-tabset">
-<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Overview</a></li><li><a href="#tabset-1-2">Transformer</a></li><li><a href="#tabset-1-3">Diffusian + Transformer</a></li></ul>
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Overview</a></li><li><a href="#tabset-1-2">Transformer</a></li><li><a href="#tabset-1-3">Diffusion&nbsp; + Transformer</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1">
 <div class="columns">
@@ -1709,8 +1755,8 @@ Daniel Hintz <br> 2024-06-06
 <div>
 <div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">Overall, the GenSLM algorithm first <strong>tokenizes</strong>, i.e., breaks up sequences in to chunks of three nucleotide</li>
-<li class="fragment">Then, <strong>vectorizes</strong> the input sequence creating a <span class="math inline">\(1 \times 512\)</span> vector for each imputed sequence</li>
+<li class="fragment">Overall, the GenSLM algorithm first <strong>tokenizes</strong>, i.e., breaks up sequences in to chunks of three nucleotides</li>
+<li class="fragment">Then, input sequence are <strong>vectorized</strong> creating a <span class="math inline">\(1 \times 512\)</span> vector for each imputed sequence</li>
 </ul>
 </div>
 </div>
@@ -1719,7 +1765,7 @@ Daniel Hintz <br> 2024-06-06
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="images/Tokenize_vectorize.png" style="width:50.0%"></p>
-<figcaption>Figure 3</figcaption>
+<figcaption>Figure 5: Generic Embedding Workflow</figcaption>
 </figure>
 </div>
 </div>
@@ -1744,7 +1790,7 @@ Daniel Hintz <br> 2024-06-06
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="images/GenSLM.png"></p>
-<figcaption>Figure 5: GenSLM Transformer Architecture; <span class="citation" data-cites="genslms2023">[<a href="#/references" role="doc-biblioref" onclick="">4</a>]</span></figcaption>
+<figcaption>Figure 6: GenSLM Transformer Architecture; <span class="citation" data-cites="genslms2023">[<a href="#/references" role="doc-biblioref" onclick="">4</a>]</span></figcaption>
 </figure>
 </div>
 </div>
@@ -1755,7 +1801,7 @@ Daniel Hintz <br> 2024-06-06
 <div>
 <div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">Diffusion and Transformer models work in tandem</li>
+<li class="fragment">Diffusion and Transformer models work in tandem in GenSLM</li>
 <li class="fragment">Transformers captures local interactions, while the diffusion model captures learns a representation of transformers vectors to represent the whole genome</li>
 </ul>
 </div>
@@ -1772,24 +1818,12 @@ Daniel Hintz <br> 2024-06-06
 </section>
 <section id="overview-1" class="title-slide slide level2 center">
 <h2>Overview</h2>
-<div class="columns">
-<div class="column" style="width:40%;">
-<div>
-<div style="font-size: 0.6em;">
-<ul>
-<li class="fragment">foo</li>
-</ul>
-</div>
-</div>
-</div><div class="column" style="width:60%;">
 <div style="text-align:center; font-size: 0.5em;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="images/Overall_workflow.png" style="width:45.0%"></p>
-<figcaption>Figure 5: Workflow</figcaption>
+<p><img data-src="images/Overall_workflow.png" style="width:30.0%"></p>
+<figcaption>Figure 7: Project Workflow</figcaption>
 </figure>
-</div>
-</div>
 </div>
 </div>
 </section>
@@ -1829,12 +1863,7 @@ Daniel Hintz <br> 2024-06-06
 <div>
 <div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">Sequences need to be aligned in order to find nucleotides responsible for coding proteins across multiple sequences</li>
-<li class="fragment">The Clustal Omega algorithm was used from the msa package in R (Sievers et al., 2011; Bodenhofer et al., 2015).</li>
-<li class="fragment">To obtain the locations of proteins in terms of base pairs, the Wuhan reference sequence (NC_045512.2), was included in the alignment for which protein locations are documented (NCBI Reference Sequence, 2023; Bai et al., 2022, p.&nbsp;283).</li>
-<li class="fragment">Protein locations for the reference sequence</li>
-<li class="fragment">Using these locations you can string matching unaligned reference sequences to the aligned reference sequence to find the updated protein locations</li>
-<li class="fragment">Now specific proteins can be selected and are reading for embedding</li>
+<li class="fragment">An multiple alignment alignment was performed to be able to slice the exact location of proteins across different sequences, for more details see the appendix</li>
 </ul>
 </div>
 </div>
@@ -1845,8 +1874,8 @@ Daniel Hintz <br> 2024-06-06
 <div>
 <div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">For Exploratory Data Analysis, the goal was the characterise the structure of the data</li>
-<li class="fragment">This served as a later compasrions to struture as seen through the embedding</li>
+<li class="fragment">For Exploratory Data Analysis, the goal was the characterize the structure of the data in its sequence presentation</li>
+<li class="fragment">This served as a later comparisons to embedding structure</li>
 </ul>
 </div>
 </div>
@@ -1855,7 +1884,7 @@ Daniel Hintz <br> 2024-06-06
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="images/Whole_Genome_Mutation_Count_Hamming_Distances.png" style="width:65.0%"></p>
-<figcaption>Figure 5: Radial Dendrogram</figcaption>
+<figcaption>Figure 8: Mutation Boxplot</figcaption>
 </figure>
 </div>
 </div>
@@ -1868,7 +1897,7 @@ Daniel Hintz <br> 2024-06-06
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="images/hamming_prot_heatmap_581_all_variants.png" style="width:100.0%"></p>
-<figcaption>Figure 5: Radial Dendrogram</figcaption>
+<figcaption>Figure 11: Hamming Distance of Aligned Proteins to Wuhan Reference Sequence</figcaption>
 </figure>
 </div>
 </div>
@@ -1880,7 +1909,7 @@ Daniel Hintz <br> 2024-06-06
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="images/high_res_tree_595_patients_gapinc_cropped.png" style="width:65.0%"></p>
-<figcaption>Figure 5: Radial Dendrogram</figcaption>
+<figcaption>Figure 12: Aligned Sequence Radial Dendrogram</figcaption>
 </figure>
 </div>
 </div>
@@ -1891,20 +1920,44 @@ Daniel Hintz <br> 2024-06-06
 <h1><span style="color:white;">Methodology</span></h1>
 
 </section>
-<section id="goals" class="title-slide slide level2 center">
-<h2>Goals</h2>
-<p>This study aimed to assess the quality of the GenSLM embedding algorithms when applied to genomic analyses. The quality of an embedding is assessed based upon its information richness and the degree of non-redundancy.</p>
-<p>When downstream learning tasks are evaluated, it’s often referred to as extrinsic evaluation. While when the qualities of the embedding matrix itself are assessed it is often referred to as intrinsic evaluation (Lavrač et al., 2021).</p>
+<section id="evaluating-embeddings" class="title-slide slide level2 center">
+<h2>Evaluating Embeddings</h2>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment"><p>Broadly speaking, the quality of an embedding is assessed based upon its information richness and the degree of non-redundancy.</p></li>
+<li class="fragment"><p>Their are two main methodologies for evaluating embeddings</p></li>
+<li class="fragment"><p>When downstream learning tasks are evaluated, it’s referred to as <strong>extrinsic evaluation</strong>.</p></li>
+<li class="fragment"><p>When the qualities of the embedding matrix itself are assessed it is referred to as <strong>intrinsic evaluation</strong> (Lavrač et al., 2021).</p></li>
+</ul>
+</div>
+</div>
 </section>
 
 <section id="intrinsic-evaluation" class="title-slide slide level2 center">
 <h2>Intrinsic Evaluation</h2>
-<p>Studying an embedding’s redundancy reveals the efficiency of its encoding; more efficient encodings tend to perform better and use fewer computational resources. Separability gives practical insight into whether or not the embedding output can be separated into meaningful genomic groups (i.e., variants). Meanwhile, exploring the preservation of semantic distance is important for determining if the structural representation of information remains valid for subsequent tasks.</p>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment"><p>There are three main qualities to asses when studying the the quality of an embedding: <strong>Redundancy</strong>, <strong>Separability</strong>, <strong>Preservation of Semantic Distance</strong></p></li>
+<li class="fragment"><p>Redundancy reveals the efficiency of a embeddings encoding; more efficient encodings tend to perform better and use fewer computational resources.</p></li>
+<li class="fragment"><p>Separability gives practical insight into whether or not the embedding output can be separated into meaningful genomic groups (i.e., variants).</p></li>
+<li class="fragment"><p>Preservation of semantic distance is important for determining if the structural representation of information remains valid for subsequent tasks.</p></li>
+</ul>
+</div>
+</div>
 </section>
 
 <section id="extrinsic-evaluation" class="title-slide slide level2 center">
 <h2>Extrinsic Evaluation</h2>
-
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">Extrinsic evaluation pursues practical benchmarks to assess the performance of an embeddings algorithm per its associated embedding matrix across varying levels of task complexity</li>
+<li class="fragment">For GenSLM, the subset of possible tasks chosen were variant and protein classification</li>
+</ul>
+</div>
+</div>
 </section>
 </section>
 <section>
@@ -1922,7 +1975,7 @@ Daniel Hintz <br> 2024-06-06
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="images/SVD_582.png" style="width:65.0%"></p>
-<figcaption>Figure 5: Radial Dendrogram</figcaption>
+<figcaption>Figure 13: SVD CPE Plot</figcaption>
 </figure>
 </div>
 </div>
@@ -1937,7 +1990,7 @@ Daniel Hintz <br> 2024-06-06
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="images/distances_matrices_labelled.png" style="width:65.0%"></p>
-<figcaption>Figure 5: Radial Dendrogram</figcaption>
+<figcaption>Figure 14: Distance Matrices</figcaption>
 </figure>
 </div>
 </div>
@@ -1947,7 +2000,7 @@ Daniel Hintz <br> 2024-06-06
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="images/CKL_vs_DKL_ver2.png" style="width:65.0%"></p>
-<figcaption>Figure 5: Radial Dendrogram</figcaption>
+<figcaption>Figure 15: CKL vs DKL</figcaption>
 </figure>
 </div>
 </div>
@@ -1963,7 +2016,7 @@ Daniel Hintz <br> 2024-06-06
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="images/high_res_tree_581_patients_emb.png" style="width:65.0%"></p>
-<figcaption>Figure 5: Radial Dendrogram</figcaption>
+<figcaption>Figure 16: Embedding Radial Dendrogram</figcaption>
 </figure>
 </div>
 </div>
@@ -1981,12 +2034,32 @@ Daniel Hintz <br> 2024-06-06
 <section id="protein-classification" class="slide level3">
 <h3>Protein Classification</h3>
 </section>
+
+<section id="conclusion" class="title-slide slide level2 center">
+<h2>Conclusion</h2>
+<iframe id="plotlyFrame" src="./plotly_p1.html" style="border: none;">
+</iframe>
 </section>
+</section>
+<section>
 <section id="appendix" class="title-slide slide level1 center" data-background-color="#8FA9C2">
 <h1><span style="color:white;">Appendix</span></h1>
 
 </section>
-
+<section id="alignment-appendix" class="title-slide slide level2 center">
+<h2>Alignment (Appendix)</h2>
+<div id="qwebr-insertion-location-3"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/alignment.png" style="width:65.0%"></p>
+<figcaption>Figure 9: Alignment Example</figcaption>
+</figure>
+</div>
+</div>
+</section>
+</section>
 <section id="section-3" class="title-slide slide level1 center">
 <h1></h1>
 <p><object data="DHintz_PlanB_Submission.pdf" type="application/pdf" width="1000" height="650"><iframe src="DHintz_PlanB_Submission.pdf" width="1000" height="650">This browser does not support PDFs. Please download the PDF to view it: <a href="DHintz_PlanB_Submission.pdf">Download PDF</a></iframe></object></p>
