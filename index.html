@@ -421,7 +421,7 @@
           Array.from(iframes).forEach(function(iframe) {
               // Set the dimensions relative to parent or custom logic
               iframe.style.height = window.innerHeight * 1 + 'px'; // 100% of the viewport height
-              iframe.style.width = window.innerWidth * 0.5 + 'px'; // 75% of the viewport width
+              iframe.style.width = window.innerWidth * 0.75 + 'px'; // 75% of the viewport width
           });
       }
 
@@ -599,7 +599,7 @@
   };
 
   // Store cell data
-  globalThis.qwebrCellDetails = [{"id":1,"options":{"fig-cap":"","autorun":"true","label":"unnamed-chunk-1","results":"markup","dpi":72,"context":"setup","fig-width":7,"read-only":"false","output":"true","comment":"","message":"true","warning":"true","fig-height":5,"out-width":"700px","out-height":"","classes":""},"code":"\noptions(max.print = 15)\n# Download a dataset\nurl <- \"https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/King_Man_Woman_Queen_pred.csv\"\ndownload.file(url, \"King_Man_Woman_Queen_pred.csv\")\nembedding_raw <- read.csv(\"King_Man_Woman_Queen_pred.csv\")\nembedding <- t(data.frame(embedding_raw[,-1] ,row.names = embedding_raw[,1]))\ncolnames(embedding) <- c(\"King\", \"Man\", \"Woman\", \"Queen\")\n# embedding <- as_tibble(embedding)\n\nprint_tidy <- function(x, ...) {\n  if (is.matrix(x) || length(dim(x)) > 1) {\n    # If x is a matrix or array, convert each column into a tibble column\n    out <- as_tibble(as.data.frame(x))\n  } else if (is.vector(x)) {\n    # If x is a vector, convert it into a single column tibble\n    out <- tibble(value = x)\n  } else {\n    # Fallback for other data types\n    out <- as_tibble(x)\n  }\n  print(out, ...)\n}"},{"id":2,"options":{"fig-cap":"","fig-width":7,"read-only":"false","warning":"true","message":"true","results":"markup","out-height":"","classes":"small-code","label":"unnamed-chunk-2","dpi":72,"output":"true","comment":"","class-source":"small-code","fig-height":5,"context":"interactive","out-width":"700px","autorun":"false"},"code":"print_tidy(embedding)\nprint_tidy(embedding[ ,\"King\"] - embedding[ , \"Man\"] + embedding[ , \"Woman\"])\nprint_tidy(t(embedding[ , \"Man\"]) %*% embedding[ , \"Woman\"])"},{"id":3,"options":{"fig-cap":"","autorun":"true","label":"unnamed-chunk-3","results":"markup","dpi":72,"context":"setup","fig-width":7,"read-only":"false","output":"true","comment":"","message":"true","warning":"true","fig-height":5,"out-width":"700px","out-height":"","classes":""},"code":"options(max.print = 10)\n# Download a dataset\nurl <- \"https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/var_seq_595_A.feather\"\ndownload.file(url, \"var_seq_595_A.feather\")\nvar_seq_595_A <- read_feather(\"var_seq_595_A.feather\")"}];
+  globalThis.qwebrCellDetails = [{"code":"options(max.print = 10)\n# Download a dataset\nurl <- \"https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/var_seq_595_A.feather\"\ndownload.file(url, \"var_seq_595_A.feather\")\nvar_seq_595_A <- read_feather(\"var_seq_595_A.feather\")","options":{"classes":"","context":"setup","comment":"","read-only":"false","output":"true","message":"true","fig-width":7,"results":"markup","warning":"true","out-width":"700px","dpi":72,"fig-height":5,"fig-cap":"","autorun":"true","label":"unnamed-chunk-1","out-height":""},"id":1},{"code":"\noptions(max.print = 15)\n# Download a dataset\nurl <- \"https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/King_Man_Woman_Queen_pred.csv\"\ndownload.file(url, \"King_Man_Woman_Queen_pred.csv\")\nembedding_raw <- read.csv(\"King_Man_Woman_Queen_pred.csv\")\nembedding <- t(data.frame(embedding_raw[,-1] ,row.names = embedding_raw[,1]))\ncolnames(embedding) <- c(\"King\", \"Man\", \"Woman\", \"Queen\")\n# embedding <- as_tibble(embedding)\n\nprint_tidy <- function(x, ...) {\n  if (is.matrix(x) || length(dim(x)) > 1) {\n    # If x is a matrix or array, convert each column into a tibble column\n    out <- as_tibble(as.data.frame(x))\n  } else if (is.vector(x)) {\n    # If x is a vector, convert it into a single column tibble\n    out <- tibble(value = x)\n  } else {\n    # Fallback for other data types\n    out <- as_tibble(x)\n  }\n  print(out, ...)\n}","options":{"classes":"","context":"setup","comment":"","read-only":"false","output":"true","message":"true","fig-width":7,"results":"markup","warning":"true","out-width":"700px","dpi":72,"fig-height":5,"fig-cap":"","autorun":"true","label":"unnamed-chunk-2","out-height":""},"id":2},{"code":"print_tidy(embedding)\nprint_tidy(embedding[ ,\"King\"] - embedding[ , \"Man\"] + embedding[ , \"Woman\"])\nprint_tidy(t(embedding[ , \"Man\"]) %*% embedding[ , \"Woman\"])","options":{"classes":"small-code","output":"true","results":"markup","class-source":"small-code","out-width":"700px","dpi":72,"autorun":"false","context":"interactive","comment":"","message":"true","fig-width":7,"warning":"true","read-only":"false","fig-height":5,"fig-cap":"","label":"unnamed-chunk-3","out-height":""},"id":3}];
 
   </script>
   <script type="module">
@@ -1495,6 +1495,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
     <div class="slides">
 
 
+<section>
 <section id="an-exploration-of-information-loss-in-transformer-embedding-spaces-for-enhancing-predictive-ai-in-genomics" class="title-slide slide level1 center" data-background-image="images/DALL_E_DNA_Image_edited.png" data-background-size="cover" data-background-color="#4f6952">
 <h1><span style="color:#FFFFFF;           font-size: 55px;           position: relative;          bottom: 60px;           text-shadow: -1px -1px 0 #000,                        1px -1px 0 #000,                        -1px 1px 0 #000,                        1px 1px 0 #000;">An Exploration of Information Loss in Transformer Embedding Spaces for Enhancing Predictive AI in Genomics</span></h1>
 <h1 style="color:#FFFFFF; 
@@ -1510,8 +1511,37 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 Daniel Hintz <br> 2024-06-06
 </h1>
 </section>
-
-<section>
+<section id="thesis-question" class="title-slide slide level2 center">
+<h2>Thesis Question</h2>
+<div class="fragment">
+<div style="text-align:center; font-size: 0.85em;">
+<p>How easily can information be extracted from GenSLM embeddings while maintaining its original integrity; and what is the quality of the produced vector embeddings?</p>
+</div>
+<aside class="notes">
+<ul>
+<li>The jargon won’t have meaning now, will very soon, i.e.
+<ul>
+<li>What is GenSLM</li>
+<li>What is an embedding</li>
+<li>Why do we care about the quality of an embedding</li>
+<li>What are real world applications<br>
+</li>
+</ul></li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+</section>
 <section id="outline" class="title-slide slide level1 center">
 <h1><span style="font-size: 55px;">Outline</span></h1>
 <div style="font-size: 0.65em;">
@@ -1536,15 +1566,7 @@ Daniel Hintz <br> 2024-06-06
 </ul>
 </div>
 </section>
-<section id="thesis-question" class="title-slide slide level2 center">
-<h2>Thesis Question</h2>
-<div class="fragment">
-<div style="text-align:center; font-size: 0.85em;">
-<p>How easily can information be extracted from GenSLM embeddings while maintaining its original integrity; and what is the quality of the produced vector embeddings?</p>
-</div>
-</div>
-</section>
-</section>
+
 <section>
 <section id="background" class="title-slide slide level1 center" data-background-color="#8FA9C2">
 <h1><span style="color:white;">Background</span></h1>
@@ -1559,7 +1581,6 @@ Daniel Hintz <br> 2024-06-06
 <ul>
 <li class="fragment">Deoxyribonucleic acid (DNA) is a molecule that contains the genetic code that provides the instructions for building and maintaining life.</li>
 <li class="fragment">The structure of DNA can be thought of as rungs on a ladder (known as base pairs) involving the pairing of four nucleotides - Adenine (A), Cytosine (C),Guanine (G) and Thymine (T).</li>
-<li class="fragment">For reference, the SARS-CoV2 virus is approximately 30,0000 base pairs (bp’s), whereas the human genome is approximately 3 billion bp.</li>
 </ul>
 </div>
 </div>
@@ -1583,12 +1604,9 @@ Daniel Hintz <br> 2024-06-06
 <div>
 <div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">Big Picture, the workflow for sequencing is the same for each technology:
-<ul>
 <li class="fragment">Someone gets tested for Covid, PCA is ran to detect if the assay is indeed positive</li>
 <li class="fragment">Positive tests sequence using a machine that is most likely either Ilumina or Oxford Nanopore machines</li>
 <li class="fragment">This takes in the Covid Sample and arrives at a digital copy of DNA sequences</li>
-</ul></li>
 </ul>
 </div>
 </div>
@@ -1635,6 +1653,88 @@ Daniel Hintz <br> 2024-06-06
 </div>
 </section>
 
+<section id="mutations" class="title-slide slide level2 center">
+<h2>Mutations</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">A mutation in the context of DNA refers to a change in the nucleotide sequence of the genetic material of an organism.</li>
+<li class="fragment">mutations can be random or induced by external factors</li>
+<li class="fragment">There many different types of mutations but only substitutions are illustrated for this talk.</li>
+</ul>
+</div>
+</div>
+</div><div class="column" style="width:60%;">
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/mutation_example.png" style="width:45.0%"></p>
+<figcaption>Figure 4: Substitution Mutations</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>Spontaneous mutations: These arise naturally and randomly without any external influence, often due to errors in DNA replication. Errors might include mispairing of nucleotides or slippage during replication.</li>
+<li>Induced mutations: These are caused by external factors, known as mutagens, which can include physical agents like ultraviolet light and X-rays, or chemical agents such as certain drugs and pollutants.</li>
+</ul>
+<p><strong>Why Mutations Occur</strong></p>
+<p>Random errors: Many mutations result simply from random errors during DNA replication. DNA polymerase, the enzyme responsible for replicating DNA, is not perfect and occasionally makes mistakes.</p>
+<p>Environmental stress: Exposure to environmental stressors like radiation, chemicals, and even biological agents can damage DNA and lead to mutations.</p>
+<p>Evolutionary advantage: From an evolutionary perspective, mutations are a key mechanism of genetic variability and thus, evolution. While many mutations are neutral or harmful, some can confer advantages that lead to positive selection in a population.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+
+<section id="motivation" class="title-slide slide level2 center">
+<h2>Motivation</h2>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">This project came about from connecting with Nick Chia, a biophysicist at Argonne National labs.</li>
+<li class="fragment">Nick and his collaborators in 2020 (then at the Mayo Clinic) made an algorithm that predicted the trajectory of colorectal cancer mutations.</li>
+<li class="fragment">However, this algorithm was slow and expensive to train.</li>
+<li class="fragment"><strong>The embeddings used in this algorithm was one of the biggest choke points</strong>.</li>
+<li class="fragment">New and improved ways are needed to embed large genomes into lower dimensions
+<ul>
+<li class="fragment">For example, a one hot encoding for the human genome as DNA dimensionally is n x 3 billion x 4, where n is the number of patients, 3 billion is the number of rows for each nucleotide and 4 columns represent the four possible bases (A, T, G, C).</li>
+</ul></li>
+<li class="fragment">This is the <strong>Big P little N problem</strong>; hence dimension reduction via an embedding is extremely advantageous!</li>
+<li class="fragment">Further work needs to be done is studying the quality of embeddings to help bring about more efficient real world implementations like precision medicine for colorectal cancer.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="dimension-reduction" class="title-slide slide level2 center">
+<h2>Dimension Reduction</h2>
+<div style="font-size: 0.6em;">
+<p>In the UW Statistics program what methods do we learn to apply dimension reduction?</p>
+</div>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">Principal component analysis (PCA)!</li>
+<li class="fragment">PCA as well as embeddings transform the coordinate system of our data.</li>
+<li class="fragment">The difference for this project is that dimension reduction is being applied to DNA.</li>
+</ul>
+</div>
+</div>
+</section>
+
 <section id="embeddings" class="title-slide slide level2 center">
 <h2>Embeddings</h2>
 <div>
@@ -1669,80 +1769,6 @@ Daniel Hintz <br> 2024-06-06
       }</style></aside>
 </section>
 
-<section id="word-embeddings" class="title-slide slide level2 center">
-<h2>Word Embeddings</h2>
-<div>
-<div style="font-size: 0.6em;">
-<ul>
-<li class="fragment">Before we introduce GenSLM, lets look at a simpler application in natural language.
-<ul>
-<li class="fragment">If we consider English text, <strong>How can we measure the similarity between words?</strong></li>
-<li class="fragment">For example, what is the semantic difference between the words “King” and “Woman”.</li>
-<li class="fragment">Let’s demonstrate the semantic relationships of “King”, “Queen”, “Man”, “Woman”.</li>
-</ul></li>
-</ul>
-</div>
-</div>
-<aside class="notes">
-<ul>
-<li>Embedding algorithms need data (a corpus of text) to construct numeric vectors relating words and their meaning.</li>
-</ul>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-
-<section id="word2vec-example" class="title-slide slide level2 center">
-<h2>Word2vec Example</h2>
-<div class="fragment">
-<div id="qwebr-insertion-location-1"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<div class="cell small-code">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r small-code number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="do">## Pre-Ran Code ##</span></span>
-<span id="cb1-2"><a href=""></a><span class="fu">library</span>(word2vec)</span>
-<span id="cb1-3"><a href=""></a><span class="co"># using British National Corpus http://vectors.nlpl.eu/repository/</span></span>
-<span id="cb1-4"><a href=""></a>model <span class="ot">&lt;-</span> <span class="fu">read.word2vec</span>(<span class="st">"British_National_Corpus_Vector_size_300_skipgram"</span>, <span class="at">normalize =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-5"><a href=""></a>embedding <span class="ot">&lt;-</span> <span class="fu">predict</span>(model,<span class="at">newdata =</span> <span class="fu">c</span>(<span class="st">"king_NOUN"</span>,<span class="st">"man_NOUN"</span>,<span class="st">"woman_NOUN"</span>,<span class="st">"queen_NOUN"</span>),<span class="at">type=</span><span class="st">"embedding"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div style="margin-top: 20px;">
-
-</div>
-</div>
-<div class="fragment">
-<div id="qwebr-insertion-location-2"></div>
-<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</div>
-</section>
-
-<section id="plotting-word-embeddings" class="title-slide slide level2 center">
-<h2>Plotting Word Embeddings</h2>
-<div class="fragment">
-<div style="font-size: 0.6em;">
-<ul>
-<li>We can Plot the vectors shown in the previous slide to demonstrate how word2vec produces embeddings that measures semantic similarity between words.</li>
-</ul>
-</div>
-</div>
-<div class="fragment">
-<div style="text-align:center; font-size: 0.5em;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="images/King_Man_Woman_Queen.png" style="width:70.0%"></p>
-<figcaption>Figure 4: Word Embedding Vectors</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</section>
-
 <section id="sequence-embeddings" class="title-slide slide level2 center">
 <h2>Sequence Embeddings</h2>
 <div>
@@ -1750,7 +1776,7 @@ Daniel Hintz <br> 2024-06-06
 <ul>
 <li class="fragment">Neural network embedding algorithms for genomic data include <strong>GenSLM (the focus of this presentation)</strong>, DNABERT2, and HyenaDNA.</li>
 <li class="fragment">These embeddings are lossy encodings, meaning that some information is lost in the transformation.</li>
-<li class="fragment">They also can distort structural relationships present in the data.</li>
+<li class="fragment">They also can distort structural relationships represented in the data.</li>
 </ul>
 </div>
 </div>
@@ -1769,36 +1795,32 @@ Daniel Hintz <br> 2024-06-06
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-</section>
+<!--
+## Why Data Representation Matters 
 
-<section id="why-data-representation-matters" class="title-slide slide level2 center">
-<h2>Why Data Representation Matters</h2>
-<div>
-<div style="font-size: 0.6em;">
-<ul>
-<li class="fragment">An embedding is one way of representing data.</li>
-</ul>
-</div>
-</div>
-<div class="fragment">
-<div style="text-align:center; font-size: 0.5em;">
-<p><img data-src="images/pred_rep_obj.png" style="width:65.0%"></p>
-</div>
-<div style="margin-top: 20px;">
+::: incremental
+::: {style="font-size: 0.6em;"}
+- An embedding is one way of representing data.
+:::
+:::
 
-</div>
-<div>
-<div style="font-size: 0.6em;">
-<ul>
-<li class="fragment">An effective representation (embedding) of a genomic sequence is crucial for all downstream tasks.
-<ul>
-<li class="fragment">i.e., clustering, classification, regression, protein function identification, structural analysis, and predicting genetic disorders <span class="citation" data-cites="angermueller2016deep">[<a href="#/references" role="doc-biblioref" onclick="">3</a>]</span>.</li>
-</ul></li>
-<li class="fragment">Given the increasing use of embeddings, embedding evolution has also become more important.</li>
-</ul>
-</div>
-</div>
-</div>
+. . .
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![](images/pred_rep_obj.png){width="65%"}
+:::
+
+::: {style="margin-top: 20px;"}
+:::
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+-  An effective representation (embedding) of a genomic sequence is crucial for all downstream tasks.
+    - i.e., clustering, classification, regression, protein function identification, structural analysis, and predicting genetic disorders [@angermueller2016deep].
+- Given the increasing use of embeddings, embedding evaluation has also become more important. 
+:::
+:::
+-->
 </section>
 
 <section id="genslm" class="title-slide slide level2 center">
@@ -1835,10 +1857,10 @@ Daniel Hintz <br> 2024-06-06
 <div>
 <div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">First the tokenized input sequence is passed to the transformer encoder</li>
-<li class="fragment">The transformer encoder converts 1,024 bp slices into numeric vectors</li>
+<li class="fragment">First the tokenized input sequence is passed to the transformer encoder.</li>
+<li class="fragment">The transformer encoder converts 1,024 bp slices into numeric vectors.</li>
 <li class="fragment">This is ran recursively through a diffusion model to learn a condensed distribution of the whole sequence.</li>
-<li class="fragment">The transformers in GenSLM are used to capture local interactions within a genomic sequence</li>
+<li class="fragment">The transformers in GenSLM are used to capture local interactions within a genomic sequence.</li>
 </ul>
 </div>
 </div>
@@ -1847,7 +1869,7 @@ Daniel Hintz <br> 2024-06-06
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="images/GenSLM.png"></p>
-<figcaption>Figure 6: GenSLM Transformer Architecture; <span class="citation" data-cites="genslms2023">[<a href="#/references" role="doc-biblioref" onclick="">4</a>]</span></figcaption>
+<figcaption>Figure 6: GenSLM Transformer Architecture; <span class="citation" data-cites="genslms2023">[<a href="#/references" role="doc-biblioref" onclick="">3</a>]</span></figcaption>
 </figure>
 </div>
 </div>
@@ -1858,8 +1880,8 @@ Daniel Hintz <br> 2024-06-06
 <div>
 <div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">Diffusion and Transformer models work in tandem in GenSLM</li>
-<li class="fragment">Transformers captures local interactions, while the diffusion model captures learns a representation of transformers vectors to represent the whole genome</li>
+<li class="fragment">Diffusion and Transformer models work in tandem in GenSLM.</li>
+<li class="fragment">Transformers captures local interactions, while the diffusion model captures learns a representation of transformers vectors to represent the whole genome.</li>
 </ul>
 </div>
 </div>
@@ -1869,12 +1891,12 @@ Daniel Hintz <br> 2024-06-06
 </section>
 </section>
 <section>
-<section id="data-and-processing" class="title-slide slide level1 center" data-background-color="#8FA9C2">
-<h1><span style="color:white;">Data and Processing</span></h1>
+<section id="project-workflow" class="title-slide slide level1 center" data-background-color="#8FA9C2">
+<h1><span style="color:white;">Project Workflow</span></h1>
 
 </section>
-<section id="data-workflow" class="title-slide slide level2 center">
-<h2>Data Workflow</h2>
+<section id="project-workflow-1" class="title-slide slide level2 center">
+<h2>Project Workflow</h2>
 <div style="text-align:center; font-size: 0.5em;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -1884,14 +1906,19 @@ Daniel Hintz <br> 2024-06-06
 </div>
 </div>
 </section>
+</section>
+<section>
+<section id="data-and-processing" class="title-slide slide level1 center" data-background-color="#8FA9C2">
+<h1><span style="color:white;">Data and Processing</span></h1>
 
+</section>
 <section id="data-description" class="title-slide slide level2 center">
 <h2>Data Description</h2>
 <div>
 <div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">All Covid sequences were downloaded with permission from the Global Initiative on Sharing All Influenza Data (GISAID)</li>
-<li class="fragment">No geographical or temporal restrictions were placed on the sequences extracted</li>
+<li class="fragment">All Covid sequences were downloaded with permission from the Global Initiative on Sharing All Influenza Data (GISAID).</li>
+<li class="fragment">No geographical or temporal restrictions were placed on the sequences extracted.</li>
 </ul>
 </div>
 </div>
@@ -1902,8 +1929,8 @@ Daniel Hintz <br> 2024-06-06
 <div>
 <div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">GISAID’s exclusion criteria was used to remove sequences of poor quality</li>
-<li class="fragment">Additional exclusion criteria was implemented to remove all sequence with ambiguous nucleotides (the <code>NA's</code> of the genomic world)</li>
+<li class="fragment">GISAID’s exclusion criteria was used to remove sequences of poor quality.</li>
+<li class="fragment">Additional exclusion criteria was implemented to remove all sequence with ambiguous nucleotides (the <code>NA's</code> of the genomic world) and large gap sizes post-alignment.</li>
 </ul>
 </div>
 </div>
@@ -1930,8 +1957,8 @@ Daniel Hintz <br> 2024-06-06
 <div>
 <div style="font-size: 0.6em;">
 <ul>
-<li class="fragment">For Exploratory Data Analysis, the goal was the characterize the structure of the data in its sequence presentation.</li>
-<li class="fragment">This served as a later comparisons to embedding structure.</li>
+<li class="fragment">For Exploratory Data Analysis, the goal was the characterize the structure of the data in its sequence representation.</li>
+<li class="fragment">This laid the groundwork for subsequent comparisons with the embedding structure.</li>
 </ul>
 </div>
 </div>
@@ -1970,7 +1997,7 @@ Daniel Hintz <br> 2024-06-06
 <div style="font-size: 0.6em;">
 <ul>
 <li class="fragment"><p>Broadly speaking, the quality of an embedding is assessed based upon its information richness and the degree of non-redundancy.</p></li>
-<li class="fragment"><p>Their are two main methodologies for evaluating embeddings.</p>
+<li class="fragment"><p>Their are two main methodologies for evaluating embeddings:</p>
 <ul>
 <li class="fragment">When downstream learning tasks are evaluated, it’s referred to as <strong>extrinsic evaluation</strong>.</li>
 <li class="fragment">When the qualities of the embedding matrix itself are assessed it is referred to as <strong>intrinsic evaluation</strong> (Lavrač et al., 2021).</li>
@@ -1991,6 +2018,7 @@ Daniel Hintz <br> 2024-06-06
 <li class="fragment">Separability gives practical insight into whether or not the embedding output can be separated into meaningful genomic groups (i.e., variants).</li>
 <li class="fragment">Preservation of semantic distance is important for determining if the structural representation of information remains valid for subsequent tasks.</li>
 </ul></li>
+<li class="fragment">Sub-methods used for intrinsic evaluation include Singular Value Decomposition (SVD), Distance matrices, Kullback–Leibler Divergence (KLD), Radial Dendograms, and Principal Copnonent Analysis.</li>
 </ul>
 </div>
 </div>
@@ -2003,6 +2031,7 @@ Daniel Hintz <br> 2024-06-06
 <ul>
 <li class="fragment">Extrinsic evaluation pursues practical benchmarks to assess the performance of an embeddings algorithm per its associated embedding matrix across varying levels of task complexity.</li>
 <li class="fragment">For GenSLM, the subset of possible tasks chosen were variant and protein classification.</li>
+<li class="fragment">A Classification and Regression Tree (CART) was used for performing the classification.</li>
 </ul>
 </div>
 </div>
@@ -2043,28 +2072,52 @@ Daniel Hintz <br> 2024-06-06
 <ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Sequence</a></li><li><a href="#tabset-2-2">Embeddings</a></li><li><a href="#tabset-2-3">Abs. Diff.</a></li><li><a href="#tabset-2-4">Reg. Diff.</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1">
-<div style="margin-top: 50px;">
+<div style="margin-top: 0px;">
 
+</div>
+<div style="font-size: 0.6em;">
+<ul>
+<li>There is a lot of heterogeneity in the differences among sequences as fine scales.</li>
+<li>Notice the L shape in striations in alpha sequences compare to other variants.</li>
+</ul>
 </div>
 <iframe class="plotlyFrame" src="./seq_dist_matrix.html" style="border: none;">
 </iframe>
 </div>
 <div id="tabset-2-2">
-<div style="margin-top: 50px;">
+<div style="margin-top: 5.5px;">
 
+</div>
+<div style="font-size: 0.6em;">
+<ul>
+<li>Comparing the Sequence distance matrix to the Embedding distance matrix we see that finer differences amongst sequences are lost in the embedding transformation.</li>
+</ul>
 </div>
 <iframe class="plotlyFrame" src="./emb_dist_matrix.html" style="border: none;">
 </iframe>
 </div>
 <div id="tabset-2-3">
-<div style="margin-top: 50px;">
+<div style="margin-top: 5px;">
 
+</div>
+<div style="font-size: 0.6em;">
+<ul>
+<li>The absolute difference matrix is the absolute difference of the sequence distance matrix and the embedding distance matrix.</li>
+</ul>
 </div>
 <iframe class="plotlyFrame" src="./abs_diff_dist_matrix.html" style="border: none;">
 </iframe>
 </div>
 <div id="tabset-2-4">
-<div style="margin-top: 50px;">
+<div style="margin-top: 18px;">
+
+</div>
+<div style="font-size: 0.6em;">
+<ul>
+<li>The difference distance matrix is the sequence distance matrix minus the embedding distance matrix.</li>
+</ul>
+</div>
+<div style="margin-top: 18px;">
 
 </div>
 <iframe class="plotlyFrame" src="./diff_dist_matrix.html" style="border: none;">
@@ -2086,6 +2139,18 @@ Daniel Hintz <br> 2024-06-06
 </section>
 <section id="radial-dendrograms" class="slide level4">
 <h4>Radial Dendrograms</h4>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">Radial dendrograms show who easily sequences cluster by their variant.</li>
+<li class="fragment">Figures 12 and 13 in the next two slides show:
+<ul>
+<li class="fragment">Radial dendrograms using sequence data does not perfectly clusters sequences by variants.</li>
+<li class="fragment">Radial dendrograms using the embedded data perfectly clusters sequences by variants.</li>
+</ul></li>
+</ul>
+</div>
+</div>
 </section>
 
 
@@ -2137,32 +2202,120 @@ Daniel Hintz <br> 2024-06-06
 </section>
 <section id="variant-classification-embedding" class="slide level4">
 <h4>Variant Classification (Embedding)</h4>
-<p><object data="images/variant_CART.gv.pdf" type="application/pdf" width="1000" height="650"><iframe src="images/variant_CART.gv.pdf" width="1000" height="650">This browser does not support PDFs. Please download the PDF to view it: <a href="images/variant_CART.gv.pdf">Download PDF</a></iframe></object></p>
+<div class="fragment">
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">Variant classification with a CART learner had a 97.71% on aligned sequence embeddings.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="panel-tabset">
+<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1">Tree</a></li><li><a href="#tabset-3-2">Missclassifications</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1">
+<p><object data="images/variant_CART.gv.pdf" type="application/pdf" width="900" height="400"><iframe src="images/variant_CART.gv.pdf" width="900" height="400">This browser does not support PDFs. Please download the PDF to view it: <a href="images/variant_CART.gv.pdf">Download PDF</a></iframe></object></p>
+</div>
+<div id="tabset-3-2">
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/Variant_missclassifcations.png" style="width:40.0%"></p>
+<figcaption>Figure 17: Variant Missclassifcations</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="variant-classification-one-hot-encoding" class="slide level4">
 <h4>Variant Classification (One-Hot-Encoding)</h4>
-<p><object data="images/CART_variant_binary_cropped.pdf" type="application/pdf" width="1000" height="650"><iframe src="images/CART_variant_binary_cropped.pdf" width="1000" height="650">This browser does not support PDFs. Please download the PDF to view it: <a href="images/CART_variant_binary_cropped.pdf">Download PDF</a></iframe></object></p>
+<div class="fragment">
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">Variant classification with a CART learner had a 10.28% on One-Hot-Encoded sequences.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><object data="images/CART_variant_binary_cropped.pdf" type="application/pdf" width="900" height="400"><iframe src="images/CART_variant_binary_cropped.pdf" width="900" height="400">This browser does not support PDFs. Please download the PDF to view it: <a href="images/CART_variant_binary_cropped.pdf">Download PDF</a></iframe></object></p>
+<aside class="notes">
+<ul>
+<li><p>one-hot encoding Covid sequences (assuming all sequences are of length 30,000) creates a one dimensional array of <span class="math inline">\(n \times 30,000 \times 4\)</span>, 4 columns representing 4 different bases</p></li>
+<li><p>A: ([1, 0, 0, 0])</p></li>
+<li><p>C: ([0, 1, 0, 0])</p></li>
+<li><p>G: ([0, 0, 1, 0])</p></li>
+<li><p>T: ([0, 0, 0, 1])</p></li>
+</ul>
+<p>where a there is 30,000 rows to represent all 30,000 nucleotides in a Covid sequence; thus with n matrices of <span class="math inline">\(30,000 \times 4\)</span> comprising the multidimensional array for each patient (ie each whole genome sequence)</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
 </section>
 
 <section id="protein-classification" class="title-slide slide level3 center">
-<h3><span style="color:#A9D0E3;">Protein Classification</span></h3>
-
-</section>
-<section id="protein-classification-embedding" class="slide level4">
-<h4>Protein Classification (Embedding)</h4>
-<p><object data="images/protein_CART.gv.pdf" type="application/pdf" width="1000" height="600"><iframe src="images/protein_CART.gv.pdf" width="1000" height="600">This browser does not support PDFs. Please download the PDF to view it: <a href="images/protein_CART.gv.pdf">Download PDF</a></iframe></object></p>
-</section>
-<section id="protein-classification-pca-reduced-embedding" class="slide level4">
-<h4>Protein Classification (PCA Reduced Embedding)</h4>
-<p><object data="images/protein_CART_29_PCA_components.gv.pdf" type="application/pdf" width="1000" height="650"><iframe src="images/protein_CART_29_PCA_components.gv.pdf" width="1000" height="650">This browser does not support PDFs. Please download the PDF to view it: <a href="images/protein_CART_29_PCA_components.gv.pdf">Download PDF</a></iframe></object></p>
+<h3>Protein Classification</h3>
+<div class="fragment">
+<div class="panel-tabset">
+<ul id="tabset-4" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-4-1">Embedding</a></li><li><a href="#tabset-4-2">PCA Reduced Embedding</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1">
+<div style="font-size: 0.5em;">
+<ul>
+<li>100% classification rate using the all 512 dimensions from the GenSLM embedding.</li>
+</ul>
+</div>
+<p><object data="images/protein_CART.gv.pdf" type="application/pdf" width="900" height="400"><iframe src="images/protein_CART.gv.pdf" width="900" height="400">This browser does not support PDFs. Please download the PDF to view it: <a href="images/protein_CART.gv.pdf">Download PDF</a></iframe></object></p>
+</div>
+<div id="tabset-4-2">
+<div style="font-size: 0.5em;">
+<ul>
+<li>100% classification rate using the PCA reduced feature matrix with 28 dimensions.</li>
+</ul>
+</div>
+<p><object data="images/protein_CART_29_PCA_components.gv.pdf" type="application/pdf" width="900" height="400"><iframe src="images/protein_CART_29_PCA_components.gv.pdf" width="900" height="400">This browser does not support PDFs. Please download the PDF to view it: <a href="images/protein_CART_29_PCA_components.gv.pdf">Download PDF</a></iframe></object></p>
+</div>
+</div>
+</div>
+</div>
 </section>
 
 
 <section id="conclusion" class="title-slide slide level2 center">
 <h2>Conclusion</h2>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">The study assessed GenSLM’s embeddings for quality using intrinsic and extrinsic evaluations, focusing on redundancy, separability, and information preservation.</li>
+<li class="fragment">GenSLM demonstrated strong performance in classification tasks, with a 97.71% success rate for variant classification and 100% for proteins using the CART learner, significantly outperforming One-Hot-Encoded matrices.</li>
+<li class="fragment">While GenSLM excelled in separability, it showed less effectiveness in preserving fine-scale genetic differences and distorted the genetic distances between certain viral variants.</li>
+<li class="fragment">The embeddings displayed considerable dimensional redundancy and only moderate success in preserving semantic distances, indicating areas for improvement.</li>
+<li class="fragment">Future research should compare GenSLM with other neural network embedding algorithms and explore its utility in more diverse genomic analysis tasks to establish broader applicability.</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="thank-you" class="title-slide slide level1 center" data-background-color="#8FA9C2">
+<h1><span class="center" style="color:white;">Thank you!!</span></h1>
 
 </section>
-</section>
+
 <section>
 <section id="appendix" class="title-slide slide level1 center" data-background-color="#8FA9C2">
 <h1><span style="color:white;">Appendix</span></h1>
@@ -2170,13 +2323,24 @@ Daniel Hintz <br> 2024-06-06
 </section>
 <section id="alignment-illustration" class="title-slide slide level2 center">
 <h2>Alignment Illustration</h2>
-<div id="qwebr-insertion-location-3"></div>
+<div id="qwebr-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div style="margin-top: 20px;">
+
+</div>
 <div style="text-align:center; font-size: 0.5em;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="images/alignment.png" style="width:65.0%"></p>
-<figcaption>Figure 9: Alignment Example</figcaption>
+<p><img data-src="images/Unaligned_example.png" style="width:35.0%"></p>
+<figcaption>Figure 18: Un-aligned Sequences</figcaption>
+</figure>
+</div>
+</div>
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/aligned_example.png" style="width:35.0%"></p>
+<figcaption>Figure 19: Aligned Sequences</figcaption>
 </figure>
 </div>
 </div>
@@ -2187,6 +2351,7 @@ Daniel Hintz <br> 2024-06-06
 <p><object data="DHintz_PlanB_Submission.pdf" type="application/pdf" width="1000" height="650"><iframe src="DHintz_PlanB_Submission.pdf" width="1000" height="650">This browser does not support PDFs. Please download the PDF to view it: <a href="DHintz_PlanB_Submission.pdf">Download PDF</a></iframe></object></p>
 </section>
 
+<section>
 <section id="acknowledgements" class="title-slide slide level1 center" data-background-color="#8FA9C2">
 <h1><svg aria-hidden="true" role="img" viewbox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:white;overflow:visible;position:relative;"><path d="M163.9 136.9c-29.4-29.8-29.4-78.2 0-108s77-29.8 106.4 0l17.7 18 17.7-18c29.4-29.8 77-29.8 106.4 0s29.4 78.2 0 108L310.5 240.1c-6.2 6.3-14.3 9.4-22.5 9.4s-16.3-3.1-22.5-9.4L163.9 136.9zM568.2 336.3c13.1 17.8 9.3 42.8-8.5 55.9L433.1 485.5c-23.4 17.2-51.6 26.5-80.7 26.5H192 32c-17.7 0-32-14.3-32-32V416c0-17.7 14.3-32 32-32H68.8l44.9-36c22.7-18.2 50.9-28 80-28H272h16 64c17.7 0 32 14.3 32 32s-14.3 32-32 32H288 272c-8.8 0-16 7.2-16 16s7.2 16 16 16H392.6l119.7-88.2c17.8-13.1 42.8-9.3 55.9 8.5zM193.6 384l0 0-.9 0c.3 0 .6 0 .9 0z"></path></svg> <span style="color:white; font-size: 70px;">Acknowledgements</span></h1>
 <div>
@@ -2196,12 +2361,80 @@ Daniel Hintz <br> 2024-06-06
 </ul>
 </div>
 </section>
-
-<section id="thank-you" class="title-slide slide level1 center" data-background-color="#8FA9C2">
-<h1><span class="center" style="color:white;">Thank you!!</span></h1>
-
+<section id="word-embeddings" class="title-slide slide level2 center">
+<h2>Word Embeddings</h2>
+<div>
+<div style="font-size: 0.6em;">
+<ul>
+<li class="fragment">Before we introduce GenSLM, lets look at a simpler application in natural language.
+<ul>
+<li class="fragment">If we consider English text, <strong>How can we measure the similarity between words?</strong></li>
+<li class="fragment">For example, what is the semantic difference between the words “King” and “Woman”.</li>
+<li class="fragment">Let’s demonstrate the semantic relationships of “King”, “Queen”, “Man”, “Woman”.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>Embedding algorithms need data (a corpus of text) to construct numeric vectors relating words and their meaning.</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 
+<section id="word2vec-example" class="title-slide slide level2 center">
+<h2>Word2vec Example</h2>
+<div class="fragment">
+<div id="qwebr-insertion-location-2"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="cell small-code">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r small-code number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="do">## Pre-Ran Code ##</span></span>
+<span id="cb1-2"><a href=""></a><span class="fu">library</span>(word2vec)</span>
+<span id="cb1-3"><a href=""></a><span class="co"># using British National Corpus http://vectors.nlpl.eu/repository/</span></span>
+<span id="cb1-4"><a href=""></a>model <span class="ot">&lt;-</span> <span class="fu">read.word2vec</span>(<span class="st">"British_National_Corpus_Vector_size_300_skipgram"</span>, <span class="at">normalize =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-5"><a href=""></a>embedding <span class="ot">&lt;-</span> <span class="fu">predict</span>(model,<span class="at">newdata =</span> <span class="fu">c</span>(<span class="st">"king_NOUN"</span>,<span class="st">"man_NOUN"</span>,<span class="st">"woman_NOUN"</span>,<span class="st">"queen_NOUN"</span>),<span class="at">type=</span><span class="st">"embedding"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div style="margin-top: 20px;">
+
+</div>
+</div>
+<div class="fragment">
+<div id="qwebr-insertion-location-3"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</section>
+
+<section id="plotting-word-embeddings" class="title-slide slide level2 center">
+<h2>Plotting Word Embeddings</h2>
+<div class="fragment">
+<div style="font-size: 0.6em;">
+<ul>
+<li>We can Plot the vectors shown in the previous slide to demonstrate how word2vec produces embeddings that measures semantic similarity between words.</li>
+</ul>
+</div>
+</div>
+<div class="fragment">
+<div style="text-align:center; font-size: 0.5em;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/King_Man_Woman_Queen.png" style="width:70.0%"></p>
+<figcaption>Figure 4: Word Embedding Vectors</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
 <section id="references" class="title-slide slide level1 smaller scrollable" data-background-color="#8FA9C2">
 <h1><span class="center" style="color:#464D58;">References</span></h1>
 <div class="quarto-auto-generated-content">
@@ -2231,11 +2464,8 @@ Daniel Hintz <br> 2024-06-06
 <div id="ref-kandwal2023genetic" class="csl-entry" role="listitem">
 <div class="csl-left-margin">2. </div><div class="csl-right-inline">Kandwal S, Fayne D (2023) Genetic conservation across SARS-CoV-2 non-structural proteins–insights into possible targets for treatment of future viral outbreaks. Virology</div>
 </div>
-<div id="ref-angermueller2016deep" class="csl-entry" role="listitem">
-<div class="csl-left-margin">3. </div><div class="csl-right-inline">Angermueller C, Pärnamaa T, Parts L, Stegle O (2016) Deep learning for computational biology. Molecular systems biology 12(7):878</div>
-</div>
 <div id="ref-genslms2023" class="csl-entry" role="listitem">
-<div class="csl-left-margin">4. </div><div class="csl-right-inline">Zvyagin M, Brace A, Hippe K, et al (2023) GenSLMs: Genome-scale language models reveal SARS-CoV-2 evolutionary dynamics. The International Journal of High Performance Computing Applications 37(6):683–705</div>
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Zvyagin M, Brace A, Hippe K, et al (2023) GenSLMs: Genome-scale language models reveal SARS-CoV-2 evolutionary dynamics. The International Journal of High Performance Computing Applications 37(6):683–705</div>
 </div>
 </div>
 </section>

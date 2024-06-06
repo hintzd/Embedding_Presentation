@@ -1,7 +1,7 @@
 ---
 webr: 
   show-startup-message: false  
-  packages: ['tibble', 'dplyr', 'feather']
+  packages: ['tibble', 'dplyr', 'feather', 'DT']
 format:
   revealjs:
     include-in-header:
@@ -51,6 +51,24 @@ engine: knitr
                       -0.75px 0.75px 0 #000, 
                       0.75px 0.75px 0 #000;">Daniel Hintz <br> 2024-06-06</h2>
 
+
+## Thesis Question
+
+. . .
+
+::: {style="text-align:center; font-size: 0.85em;"}
+How easily can information be extracted from GenSLM embeddings while maintaining its original integrity; and what is the quality of the produced vector embeddings?
+:::
+
+
+::: {.notes}
+- The jargon won't have meaning now, will very soon, i.e.
+    - What is GenSLM
+    - What is an embedding 
+    - Why do we care about the quality of an embedding 
+    - What are real world applications  
+:::
+
 # [Outline]{style="font-size: 55px;"} 
 
 ::: {style="font-size: 0.65em;"}
@@ -68,16 +86,6 @@ engine: knitr
 :::
 
 
-## Thesis Question
-
-. . .
-
-::: {style="text-align:center; font-size: 0.85em;"}
-How easily can information be extracted from GenSLM embeddings while maintaining its original integrity; and what is the quality of the produced vector embeddings?
-:::
-
-
-
 # [Background]{style="color:white;"}{background-color="#8FA9C2"}
 
 ## DNA
@@ -88,7 +96,8 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 ::: {style="font-size: 0.6em;"}
 - Deoxyribonucleic acid (DNA) is a molecule that contains the genetic code that provides the instructions for building and maintaining life.
 - The structure of DNA can be thought of as rungs on a ladder (known as base pairs) involving the pairing of four nucleotides - Adenine (A), Cytosine (C),Guanine (G) and Thymine (T).
-- For reference, the SARS-CoV2 virus is approximately 30,0000 base pairs (bp’s), whereas the human genome is approximately 3 billion bp.
+
+
 :::
 :::
 :::
@@ -105,10 +114,9 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 ::: {.column width="50%"}
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- Big Picture, the workflow for sequencing is the same for each technology:
-    - Someone gets tested for Covid, PCA is ran to detect if the assay is indeed positive
-    - Positive tests sequence using a machine that is most likely either Ilumina or Oxford Nanopore machines
-    - This takes in the Covid Sample and arrives at a digital copy of DNA sequences
+- Someone gets tested for Covid, PCA is ran to detect if the assay is indeed positive
+- Positive tests sequence using a machine that is most likely either Ilumina or Oxford Nanopore machines
+- This takes in the Covid Sample and arrives at a digital copy of DNA sequences
 :::
 :::
 :::
@@ -144,6 +152,67 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 :::
 :::
 
+## Mutations
+
+::: columns
+::: {.column width="40%"}
+::: incremental
+::: {style="font-size: 0.6em;"}
+- A mutation in the context of DNA refers to a change in the nucleotide sequence of the genetic material of an organism. 
+- mutations can be random or induced by external factors 
+- There many different types of mutations but only substitutions are illustrated for this talk.
+::: 
+::: 
+:::
+::: {.column width="60%"}
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 4: Substitution Mutations](images/mutation_example.png){width="45%"}
+:::
+:::
+:::
+
+:::{.notes}
+- Spontaneous mutations: These arise naturally and randomly without any external influence, often due to errors in DNA replication. Errors might include mispairing of nucleotides or slippage during replication.
+- Induced mutations: These are caused by external factors, known as mutagens, which can include physical agents like ultraviolet light and X-rays, or chemical agents such as certain drugs and pollutants.
+
+**Why Mutations Occur**
+
+Random errors: Many mutations result simply from random errors during DNA replication. DNA polymerase, the enzyme responsible for replicating DNA, is not perfect and occasionally makes mistakes.
+
+Environmental stress: Exposure to environmental stressors like radiation, chemicals, and even biological agents can damage DNA and lead to mutations.
+
+Evolutionary advantage: From an evolutionary perspective, mutations are a key mechanism of genetic variability and thus, evolution. While many mutations are neutral or harmful, some can confer advantages that lead to positive selection in a population.
+:::
+
+## Motivation 
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- This project came about from connecting with Nick Chia, a biophysicist at Argonne National labs.
+- Nick and his collaborators in 2020 (then at the Mayo Clinic) made an algorithm that predicted the trajectory of colorectal cancer mutations.
+- However, this algorithm was slow and expensive to train. 
+- **The embeddings used in this algorithm was one of the biggest choke points**.
+- New and improved ways are needed to embed large genomes into lower dimensions
+    - For example, a one hot encoding for the human genome as DNA dimensionally is n x 3 billion x 4, where n is the number of patients, 3 billion is the number of rows for each nucleotide and 4 columns represent the four possible bases (A, T, G, C).
+- This is the **Big P little N problem**; hence dimension reduction via an embedding is extremely advantageous!
+- Further work needs to be done is studying the quality of embeddings to help bring about more efficient real world implementations like precision medicine for colorectal cancer. 
+:::
+:::
+
+## Dimension Reduction 
+
+::: {style="font-size: 0.6em;"}
+In the UW Statistics program what methods do we learn to apply dimension reduction?
+::: 
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Principal component analysis (PCA)!
+- PCA as well as embeddings transform the coordinate system of our data.
+- The difference for this project is that dimension reduction is being applied to DNA.
+::: 
+::: 
+
 ## Embeddings
 
 ::: incremental
@@ -154,10 +223,7 @@ How easily can information be extracted from GenSLM embeddings while maintaining
  
  -  Embeddings are representation of data in lower-dimensional space that preserves some aspects of the original structure of the data.
 
-- Embedding algorithms exist for languages (i.e., word2vec) as well as genomic sequences, such as GenSLM.
-
 - But why would you ever embed something?
-    - In natural language applications, words can be compared mathematically using their numeric representations, similar to comparing vectors in physics.
     - Embedding vectors are generally more computationally efficient.
 :::
 :::
@@ -165,6 +231,474 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 ::: {.notes}
 - As an introduction, it will be easier to first walk through an example of an Embedding for natural language.
 :::
+
+
+## Sequence Embeddings
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Neural network embedding algorithms for genomic data include **GenSLM (the focus of this presentation)**, DNABERT2, and HyenaDNA.
+- These embeddings are lossy encodings, meaning that some information is lost in the transformation.
+- They also can distort structural relationships represented in the data.
+:::
+:::
+
+::: {.notes}
+- Just like we can represent words as vectors we can also represent genomic sequences as vectors.
+:::
+
+<!--
+## Why Data Representation Matters 
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- An embedding is one way of representing data.
+:::
+:::
+
+. . .
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![](images/pred_rep_obj.png){width="65%"}
+:::
+
+::: {style="margin-top: 20px;"}
+:::
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+-  An effective representation (embedding) of a genomic sequence is crucial for all downstream tasks.
+    - i.e., clustering, classification, regression, protein function identification, structural analysis, and predicting genetic disorders [@angermueller2016deep].
+- Given the increasing use of embeddings, embedding evaluation has also become more important. 
+:::
+:::
+-->
+
+## GenSLM
+
+::: panel-tabset
+### Overview
+
+::: columns
+::: {.column width="40%"}
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Overall, the GenSLM algorithm first **tokenizes**, i.e., breaks up sequences in to chunks of three nucleotides. 
+- Then, the input sequence are **vectorized** creating a $1 \times 512$ vector for each inputed sequence.
+:::
+:::
+:::
+::: {.column width="60%"}
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 5: Generic Embedding Workflow](images/Tokenize_vectorize.png){width="50%"}
+:::
+:::
+:::
+
+### Transformer
+::: columns
+::: {.column width="40%"}
+::: incremental
+::: {style="font-size: 0.6em;"}
+- First the tokenized input sequence is passed to the transformer encoder.
+- The transformer encoder converts 1,024 bp slices into numeric vectors. 
+- This is ran recursively through a diffusion model to learn a condensed distribution of the whole sequence.
+- The transformers in GenSLM are used to capture local interactions within a genomic sequence.
+:::
+:::
+:::
+::: {.column width="60%"}
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 6: GenSLM Transformer Architecture; [@genslms2023]](images/GenSLM.png)
+:::
+:::
+:::
+
+### Diffusion  + Transformer
+
+
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Diffusion and Transformer models work in tandem in GenSLM.
+- Transformers captures local interactions, while the diffusion model captures learns a representation of transformers vectors to represent the whole genome.
+:::
+:::
+
+
+:::
+
+
+# [Downstream]{style="color:white;"}{background-color="#8FA9C2"}
+
+## Downstream
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Consider our colereactal cancer example, in the context of precision medicine, you may want to classify aggressive and non-aggressive cancers. 
+
+- Or in the context of SARS-CoV-2, you may want to be able to monitor changes in variants and how they differ from previous variants. 
+
+- Using embeddings as both cases the tasks are considered **downstream** from the process of creating the embeddings from the original data. 
+::: 
+::: 
+
+## Raw DNA versus embedded Data
+
+```{webr-r}
+#| context: setup
+options(max.print = 10)
+# Download a dataset
+url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/var_seq_595_A.feather"
+download.file(url, "var_seq_595_A.feather")
+var_seq_595_A <- feather::read_feather("raw-data/var_seq_595_A.feather")
+var_seq_595_A <- var_seq_595_A[-c(36,41,51, 63, 67, 75,84,85,86,171,356,365,373,400),] # removing seqs of bad quality 
+# 
+# url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/variant_seq_plus_emb_aggr_7v_581pat_aligned_with_Wuhan.feather"
+# 
+# truncate_ln = 90
+# var_seq_595_A_subset <- var_seq_595_A |> rename(patient_id=new_patient_id, Unaligned_seq = Unaligned_sequence) |> select(patient_id, variant,gap_len,length, aligned_seq, Unaligned_seq) %>%
+#   mutate(aligned_seq = ifelse(nchar(aligned_seq) > truncate_ln, paste0(substr(aligned_seq, 1, truncate_ln), "..."), aligned_seq),
+#          Unaligned_seq = ifelse(nchar(Unaligned_seq) > truncate_ln, paste0(substr(Unaligned_seq, 1, truncate_ln), "..."), Unaligned_seq))
+# 
+# 
+# 
+# var_emb_595_A <- feather::read_feather("/Users/danielhintz/Library/CloudStorage/Dropbox/UNI/Embedding_Exploration/Genomic_data/Aligned_data/Emb/variant_seq_plus_emb_aggr_7v_581pat_aligned_with_Wuhan.feather")
+# var_emb_595_A <- var_emb_595_A[-582,] # removing reference 
+# var_all_595_A <- cbind(var_seq_595_A_subset ,select(var_emb_595_A, `A1`:`A512`))
+# Whole_genome_covid_seqs <- var_all_595_A
+```
+
+```{webr-r}
+# Whole_genome_covid_seqs %>%
+#   group_by(variant) %>%
+#   slice_sample(n = 3) %>%
+#   ungroup() |> datatable()
+```
+
+## Project Workflow
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 7: Project Workflow](images/Overall_workflow.png){width="30%"}
+:::
+
+# [Data and Processing]{style="color:white;"}{background-color="#8FA9C2"}
+
+## Data Description
+
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- All Covid sequences were downloaded with permission from the Global Initiative on Sharing All Influenza Data (GISAID).
+- No geographical or temporal restrictions were placed on the sequences extracted.
+:::
+:::
+
+## Data Cleaning 
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- GISAID's exclusion criteria was used to remove sequences of poor quality. 
+- Additional exclusion criteria was implemented to remove all sequence with ambiguous nucleotides (the `NA's` of the genomic world) and large gap sizes post-alignment.
+:::
+:::
+
+
+## Alignment 
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- An multiple alignment alignment was performed to be able to slice the exact location of proteins across different sequences, for more details see the appendix
+:::
+::: 
+
+# [Exploratory Data Analysis]{style="color:white;"}{background-color="#8FA9C2"}
+
+## [What are the Patterns and Structures Oberved from the Sequence Data?]{style="font-size: 52px;"}
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- For Exploratory Data Analysis, the goal was the characterize the structure of the data in its sequence representation. 
+-  This laid the groundwork for subsequent comparisons with the embedding structure.
+:::
+::: 
+
+. . .
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 8: Mutation Boxplot](images/Whole_Genome_Mutation_Count_Hamming_Distances.png){width="50%"}
+:::
+
+## 
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 11: Hamming Distance of Aligned Proteins to Wuhan Reference Sequence](images/hamming_prot_heatmap_581_all_variants.png){width="100%"}
+:::
+
+
+
+# [Methodology]{style="color:white;"}{background-color="#8FA9C2"}
+
+## Evaluating Embeddings 
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Broadly speaking, the quality of an embedding is assessed based upon its information richness and the degree of non-redundancy.
+
+- Their are two main methodologies for evaluating embeddings: 
+    - When downstream learning tasks are evaluated, it’s referred to as **extrinsic evaluation**.
+    - When the qualities of the embedding matrix itself are assessed it is referred to as **intrinsic evaluation** (Lavrač et al., 2021).
+:::
+:::
+
+## Intrinsic Evaluation
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- There are three main qualities to asses when studying the the quality of an embedding: **Redundancy**, **Separability**, **Preservation of Semantic Distance**
+    - Redundancy reveals the efficiency of a embeddings encoding; more efficient encodings tend to perform better and use fewer computational resources.
+    - Separability gives practical insight into whether or not the embedding output can be separated into meaningful genomic groups (i.e., variants). 
+    - Preservation of semantic distance is important for determining if the structural representation of information remains valid for subsequent tasks.
+
+- Sub-methods used for intrinsic evaluation include Singular Value Decomposition (SVD), Distance matrices, Kullback–Leibler Divergence (KLD), Radial Dendograms, and Principal Copnonent Analysis.
+:::
+:::
+
+## Extrinsic Evaluation
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Extrinsic evaluation pursues practical benchmarks to assess the performance of an embeddings algorithm per its associated embedding matrix across varying levels of task complexity.
+- For GenSLM, the subset of possible tasks chosen were variant and protein classification.
+- A Classification and Regression Tree (CART) was used for performing the classification.
+:::
+:::
+
+# [Results]{style="color:white;"}{background-color="#8FA9C2"}
+
+## [Intrinsic Evaluation Results]{style="color:#6FB1D1;"}
+
+### [Redundancy]{style="color:#A9D0E3;"}
+
+#### Singular Value Decomposition
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 13: SVD CPE Plot](images/SVD_582.png){width="65%"}
+:::
+
+### [Preservation of Semantic Distance]{style="color:#A9D0E3;"}
+
+#### Distance Matrices
+
+::: panel-tabset
+##### Sequence 
+::: {style="margin-top: 0px;"}
+:::
+
+::: {style="font-size: 0.6em;"}
+- There is a lot of heterogeneity in the differences among sequences as fine scales. 
+- Notice the L shape in striations in alpha sequences compare to other variants. 
+:::
+
+<iframe class="plotlyFrame" src="./seq_dist_matrix.html" style="border: none;"></iframe>
+
+##### Embeddings 
+::: {style="margin-top: 5.5px;"}
+:::
+
+::: {style="font-size: 0.6em;"}
+- Comparing the Sequence distance matrix to the Embedding distance matrix we see that finer differences amongst sequences are lost in the embedding transformation. 
+:::
+
+<iframe class="plotlyFrame" src="./emb_dist_matrix.html" style="border: none;"></iframe>
+
+##### Abs. Diff.
+::: {style="margin-top: 5px;"}
+:::
+
+::: {style="font-size: 0.6em;"}
+- The absolute difference matrix is the absolute difference of the sequence distance matrix and the embedding distance matrix.
+:::
+
+<iframe class="plotlyFrame" src="./abs_diff_dist_matrix.html" style="border: none;"></iframe>
+
+##### Reg. Diff.
+::: {style="margin-top: 18px;"}
+:::
+
+::: {style="font-size: 0.6em;"}
+- The difference distance matrix is the sequence distance matrix minus the embedding distance matrix.
+:::
+
+::: {style="margin-top: 18px;"}
+:::
+
+<iframe class="plotlyFrame" src="./diff_dist_matrix.html" style="border: none;"></iframe>
+
+:::
+
+
+#### Kullback–Leibler Divergence (KLD)
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 15: CKL vs DKL](images/CKL_vs_DKL_ver2.png){width="85%"}
+:::
+
+
+#### Radial Dendrograms
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Radial dendrograms show who easily sequences cluster by their variant.
+- Figures 12 and 13 in the next two slides show:
+    - Radial dendrograms using sequence data does not perfectly clusters sequences by variants. 
+    - Radial dendrograms using the embedded data perfectly clusters sequences by variants. 
+:::
+::: 
+
+## 
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 12: Aligned Sequence Radial Dendrogram](images/high_res_tree_595_patients_gapinc_cropped.png){width="65%"}
+:::
+
+## 
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 16: Embedding Radial Dendrogram](images/high_res_tree_581_patients_emb_cropped.png){width="65%"}
+:::
+
+### [Separability]{style="color:#A9D0E3;"}
+
+### Principal Component Analysis
+
+::: {style="margin-top: 70px;"}
+:::
+
+<iframe class="plotlyFrame" src="./v_pc_plotly.html" style="border: none;"></iframe>
+
+
+## [Extrinsic Evaluation Results]{style="color:#6FB1D1;"}
+
+### [Variant Classification]{style="color:#A9D0E3;"}
+
+#### Variant Classification (Embedding)
+
+. . .
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Variant classification with a CART learner had a 97.71% on aligned sequence embeddings.
+:::
+:::
+
+. . .
+
+::: panel-tabset
+##### Tree
+
+{{< pdf images/variant_CART.gv.pdf width=900 height=400 >}}
+
+##### Missclassifications 
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 17: Variant Missclassifcations](images/Variant_missclassifcations.png){width="40%"}
+:::
+:::
+
+#### Variant Classification (One-Hot-Encoding)
+
+
+. . .
+
+::: incremental
+::: {style="font-size: 0.6em;"}
+- Variant classification with a CART learner had a 10.28% on One-Hot-Encoded sequences.
+:::
+:::
+
+. . .
+
+
+{{< pdf images/CART_variant_binary_cropped.pdf width=900 height=400 >}}
+
+:::{.notes}
+-  one-hot encoding Covid sequences (assuming all sequences are of length 30,000) creates a one dimensional array of $n \times 30,000 \times 4$, 4 columns representing 4 different bases
+
+- A: \([1, 0, 0, 0]\)
+- C: \([0, 1, 0, 0]\)
+- G: \([0, 0, 1, 0]\)
+- T: \([0, 0, 0, 1]\)
+
+where a there is 30,000 rows to represent all 30,000 nucleotides in a Covid sequence; thus with n matrices of $30,000 \times 4$ comprising the multidimensional array for each patient (ie each whole genome sequence)
+::: 
+
+### Protein Classification
+
+. . .
+
+::: panel-tabset
+#### Embedding
+
+
+::: {style="font-size: 0.5em;"}
+- 100% classification rate using the all 512 dimensions from the GenSLM embedding.
+:::
+
+
+{{< pdf images/protein_CART.gv.pdf width=900 height=400 >}}
+
+#### PCA Reduced Embedding
+
+::: {style="font-size: 0.5em;"}
+- 100% classification rate using the PCA reduced feature matrix with 28 dimensions.
+:::
+
+
+{{< pdf images/protein_CART_29_PCA_components.gv.pdf width=900 height=400 >}}
+:::
+
+## Conclusion
+::: incremental
+::: {style="font-size: 0.6em;"}
+- The study assessed GenSLM's embeddings for quality using intrinsic and extrinsic evaluations, focusing on redundancy, separability, and information preservation.
+- GenSLM demonstrated strong performance in classification tasks, with a 97.71% success rate for variant classification and 100% for proteins using the CART learner, significantly outperforming One-Hot-Encoded matrices.
+- While GenSLM excelled in separability, it showed less effectiveness in preserving fine-scale genetic differences and distorted the genetic distances between certain viral variants.
+- The embeddings displayed considerable dimensional redundancy and only moderate success in preserving semantic distances, indicating areas for improvement.
+- Future research should compare GenSLM with other neural network embedding algorithms and explore its utility in more diverse genomic analysis tasks to establish broader applicability.
+:::
+:::
+
+# [Thank you!!]{.center style="color:white;"}{background-color="#8FA9C2"}
+
+# [Appendix]{style="color:white;"}{background-color="#8FA9C2"}
+
+## Alignment Illustration
+
+
+::: {style="margin-top: 20px;"}
+:::
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 18: Un-aligned Sequences](images/Unaligned_example.png){width="35%"}
+:::
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 19: Aligned Sequences](images/aligned_example.png){width="35%"}
+:::
+
+
+#
+
+{{< pdf DHintz_PlanB_Submission.pdf width=1000 height=650 >}}
+
+# `r fontawesome::fa("hand-holding-heart", "white")` [Acknowledgements]{style="color:white; font-size: 70px;"} {background-color="#8FA9C2"}
+
+::: incremental
+- Committee members 
+- Cohort
+:::
+
+
 ## Word Embeddings 
 
 ::: incremental
@@ -251,326 +785,6 @@ print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 ::: {style="text-align:center; font-size: 0.5em;"}
 ![Figure 4: Word Embedding Vectors ](images/King_Man_Woman_Queen.png){width="70%"}
 :::
-
-
-## Sequence Embeddings
-
-::: incremental
-::: {style="font-size: 0.6em;"}
-- Neural network embedding algorithms for genomic data include **GenSLM (the focus of this presentation)**, DNABERT2, and HyenaDNA.
-- These embeddings are lossy encodings, meaning that some information is lost in the transformation.
-- They also can distort structural relationships present in the data.
-:::
-:::
-
-::: {.notes}
-- Just like we can represent words as vectors we can also represent genomic sequences as vectors.
-:::
-
-## Why Data Representation Matters 
-
-::: incremental
-::: {style="font-size: 0.6em;"}
-- An embedding is one way of representing data.
-:::
-:::
-
-. . .
-
-::: {style="text-align:center; font-size: 0.5em;"}
-![](images/pred_rep_obj.png){width="65%"}
-:::
-
-::: {style="margin-top: 20px;"}
-:::
-
-::: incremental
-::: {style="font-size: 0.6em;"}
--  An effective representation (embedding) of a genomic sequence is crucial for all downstream tasks.
-    - i.e., clustering, classification, regression, protein function identification, structural analysis, and predicting genetic disorders [@angermueller2016deep].
-- Given the increasing use of embeddings, embedding evolution has also become more important. 
-:::
-:::
-
-## GenSLM
-
-::: panel-tabset
-### Overview
-
-::: columns
-::: {.column width="40%"}
-::: incremental
-::: {style="font-size: 0.6em;"}
-- Overall, the GenSLM algorithm first **tokenizes**, i.e., breaks up sequences in to chunks of three nucleotides. 
-- Then, the input sequence are **vectorized** creating a $1 \times 512$ vector for each inputed sequence.
-:::
-:::
-:::
-::: {.column width="60%"}
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 5: Generic Embedding Workflow](images/Tokenize_vectorize.png){width="50%"}
-:::
-:::
-:::
-
-### Transformer
-::: columns
-::: {.column width="40%"}
-::: incremental
-::: {style="font-size: 0.6em;"}
-- First the tokenized input sequence is passed to the transformer encoder
-- The transformer encoder converts 1,024 bp slices into numeric vectors 
-- This is ran recursively through a diffusion model to learn a condensed distribution of the whole sequence.
-- The transformers in GenSLM are used to capture local interactions within a genomic sequence
-:::
-:::
-:::
-::: {.column width="60%"}
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 6: GenSLM Transformer Architecture; [@genslms2023]](images/GenSLM.png)
-:::
-:::
-:::
-
-### Diffusion  + Transformer
-
-
-
-::: incremental
-::: {style="font-size: 0.6em;"}
-- Diffusion and Transformer models work in tandem in GenSLM
-- Transformers captures local interactions, while the diffusion model captures learns a representation of transformers vectors to represent the whole genome
-:::
-:::
-
-
-:::
-
-# [Data and Processing]{style="color:white;"}{background-color="#8FA9C2"}
-
-
-## Data Workflow 
-
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 7: Project Workflow](images/Overall_workflow.png){width="30%"}
-:::
-
-## Data Description
-
-
-::: incremental
-::: {style="font-size: 0.6em;"}
-- All Covid sequences were downloaded with permission from the Global Initiative on Sharing All Influenza Data (GISAID)
-- No geographical or temporal restrictions were placed on the sequences extracted
-:::
-:::
-
-## Data Cleaning 
-
-::: incremental
-::: {style="font-size: 0.6em;"}
-- GISAID's exclusion criteria was used to remove sequences of poor quality 
-- Additional exclusion criteria was implemented to remove all sequence with ambiguous nucleotides (the `NA's` of the genomic world)
-:::
-:::
-
-
-## Alignment 
-
-::: incremental
-::: {style="font-size: 0.6em;"}
-- An multiple alignment alignment was performed to be able to slice the exact location of proteins across different sequences, for more details see the appendix
-:::
-::: 
-
-# [Exploratory Data Analysis]{style="color:white;"}{background-color="#8FA9C2"}
-
-## [What are the Patterns and Structures Oberved from the Sequence Data?]{style="font-size: 52px;"}
-
-::: incremental
-::: {style="font-size: 0.6em;"}
-- For Exploratory Data Analysis, the goal was the characterize the structure of the data in its sequence presentation. 
--  This served as a later comparisons to embedding structure. 
-:::
-::: 
-
-. . .
-
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 8: Mutation Boxplot](images/Whole_Genome_Mutation_Count_Hamming_Distances.png){width="50%"}
-:::
-
-## 
-
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 11: Hamming Distance of Aligned Proteins to Wuhan Reference Sequence](images/hamming_prot_heatmap_581_all_variants.png){width="100%"}
-:::
-
-
-
-# [Methodology]{style="color:white;"}{background-color="#8FA9C2"}
-
-## Evaluating Embeddings 
-
-::: incremental
-::: {style="font-size: 0.6em;"}
-- Broadly speaking, the quality of an embedding is assessed based upon its information richness and the degree of non-redundancy.
-
-- Their are two main methodologies for evaluating embeddings. 
-    - When downstream learning tasks are evaluated, it’s referred to as **extrinsic evaluation**.
-    - When the qualities of the embedding matrix itself are assessed it is referred to as **intrinsic evaluation** (Lavrač et al., 2021).
-:::
-:::
-
-## Intrinsic Evaluation
-
-::: incremental
-::: {style="font-size: 0.6em;"}
-- There are three main qualities to asses when studying the the quality of an embedding: **Redundancy**, **Separability**, **Preservation of Semantic Distance**
-    - Redundancy reveals the efficiency of a embeddings encoding; more efficient encodings tend to perform better and use fewer computational resources.
-    - Separability gives practical insight into whether or not the embedding output can be separated into meaningful genomic groups (i.e., variants). 
-    - Preservation of semantic distance is important for determining if the structural representation of information remains valid for subsequent tasks.
-:::
-:::
-
-## Extrinsic Evaluation
-
-::: incremental
-::: {style="font-size: 0.6em;"}
-- Extrinsic evaluation pursues practical benchmarks to assess the performance of an embeddings algorithm per its associated embedding matrix across varying levels of task complexity.
-- For GenSLM, the subset of possible tasks chosen were variant and protein classification.
-:::
-:::
-
-# [Results]{style="color:white;"}{background-color="#8FA9C2"}
-
-## [Intrinsic Evaluation Results]{style="color:#6FB1D1;"}
-
-### [Redundancy]{style="color:#A9D0E3;"}
-
-#### Singular Value Decomposition
-
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 13: SVD CPE Plot](images/SVD_582.png){width="65%"}
-:::
-
-### [Preservation of Semantic Distance]{style="color:#A9D0E3;"}
-
-#### Distance Matrices
-
-::: panel-tabset
-##### Sequence 
-::: {style="margin-top: 50px;"}
-:::
-
-<iframe class="plotlyFrame" src="./seq_dist_matrix.html" style="border: none;"></iframe>
-
-##### Embeddings 
-::: {style="margin-top: 50px;"}
-:::
-
-<iframe class="plotlyFrame" src="./emb_dist_matrix.html" style="border: none;"></iframe>
-
-##### Abs. Diff.
-::: {style="margin-top: 50px;"}
-:::
-
-<iframe class="plotlyFrame" src="./abs_diff_dist_matrix.html" style="border: none;"></iframe>
-
-##### Reg. Diff.
-::: {style="margin-top: 50px;"}
-:::
-
-<iframe class="plotlyFrame" src="./diff_dist_matrix.html" style="border: none;"></iframe>
-
-:::
-
-
-#### Kullback–Leibler Divergence (KLD)
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 15: CKL vs DKL](images/CKL_vs_DKL_ver2.png){width="85%"}
-:::
-
-
-#### Radial Dendrograms
-
-## 
-
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 12: Aligned Sequence Radial Dendrogram](images/high_res_tree_595_patients_gapinc_cropped.png){width="65%"}
-:::
-
-## 
-
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 16: Embedding Radial Dendrogram](images/high_res_tree_581_patients_emb_cropped.png){width="65%"}
-:::
-
-### [Separability]{style="color:#A9D0E3;"}
-
-### Principal Component Analysis
-
-::: {style="margin-top: 70px;"}
-:::
-
-<iframe class="plotlyFrame" src="./v_pc_plotly.html" style="border: none;"></iframe>
-
-
-## [Extrinsic Evaluation Results]{style="color:#6FB1D1;"}
-
-### [Variant Classification]{style="color:#A9D0E3;"}
-
-#### Variant Classification (Embedding)
-
-{{< pdf images/variant_CART.gv.pdf width=1000 height=650 >}}
-
-#### Variant Classification (One-Hot-Encoding)
-
-{{< pdf images/CART_variant_binary_cropped.pdf width=1000 height=650 >}}
-
-### [Protein Classification]{style="color:#A9D0E3;"}
-
-#### Protein Classification (Embedding)
-
-{{< pdf images/protein_CART.gv.pdf width=1000 height=600 >}}
-
-#### Protein Classification (PCA Reduced Embedding)
-{{< pdf images/protein_CART_29_PCA_components.gv.pdf width=1000 height=650 >}}
-
-
-## Conclusion
-
-# [Appendix]{style="color:white;"}{background-color="#8FA9C2"}
-
-## Alignment Illustration
-
-```{webr-r}
-#| context: setup
-options(max.print = 10)
-# Download a dataset
-url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/var_seq_595_A.feather"
-download.file(url, "var_seq_595_A.feather")
-var_seq_595_A <- read_feather("var_seq_595_A.feather")
-```
-
-
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 9: Alignment Example](images/alignment.png){width="65%"}
-:::
-
-
-#
-
-{{< pdf DHintz_PlanB_Submission.pdf width=1000 height=650 >}}
-
-# `r fontawesome::fa("hand-holding-heart", "white")` [Acknowledgements]{style="color:white; font-size: 70px;"} {background-color="#8FA9C2"}
-
-::: incremental
-- Committee members 
-- Cohort
-:::
-
-# [Thank you!!]{.center style="color:white;"}{background-color="#8FA9C2"}
 
 # [References]{.center style="color:#464D58;"}{background-color="#8FA9C2"}
 
