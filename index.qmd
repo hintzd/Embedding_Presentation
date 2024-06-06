@@ -344,76 +344,25 @@ In the UW Statistics program what methods do we learn to apply dimension reducti
 ::: 
 ::: 
 
-## Raw DNA versus embedded Data
-
-```{webr-r}
-#| context: setup
-options(max.print = 10)
-# Download a dataset
-# url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/variant_data_subset.feather"
-# download.file(url, "variant_data_subset.feather")
-# variant_data_subset <- feather::read_feather("raw-data/variant_data_subset.feather")
-```
-
-<!--
-# DT::datatable(Whole_genome_covid_seqs)
--->
-```{r}
-# library(DT)
-# datatable(iris, class = 'cell-border stripe', options = list(pageLength = 4, dom = 'tip')) |> 
-#   formatStyle(
-#     columns = colnames(iris),  # Specify columns to style
-#     fontSize = '18px'
-#   )
-
-# 
-# library(DT)
-# library(htmltools)
-# 
-# datatable(iris, class = 'cell-border stripe', options = list(pageLength = 4, dom = 'tip')) %>% 
-#   formatStyle(
-#     columns = colnames(iris),  # Apply font size to all data columns
-#     fontSize = '18px'
-#   ) %>% 
-#   tags$head(
-#     tags$style(HTML("
-#       .dataTables_wrapper .dataTable th {
-#         font-size: 14px; /* Decrease font size for column headers */
-#       }
-#     "))
-#   )
-```
+## Raw DNA Versus Embedded Data
 
 ```{r}
-# library(DT)
-# library(htmltools)
-# write.csv(variant_data_subset, "/Users/danielhintz/Library/CloudStorage/Dropbox/Embedding_Presentation/raw-data/variant_data_subset.csv")
-# 
-# variant_data_subset <- read.csv("/Users/danielhintz/Library/CloudStorage/Dropbox/Embedding_Presentation/raw-data/variant_data_subset.feather")
-# variant_data_subset <- feather::read_feather("/Users/danielhintz/Library/CloudStorage/Dropbox/Embedding_Presentation/raw-data/variant_data_subset.feather")
-# # Define the datatable
-# dt <- datatable(variant_data_subset, class = 'cell-border stripe', options = list(pageLength = 4, dom = 'tip'), 
-#                 callback = JS("table.columns().header().to$().css({'font-size': '10px'});")) %>% 
-#   formatStyle(
-#     columns = colnames(iris),  # Apply font size to all data columns
-#     fontSize = '10px'
-#   )
-# 
-# # Create a custom HTML structure with embedded CSS
-# htmlOutput <- tags$html(
-#   tags$head(
-#     tags$style(HTML("
-#       .dataTable th {
-#         font-size: 10px !important; /* Using !important to ensure override */
-#       }
-#     "))
-#   ),
-#   dt
-# )
-# 
-# # Render the output
-# htmlOutput
+library(DT)
+
+variant_data_subset <- read.csv("https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/variant_data_subset.csv")
+
+font.size <- "10pt"
+variant_data_subset %>% 
+   DT::datatable(
+     options=list(
+       initComplete = htmlwidgets::JS(
+          "function(settings, json) {",
+          paste0("$(this.api().table().container()).css({'font-size': '", font.size, "'});"),
+          "}")
+       ) 
+     )
 ```
+
 
 ## Project Workflow
 
@@ -737,9 +686,12 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 ::: incremental
 ::: {style="font-size: 0.6em;"}
 - The study assessed GenSLM's embeddings for quality using intrinsic and extrinsic evaluations, focusing on redundancy, separability, and information preservation.
-- GenSLM demonstrated strong performance in classification tasks, with a 97.71% success rate for variant classification and 100% for proteins using the CART learner, significantly outperforming One-Hot-Encoded matrices.
-- While GenSLM excelled in separability, it showed less effectiveness in preserving fine-scale genetic differences and distorted the genetic distances between certain viral variants.
-- The embeddings displayed considerable dimensional redundancy and only moderate success in preserving semantic distances, indicating areas for improvement.
+- While Covid DNA can be highly related with a little as 0.067% differentiating some variates, the GenSLM embedding did indctaed strong performance.
+    - GenSLM demonstrated strong performance in classification tasks, with a 97.71% success rate for variant classification and 100% for proteins using the CART learner, significantly outperforming One-Hot-Encoded matrices.
+    - GenSLM aslo excelled in separability.
+- However , GenSLM also displayed suboptimal features    
+    - GenSLM was not effective in preserving fine-scale genetic differences and distorted the genetic distances between certain viral variants.
+- Overall, GenSLM has room to improve considering its dimensional redundancy and only moderate success in preserving semantic distances.
 - Future research should compare GenSLM with other neural network embedding algorithms and explore its utility in more diverse genomic analysis tasks to establish broader applicability.
 :::
 :::
