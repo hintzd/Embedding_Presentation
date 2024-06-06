@@ -1,5 +1,3 @@
-# An Advanced Introduction to R
+# My Defence of my Plan B Paper for a Masters in Statistcs 
 
-If you would like to follow the slides through with a regular `.R` file see `workshop_code.R` (note the answers have been removed). For practise question with answers see `questions_with_answers.R`
-
-To view the live slides click  [here](https://dhintz137.github.io/Intro_2_R_workshop/#/title-slide). **Note**: google chrome is the preferred browser for viewing this content for the best user experience. 
+See the paper  [here](https://github.com/DHintz137/Embedding_Presentation/blob/main/DHintz_PlanB_Submission.pdf), the presentation link [here](dhintz137.github.io/Embedding_Presentation/) and the zoom link here [here](https://uwyo.zoom.us/j/96419822465).
