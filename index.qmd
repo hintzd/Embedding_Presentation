@@ -52,7 +52,7 @@ engine: knitr
                       0.75px 0.75px 0 #000;">Daniel Hintz <br> 2024-06-06</h2>
 
 
-## Thesis Question
+# Thesis Question
 
 . . .
 
@@ -696,20 +696,28 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 :::
 :::
 
+# `r fontawesome::fa("hand-holding-heart", "white")` [Acknowledgements]{style="color:white; font-size: 70px;"} {background-color="#8FA9C2"}
+
+::: incremental
+::: {style="color:white; font-size: 0.6em;"}
+- A big thank you to my Committee Tim Robinson, Shaun Wulff, Sasha Skiba and Nick Chia.
+- An Extra special thank you Nick for sticking by me!
+- Robert Petit for Introducing me to Bioinformatics!
+- Liudmila Mainzer for all your support, training and guidance!
+- My Cohort: Allie Midkiff, Oisín O'Gailin, Austin Watson, Sandra Biller, Austin Watson, Daiven Francis, and Joe Crane. 
+- My partner Hana for all your support and patience!
+- And another big thank you to Tim!
+:::
+:::
+
+
 # [Thank you!!]{.center style="color:white;"}{background-color="#8FA9C2"}
 
 # [Appendix]{style="color:white;"}{background-color="#8FA9C2"}
 
-#
+##
 
 {{< pdf DHintz_PlanB_Submission.pdf width=1000 height=650 >}}
-
-# `r fontawesome::fa("hand-holding-heart", "white")` [Acknowledgements]{style="color:white; font-size: 70px;"} {background-color="#8FA9C2"}
-
-::: incremental
-- Committee members 
-- Cohort
-:::
 
 
 ## Word Embeddings 
@@ -783,6 +791,7 @@ embedding <- predict(model,newdata = c("king_NOUN","man_NOUN","woman_NOUN","quee
 print_tidy(embedding)
 print_tidy(embedding[ ,"King"] - embedding[ , "Man"] + embedding[ , "Woman"])
 print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
+print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "King"])
 ```
 
 ## Plotting Word Embeddings
