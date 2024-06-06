@@ -348,15 +348,15 @@ In the UW Statistics program what methods do we learn to apply dimension reducti
 
 ```{webr-r}
 #| context: setup
-# options(max.print = 10)
+options(max.print = 10)
 # Download a dataset
-# url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/variant_data_subset.feather"
-# download.file(url, "variant_data_subset.feather")
-# Whole_genome_covid_seqs <- feather::read_feather("raw-data/variant_data_subset.feather")
+url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/variant_data_subset.feather"
+download.file(url, "variant_data_subset.feather")
+Whole_genome_covid_seqs <- feather::read_feather("raw-data/variant_data_subset.feather")
 ```
 
 ```{webr-r}
-# DT::datatable(Whole_genome_covid_seqs)
+DT::datatable(Whole_genome_covid_seqs)
 ```
 
 ## Project Workflow
