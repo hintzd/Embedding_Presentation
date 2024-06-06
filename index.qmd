@@ -621,6 +621,11 @@ variant_data_subset %>%
 ![Figure 17: Variant Missclassifcations](images/Variant_missclassifcations.png){width="40%"}
 :::
 
+. . . 
+
+::: {style="font-size: 0.6em;"}
+- Imagine if we could classify aggressive and non-aggressive cancer with this kind of accuracy. 
+::: 
 
 #### Variant One-Hot-Encoding Classification
 
