@@ -75,7 +75,7 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 - Thesis Question
 - Background
     - DNA
-    - Word Embeddings
+    - Motivation
     - GenSLM Embedding Algorithm 
 - Data and Processing
     - Source and Cleaning 
@@ -114,9 +114,9 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 ::: {.column width="50%"}
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- Someone gets tested for Covid, PCA is ran to detect if the assay is indeed positive
-- Positive tests sequence using a machine that is most likely either Ilumina or Oxford Nanopore machines
-- This takes in the Covid Sample and arrives at a digital copy of DNA sequences
+- Someone gets tested for Covid, PCA is ran to detect if the assay is indeed positive.
+- Positive tests are sequenced using a machine that is most likely either Ilumina or Oxford Nanopore.
+- This takes in the Covid Sample and arrives at a digital copy of DNA sequences.
 :::
 :::
 :::
@@ -159,7 +159,8 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 ::: incremental
 ::: {style="font-size: 0.6em;"}
 - A mutation in the context of DNA refers to a change in the nucleotide sequence of the genetic material of an organism. 
-- mutations can be random or induced by external factors 
+- Mutations can be random or induced by external factors. 
+- For contect, SARS-CoV-2 can mutate to become more infective for increasing its chances of survival.
 - There many different types of mutations but only substitutions are illustrated for this talk.
 ::: 
 ::: 
@@ -208,7 +209,7 @@ In the UW Statistics program what methods do we learn to apply dimension reducti
 ::: incremental
 ::: {style="font-size: 0.6em;"}
 - Principal component analysis (PCA)!
-- PCA as well as embeddings transform the coordinate system of our data.
+- PCA as well as embeddings, transform the coordinate system of our data.
 - The difference for this project is that dimension reduction is being applied to DNA.
 ::: 
 ::: 
@@ -217,9 +218,9 @@ In the UW Statistics program what methods do we learn to apply dimension reducti
 
 ::: incremental
 ::: {style="font-size: 0.55em;"}
- - An *embedding* is the name for the dense numeric vectors produced by *embedding algorithms*, such as word2vec or GenSLM.
+ - An *embedding* is the name for the dense numeric vectors produced by *embedding algorithms*, such as GenSLM.
  
- -  "Embedding" generally refers to the embedding vector
+ -  "Embedding" generally refers to the embedding vector.
  
  -  Embeddings are representation of data in lower-dimensional space that preserves some aspects of the original structure of the data.
 
@@ -339,7 +340,7 @@ In the UW Statistics program what methods do we learn to apply dimension reducti
 
 - Or in the context of SARS-CoV-2, you may want to be able to monitor changes in variants and how they differ from previous variants. 
 
-- Using embeddings as both cases the tasks are considered **downstream** from the process of creating the embeddings from the original data. 
+- Assuming embeddings in both examples, the tasks are considered **downstream** from the process of creating the embeddings from the original data. 
 ::: 
 ::: 
 
@@ -347,33 +348,15 @@ In the UW Statistics program what methods do we learn to apply dimension reducti
 
 ```{webr-r}
 #| context: setup
-options(max.print = 10)
+# options(max.print = 10)
 # Download a dataset
-url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/var_seq_595_A.feather"
-download.file(url, "var_seq_595_A.feather")
-var_seq_595_A <- feather::read_feather("raw-data/var_seq_595_A.feather")
-var_seq_595_A <- var_seq_595_A[-c(36,41,51, 63, 67, 75,84,85,86,171,356,365,373,400),] # removing seqs of bad quality 
-# 
-# url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/variant_seq_plus_emb_aggr_7v_581pat_aligned_with_Wuhan.feather"
-# 
-# truncate_ln = 90
-# var_seq_595_A_subset <- var_seq_595_A |> rename(patient_id=new_patient_id, Unaligned_seq = Unaligned_sequence) |> select(patient_id, variant,gap_len,length, aligned_seq, Unaligned_seq) %>%
-#   mutate(aligned_seq = ifelse(nchar(aligned_seq) > truncate_ln, paste0(substr(aligned_seq, 1, truncate_ln), "..."), aligned_seq),
-#          Unaligned_seq = ifelse(nchar(Unaligned_seq) > truncate_ln, paste0(substr(Unaligned_seq, 1, truncate_ln), "..."), Unaligned_seq))
-# 
-# 
-# 
-# var_emb_595_A <- feather::read_feather("/Users/danielhintz/Library/CloudStorage/Dropbox/UNI/Embedding_Exploration/Genomic_data/Aligned_data/Emb/variant_seq_plus_emb_aggr_7v_581pat_aligned_with_Wuhan.feather")
-# var_emb_595_A <- var_emb_595_A[-582,] # removing reference 
-# var_all_595_A <- cbind(var_seq_595_A_subset ,select(var_emb_595_A, `A1`:`A512`))
-# Whole_genome_covid_seqs <- var_all_595_A
+# url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/variant_data_subset.feather"
+# download.file(url, "variant_data_subset.feather")
+# Whole_genome_covid_seqs <- feather::read_feather("raw-data/variant_data_subset.feather")
 ```
 
 ```{webr-r}
-# Whole_genome_covid_seqs %>%
-#   group_by(variant) %>%
-#   slice_sample(n = 3) %>%
-#   ungroup() |> datatable()
+# DT::datatable(Whole_genome_covid_seqs)
 ```
 
 ## Project Workflow
@@ -404,16 +387,31 @@ var_seq_595_A <- var_seq_595_A[-c(36,41,51, 63, 67, 75,84,85,86,171,356,365,373,
 :::
 
 
-## Alignment 
+## Multiple Sequence Alignment 
 
 ::: incremental
 ::: {style="font-size: 0.6em;"}
-- An multiple alignment alignment was performed to be able to slice the exact location of proteins across different sequences, for more details see the appendix
+- An multiple alignment alignment was performed to be able to slice the exact location of proteins across different sequences.
 :::
 ::: 
 
+. . .
+
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 18: Un-aligned Sequences](images/Unaligned_example.png){width="30%"}
+:::
+. . .
+
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 19: Aligned Sequences](images/aligned_example.png){width="30%"}
+:::
+
+
+
 # [Exploratory Data Analysis]{style="color:white;"}{background-color="#8FA9C2"}
 
+<!--
 ## [What are the Patterns and Structures Oberved from the Sequence Data?]{style="font-size: 52px;"}
 
 ::: incremental
@@ -428,6 +426,7 @@ var_seq_595_A <- var_seq_595_A[-c(36,41,51, 63, 67, 75,84,85,86,171,356,365,373,
 ::: {style="text-align:center; font-size: 0.5em;"}
 ![Figure 8: Mutation Boxplot](images/Whole_Genome_Mutation_Count_Hamming_Distances.png){width="50%"}
 :::
+-->
 
 ## 
 
@@ -446,8 +445,8 @@ var_seq_595_A <- var_seq_595_A[-c(36,41,51, 63, 67, 75,84,85,86,171,356,365,373,
 - Broadly speaking, the quality of an embedding is assessed based upon its information richness and the degree of non-redundancy.
 
 - Their are two main methodologies for evaluating embeddings: 
-    - When downstream learning tasks are evaluated, it’s referred to as **extrinsic evaluation**.
-    - When the qualities of the embedding matrix itself are assessed it is referred to as **intrinsic evaluation** (Lavrač et al., 2021).
+    - When downstream learning tasks are evaluated, it’s referred to as **extrinsic evaluation** [@lavravc2021representation].
+    - When the qualities of the embedding matrix itself are assessed it is referred to as **intrinsic evaluation** [@lavravc2021representation].
 :::
 :::
 
@@ -460,7 +459,7 @@ var_seq_595_A <- var_seq_595_A[-c(36,41,51, 63, 67, 75,84,85,86,171,356,365,373,
     - Separability gives practical insight into whether or not the embedding output can be separated into meaningful genomic groups (i.e., variants). 
     - Preservation of semantic distance is important for determining if the structural representation of information remains valid for subsequent tasks.
 
-- Sub-methods used for intrinsic evaluation include Singular Value Decomposition (SVD), Distance matrices, Kullback–Leibler Divergence (KLD), Radial Dendograms, and Principal Copnonent Analysis.
+- Sub-methods used for intrinsic evaluation include Singular Value Decomposition (SVD), Distance matrices, Radial Dendograms, and Principal Copnonent Analysis.
 :::
 :::
 
@@ -480,15 +479,43 @@ var_seq_595_A <- var_seq_595_A[-c(36,41,51, 63, 67, 75,84,85,86,171,356,365,373,
 
 ### [Redundancy]{style="color:#A9D0E3;"}
 
-#### Singular Value Decomposition
+#### [Singular Value Decomposition]{style="font-size: 0.8em;"}
 
 ::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 13: SVD CPE Plot](images/SVD_582.png){width="65%"}
+![Figure 13: SVD CPE Plot](images/SVD_582_cpe_2.png){width="92%"}
 :::
 
 ### [Preservation of Semantic Distance]{style="color:#A9D0E3;"}
 
 #### Distance Matrices
+
+<!--X axis labels-->
+![](images/variant_labels/alpha.png){.absolute top=675 left=110 width="20.55" height="16.91"}
+![](images/variant_labels/beta.png){.absolute top=675 left=228 width="18.17" height="29.48"}
+![](images/variant_labels/delta.png){.absolute top=675 left=340 width="14.64" height="24.91"}
+![](images/variant_labels/epsilon.png){.absolute top=675 left=455 width="15.74" height="21.83"}
+![](images/variant_labels/gamma.png){.absolute top=675 left=575 width="20.07" height="25.14"}
+
+![](images/variant_labels/mu.png){.absolute top=675 left=692 width="20.71" height="25.14"}
+![](images/variant_labels/omicron.png){.absolute top=675 left=815 width="21.45" height="22.91"}
+
+<!--Y axis labels-->
+
+![](images/variant_labels/alpha_90degrees.png){.absolute top=630 left=37.5 width="16.91" height="20.55"}
+![](images/variant_labels/beta_90degrees.png){.absolute top=580 left=32 width="29.48" height="18.17"}
+
+
+![](images/variant_labels/delta_90degrees.png){.absolute top=538 left=32 width="24.91" height="14.64"}
+
+![](images/variant_labels/epsilon_90degrees.png){.absolute top=490 left=32 width="21.83" height="15.74"}
+
+![](images/variant_labels/gamma_90degrees.png){.absolute top=440 left=32 width="25.14" height="20.07"}
+
+![](images/variant_labels/mu_90degrees.png){.absolute top=390 left=32 width="25.14" height="20.71"}
+
+![](images/variant_labels/omicron_90degrees.png){.absolute top=340 left=32 width="22.91" height="21.45"}
+
+
 
 ::: panel-tabset
 ##### Sequence 
@@ -538,13 +565,9 @@ var_seq_595_A <- var_seq_595_A[-c(36,41,51, 63, 67, 75,84,85,86,171,356,365,373,
 :::
 
 
-#### Kullback–Leibler Divergence (KLD)
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 15: CKL vs DKL](images/CKL_vs_DKL_ver2.png){width="85%"}
-:::
 
 
-#### Radial Dendrograms
+#### Radial Dendrograms (1)
 
 ::: incremental
 ::: {style="font-size: 0.6em;"}
@@ -555,17 +578,10 @@ var_seq_595_A <- var_seq_595_A[-c(36,41,51, 63, 67, 75,84,85,86,171,356,365,373,
 :::
 ::: 
 
-## 
+#### Radial Dendrograms (2)
 
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 12: Aligned Sequence Radial Dendrogram](images/high_res_tree_595_patients_gapinc_cropped.png){width="65%"}
-:::
+![](images/Radial_dendrograms.png)
 
-## 
-
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 16: Embedding Radial Dendrogram](images/high_res_tree_581_patients_emb_cropped.png){width="65%"}
-:::
 
 ### [Separability]{style="color:#A9D0E3;"}
 
@@ -581,31 +597,27 @@ var_seq_595_A <- var_seq_595_A[-c(36,41,51, 63, 67, 75,84,85,86,171,356,365,373,
 
 ### [Variant Classification]{style="color:#A9D0E3;"}
 
-#### Variant Classification (Embedding)
-
-. . .
+#### [Variant Embedding Classification (1)]{style="font-size: 0.8em;"}
 
 ::: incremental
-::: {style="font-size: 0.6em;"}
+::: {style="font-size: 0.5em;"}
 - Variant classification with a CART learner had a 97.71% on aligned sequence embeddings.
 :::
 :::
 
 . . .
 
-::: panel-tabset
-##### Tree
 
-{{< pdf images/variant_CART.gv.pdf width=900 height=400 >}}
+![Figure 17: Variant Missclassifcations](images/Variant_CART_tree.png){width="67%"}
 
-##### Missclassifications 
+#### Variant Embedding Classification (2)
 
 ::: {style="text-align:center; font-size: 0.5em;"}
 ![Figure 17: Variant Missclassifcations](images/Variant_missclassifcations.png){width="40%"}
 :::
-:::
 
-#### Variant Classification (One-Hot-Encoding)
+
+#### Variant One-Hot-Encoding Classification
 
 
 . . .
@@ -632,6 +644,7 @@ var_seq_595_A <- var_seq_595_A[-c(36,41,51, 63, 67, 75,84,85,86,171,356,365,373,
 where a there is 30,000 rows to represent all 30,000 nucleotides in a Covid sequence; thus with n matrices of $30,000 \times 4$ comprising the multidimensional array for each patient (ie each whole genome sequence)
 ::: 
 
+<!--
 ### Protein Classification
 
 . . .
@@ -656,6 +669,13 @@ where a there is 30,000 rows to represent all 30,000 nucleotides in a Covid sequ
 
 {{< pdf images/protein_CART_29_PCA_components.gv.pdf width=900 height=400 >}}
 :::
+-->
+
+## Thesis Question
+
+::: {style="text-align:center; font-size: 0.85em;"}
+How easily can information be extracted from GenSLM embeddings while maintaining its original integrity; and what is the quality of the produced vector embeddings?
+:::
 
 ## Conclusion
 ::: incremental
@@ -671,21 +691,6 @@ where a there is 30,000 rows to represent all 30,000 nucleotides in a Covid sequ
 # [Thank you!!]{.center style="color:white;"}{background-color="#8FA9C2"}
 
 # [Appendix]{style="color:white;"}{background-color="#8FA9C2"}
-
-## Alignment Illustration
-
-
-::: {style="margin-top: 20px;"}
-:::
-
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 18: Un-aligned Sequences](images/Unaligned_example.png){width="35%"}
-:::
-
-::: {style="text-align:center; font-size: 0.5em;"}
-![Figure 19: Aligned Sequences](images/aligned_example.png){width="35%"}
-:::
-
 
 #
 
@@ -784,6 +789,12 @@ print_tidy(t(embedding[ , "Man"]) %*% embedding[ , "Woman"])
 
 ::: {style="text-align:center; font-size: 0.5em;"}
 ![Figure 4: Word Embedding Vectors ](images/King_Man_Woman_Queen.png){width="70%"}
+:::
+
+
+#### Kullback–Leibler Divergence (KLD)
+::: {style="text-align:center; font-size: 0.5em;"}
+![Figure 15: CKL vs DKL](images/CKL_vs_DKL_ver2.png){width="85%"}
 :::
 
 # [References]{.center style="color:#464D58;"}{background-color="#8FA9C2"}
