@@ -1,7 +1,7 @@
 ---
 webr: 
   show-startup-message: false  
-  packages: ['tibble', 'dplyr', 'feather', 'DT']
+  packages: ['tibble', 'dplyr', 'feather']
 format:
   revealjs:
     include-in-header:
@@ -315,7 +315,7 @@ In the UW Statistics program what methods do we learn to apply dimension reducti
 :::
 :::
 
-### Diffusion  + Transformer
+### Diffusion + Transformer
 
 
 
@@ -350,13 +350,69 @@ In the UW Statistics program what methods do we learn to apply dimension reducti
 #| context: setup
 options(max.print = 10)
 # Download a dataset
-url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/variant_data_subset.feather"
-download.file(url, "variant_data_subset.feather")
-Whole_genome_covid_seqs <- feather::read_feather("raw-data/variant_data_subset.feather")
+# url <- "https://raw.githubusercontent.com/DHintz137/Embedding_Presentation/main/raw-data/variant_data_subset.feather"
+# download.file(url, "variant_data_subset.feather")
+# variant_data_subset <- feather::read_feather("raw-data/variant_data_subset.feather")
 ```
 
-```{webr-r}
-DT::datatable(Whole_genome_covid_seqs)
+<!--
+# DT::datatable(Whole_genome_covid_seqs)
+-->
+```{r}
+# library(DT)
+# datatable(iris, class = 'cell-border stripe', options = list(pageLength = 4, dom = 'tip')) |> 
+#   formatStyle(
+#     columns = colnames(iris),  # Specify columns to style
+#     fontSize = '18px'
+#   )
+
+# 
+# library(DT)
+# library(htmltools)
+# 
+# datatable(iris, class = 'cell-border stripe', options = list(pageLength = 4, dom = 'tip')) %>% 
+#   formatStyle(
+#     columns = colnames(iris),  # Apply font size to all data columns
+#     fontSize = '18px'
+#   ) %>% 
+#   tags$head(
+#     tags$style(HTML("
+#       .dataTables_wrapper .dataTable th {
+#         font-size: 14px; /* Decrease font size for column headers */
+#       }
+#     "))
+#   )
+```
+
+```{r}
+# library(DT)
+# library(htmltools)
+# write.csv(variant_data_subset, "/Users/danielhintz/Library/CloudStorage/Dropbox/Embedding_Presentation/raw-data/variant_data_subset.csv")
+# 
+# variant_data_subset <- read.csv("/Users/danielhintz/Library/CloudStorage/Dropbox/Embedding_Presentation/raw-data/variant_data_subset.feather")
+# variant_data_subset <- feather::read_feather("/Users/danielhintz/Library/CloudStorage/Dropbox/Embedding_Presentation/raw-data/variant_data_subset.feather")
+# # Define the datatable
+# dt <- datatable(variant_data_subset, class = 'cell-border stripe', options = list(pageLength = 4, dom = 'tip'), 
+#                 callback = JS("table.columns().header().to$().css({'font-size': '10px'});")) %>% 
+#   formatStyle(
+#     columns = colnames(iris),  # Apply font size to all data columns
+#     fontSize = '10px'
+#   )
+# 
+# # Create a custom HTML structure with embedded CSS
+# htmlOutput <- tags$html(
+#   tags$head(
+#     tags$style(HTML("
+#       .dataTable th {
+#         font-size: 10px !important; /* Using !important to ensure override */
+#       }
+#     "))
+#   ),
+#   dt
+# )
+# 
+# # Render the output
+# htmlOutput
 ```
 
 ## Project Workflow
