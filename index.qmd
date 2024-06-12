@@ -494,6 +494,11 @@ variant_data_subset %>%
 
 #### Distance Matrices
 
+
+![alpha](https://github.com/DHintz137/Embedding_Presentation/raw/main/images/Variant_labels/alpha.png)
+
+
+
 <!--X axis labels-->
 ![](images/variant_labels/alpha.png){.absolute top=675 left=110 width="20.55" height="16.91"}
 ![](images/variant_labels/beta.png){.absolute top=675 left=228 width="18.17" height="29.48"}
