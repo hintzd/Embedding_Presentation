@@ -500,7 +500,7 @@ variant_data_subset %>%
 
 
 <!--X axis labels-->
-![](images/variant_labels/alpha.png){.absolute top=675 left=110 width="20.55" height="16.91"}
+
 ![](images/variant_labels/beta.png){.absolute top=675 left=228 width="18.17" height="29.48"}
 ![](images/variant_labels/delta.png){.absolute top=675 left=340 width="14.64" height="24.91"}
 ![](images/variant_labels/epsilon.png){.absolute top=675 left=455 width="15.74" height="21.83"}
