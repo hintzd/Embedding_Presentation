@@ -493,13 +493,13 @@ variant_data_subset %>%
 ### [Preservation of Semantic Distance]{style="color:#A9D0E3;"}
 
 #### Distance Matrices
-
+<!--
 ![](/images/variant_labels/alpha.png){.absolute top=675 left=110 width="20.55" height="16.91"}
-
+-->
 
 
 <!--X axis labels-->
-
+<!--
 ![](images/variant_labels/beta.png){.absolute top=675 left=228 width="18.17" height="29.48"}
 ![](images/variant_labels/delta.png){.absolute top=675 left=340 width="14.64" height="24.91"}
 ![](images/variant_labels/epsilon.png){.absolute top=675 left=455 width="15.74" height="21.83"}
@@ -507,9 +507,9 @@ variant_data_subset %>%
 
 ![](images/variant_labels/mu.png){.absolute top=675 left=692 width="20.71" height="25.14"}
 ![](images/variant_labels/omicron.png){.absolute top=675 left=815 width="21.45" height="22.91"}
-
+-->
 <!--Y axis labels-->
-
+<!--
 ![](images/variant_labels/alpha_90degrees.png){.absolute top=630 left=37.5 width="16.91" height="20.55"}
 ![](images/variant_labels/beta_90degrees.png){.absolute top=580 left=32 width="29.48" height="18.17"}
 
@@ -523,7 +523,7 @@ variant_data_subset %>%
 ![](images/variant_labels/mu_90degrees.png){.absolute top=390 left=32 width="25.14" height="20.71"}
 
 ![](images/variant_labels/omicron_90degrees.png){.absolute top=340 left=32 width="22.91" height="21.45"}
-
+-->
 
 
 ::: panel-tabset
