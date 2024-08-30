@@ -726,7 +726,7 @@ How easily can information be extracted from GenSLM embeddings while maintaining
 
 ##
 
-{{< pdf DHintz_PlanB_Submission.pdf width=1000 height=650 >}}
+{{< pdf DHintz_PlanB_Final.pdf width=1000 height=650 >}}
 
 
 ## Word Embeddings 
